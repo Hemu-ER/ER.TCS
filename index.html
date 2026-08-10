@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>이터널 리턴 트친소★</title>
-  <meta name="description" content="누구나 쉽게 만드는 범용 트친소 카드 생성기" />
+  <title>이터널 리턴 트친소 메이커</title>
+  <meta name="description" content="이터널 리턴 유저를 위한 트친소 카드 생성기" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,9 +12,9 @@
   <main class="app-shell">
     <section class="hero">
       <div>
-        <p class="eyebrow">TCS // PROFILE SIGNAL</p>
-        <h1>이리 트친소<span class="spark">✦</span></h1>
-        <p class="hero-copy">취향과 활동 성향을 한 장의 <b>프로필 티켓</b>으로. 입력한 내용은 브라우저 안에서만 처리됩니다.</p>
+        <p class="eyebrow">ER // SURVIVOR PROFILE</p>
+        <h1>이터널 리턴 트친소<span class="spark">✦</span></h1>
+        <p class="hero-copy">티어, 선호 실험체, 플레이 모드까지 한 장에 담는 <b>이터널 리턴 전용 트친소 카드</b>.</p>
       </div>
       <button id="resetBtn" class="ghost-btn" type="button">↻ 초기화</button>
     </section>
@@ -32,17 +32,62 @@
         </div>
 
         <div class="panel-section">
-          <div class="section-head"><h2><em>02</em> 관심사 태그</h2><button id="addTagBtn" class="small-btn" type="button">+ ADD</button></div>
+          <h2><em>02</em> 게임 프로필</h2>
+          <div class="option-group">
+            <span class="option-label">티어</span>
+            <div id="tierEditor" class="tier-picker"></div>
+          </div>
+
+          <div class="option-group">
+            <div class="subject-heading">
+              <span class="option-label">선호 실험체 <small>최대 5명</small></span>
+              <span id="subjectCount" class="subject-count">0 / 5</span>
+            </div>
+            <input id="subjectSearch" class="subject-search" type="text" placeholder="실험체 이름 검색..." autocomplete="off" />
+            <div id="selectedSubjects" class="selected-subjects"></div>
+            <div id="subjectGrid" class="subject-grid"></div>
+          </div>
+
+          <div class="option-group">
+            <span class="option-label">성별</span>
+            <div class="segmented" id="genderEditor">
+              <label><input type="radio" name="gender" value="남성"><span>남성</span></label>
+              <label><input type="radio" name="gender" value="여성"><span>여성</span></label>
+              <label><input type="radio" name="gender" value="비공"><span>비공</span></label>
+            </div>
+          </div>
+
+          <div class="option-group">
+            <span class="option-label">디스코드</span>
+            <div class="segmented two" id="discordEditor">
+              <label><input type="radio" name="discord" value="사용"><span>사용</span></label>
+              <label><input type="radio" name="discord" value="사용 안 함"><span>사용 안 함</span></label>
+            </div>
+          </div>
+
+          <div class="option-group">
+            <span class="option-label">게임 종류 <small>다중 선택 가능</small></span>
+            <div class="mode-grid" id="modeEditor">
+              <label><input type="checkbox" value="일반"><span>일반</span></label>
+              <label><input type="checkbox" value="랭크"><span>랭크</span></label>
+              <label><input type="checkbox" value="코발트"><span>코발트</span></label>
+              <label><input type="checkbox" value="유니온"><span>유니온</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <div class="section-head"><h2><em>03</em> 관심사 태그</h2><button id="addTagBtn" class="small-btn" type="button">+ ADD</button></div>
           <div id="tagEditor" class="stack"></div>
         </div>
 
         <div class="panel-section">
-          <div class="section-head"><h2><em>03</em> 활동 성향</h2><button id="addTraitBtn" class="small-btn" type="button">+ ADD</button></div>
+          <div class="section-head"><h2><em>04</em> 활동 성향</h2><button id="addTraitBtn" class="small-btn" type="button">+ ADD</button></div>
           <div id="traitEditor" class="stack"></div>
         </div>
 
         <div class="panel-section">
-          <h2><em>04</em> 접속 시간</h2>
+          <h2><em>05</em> 접속 시간</h2>
           <div class="check-grid" id="timeEditor">
             <label><input type="checkbox" value="아침" /> 아침</label>
             <label><input type="checkbox" value="낮" /> 낮</label>
@@ -52,18 +97,18 @@
         </div>
 
         <div class="panel-section">
-          <h2><em>05</em> 좋아요 / 싫어요</h2>
+          <h2><em>06</em> 좋아요 / 싫어요</h2>
           <label>좋아요<textarea id="likes" rows="3" maxlength="140" placeholder="예: 잡담, 게임, 밈, 그림"></textarea></label>
           <label>싫어요<textarea id="dislikes" rows="3" maxlength="140" placeholder="예: 무례한 말투, 과한 싸움"></textarea></label>
         </div>
 
         <div class="panel-section">
-          <h2><em>06</em> 자유 소개</h2>
+          <h2><em>07</em> 자유 소개</h2>
           <label><textarea id="bio" rows="5" maxlength="300" placeholder="편하게 자기소개를 적어보세요."></textarea></label>
         </div>
 
         <div class="panel-section">
-          <h2><em>07</em> 컬러 튜닝</h2>
+          <h2><em>08</em> 컬러 튜닝</h2>
           <div class="theme-row">
             <label>포인트<input id="accentColor" type="color" value="#7c5cff" /></label>
             <label>배경<input id="bgColor" type="color" value="#f3f0ff" /></label>
@@ -81,7 +126,7 @@
             <div class="card-noise"></div>
             <div class="corner-mark corner-tl">⌜</div><div class="corner-mark corner-br">⌟</div>
             <div class="ticket-side">
-              <span>TCS</span><b>PROFILE<br/>SIGNAL</b><small>MAKE / MEET / CONNECT</small>
+              <span>ER</span><b>SURVIVOR<br/>PROFILE</b><small>LUMIA ISLAND // MATCH READY</small>
             </div>
             <div class="card-main">
               <header class="card-header">
@@ -99,6 +144,32 @@
               </header>
 
               <p id="headlinePreview" class="headline">한줄 소개를 입력해보세요.</p>
+
+              <section class="er-profile-strip">
+                <div class="er-stat tier-stat">
+                  <span class="er-stat-label">TIER</span>
+                  <strong id="tierPreview">미입력</strong>
+                </div>
+                <div class="er-stat subject-stat">
+                  <span class="er-stat-label">MAIN TEST SUBJECT</span>
+                  <div id="favoriteCharactersPreview" class="subject-preview">미입력</div>
+                </div>
+              </section>
+
+              <section class="card-block er-info-grid">
+                <div>
+                  <div class="block-title"><h4>GENDER</h4><span>성별</span></div>
+                  <div id="genderPreview" class="er-badge">비공</div>
+                </div>
+                <div>
+                  <div class="block-title"><h4>DISCORD</h4><span>디스코드</span></div>
+                  <div id="discordPreview" class="er-badge">미입력</div>
+                </div>
+                <div class="er-mode-area">
+                  <div class="block-title"><h4>GAME MODE</h4><span>게임 종류</span></div>
+                  <div id="modePreview" class="mode-preview">미입력</div>
+                </div>
+              </section>
 
               <section class="card-block interest-block">
                 <div class="block-title"><h4>INTERESTS</h4><span>관심사</span></div>
@@ -133,7 +204,7 @@
               </section>
 
               <footer class="card-footer">
-                <span>FIND YOUR TIMELINE MATES</span>
+                <span>FIND YOUR LUMIA MATES</span>
                 <div class="barcode" aria-hidden="true"></div>
                 <b>ER.TCS</b>
               </footer>
