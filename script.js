@@ -2,6 +2,8 @@ const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 const STORE='er-tcs-v5';
 const MAX_SUBJECTS=5;
+const KO_NAMES={'Abigail': '아비게일', 'Adela': '아델라', 'Adina': '아디나', 'Adriana': '아드리아나', 'Aiden': '에이든', 'Alex': '알렉스', 'Alonso': '알론소', 'Arda': '아르다', 'Aya': '아야', 'Barbara': '바바라', 'Bernice': '버니스', 'Bianca': '비앙카', 'Bihyung': '비형', 'Blair': '블레어', 'Camilo': '카밀로', 'Cathy': '캐시', 'Celine': '셀린', 'Charlotte': '샬럿', 'Chiara': '키아라', 'Chloe': '클로에', 'Coraline': '코랄린', 'Craver': '크레이버', 'Daniel': '다니엘', 'Darko': '다르코', 'Debi & Marlene': '데비&마를렌', 'Echion': '에키온', 'Elena': '엘레나', 'Eleven': '일레븐', 'Emma': '엠마', 'Estelle': '에스텔', 'Eva': '이바', 'Felix': '펠릭스', 'Fenrir': '펜리르', 'Fiora': '피오라', 'Garnet': '가넷', 'Hart': '하트', 'Haze': '헤이즈', 'Henry': '헨리', 'Hisui': '히스이', 'Hyejin': '혜진', 'Hyunwoo': '현우', 'Irem': '이렘', 'Isaac': '아이작', 'Isol': '아이솔', 'Istvan': '이스트반', 'Jackie': '재키', 'Jan': '얀', 'Jenny': '제니', 'Johann': '요한', 'Justyna': '유스티나', 'Karla': '칼라', 'Katja': '카티야', 'Kenneth': '케네스', 'Laura': '라우라', 'Leni': '레니', 'Lenore': '르노어', 'Lenox': '레녹스', 'Leon': '레온', 'Li Dailin': '리 다이린', 'Luke': '루크', 'Lucia': '루시아', 'Ly Anh': '리앙', 'Magnus': '매그너스', 'Mai': '마이', 'Markus': '마커스', 'Martina': '마르티나', 'Mirka': '미르카', 'Nadine': '나딘', 'Nathapon': '나타폰', 'NiaH': '니아', 'Nicky': '니키', 'Piolo': '피올로', 'Priya': '프리야', 'Rio': '리오', 'Rozzi': '로지', 'Shoichi': '쇼이치', 'Silvia': '실비아', 'Sissela': '시셀라', 'Sua': '수아', 'Tazia': '타지아', 'Theodore': '테오도르', 'Tia': '띠아', 'Tsubame': '츠바메', 'Vanya': '바냐', 'William': '윌리엄', 'Xiukai': '쇼우', 'Xuelin': '쉐린', 'Yuki': '유키', 'Yumin': '유민', 'Zahir': '자히르'};
+function displayName(c){return KO_NAMES[c.sourceName||c.name]||c.name}
 const defaults={
  nickname:'',handle:'',headline:'',tier:'',gender:'비공',discord:'',modes:[],
  tags:['이터널 리턴','게임','일상'],traits:['즐겜 위주','멘션 좋아함'],times:[],
@@ -27,20 +29,24 @@ function load(){
 function save(){localStorage.setItem(STORE,JSON.stringify(state))}
 function esc(s){return String(s??'')}
 function imagePath(c){return c.image||`assets/characters/${c.resource}.png`}
-function getChar(name){return CHARACTERS.find(c=>c.name===name)}
+function getChar(name){return CHARACTERS.find(c=>c.name===name||c.displayName===name||c.sourceName===name)}
 function fallbackLetters(name){return name.replace(/[^A-Za-z0-9가-힣]/g,'').slice(0,2).toUpperCase()||'ER'}
 
 async function loadCharacters(){
  try{
    const r=await fetch(`characters.json?v=${Date.now()}`,{cache:'no-store'});
    if(!r.ok)throw new Error('characters.json');
-   CHARACTERS=await r.json();
+   CHARACTERS=(await r.json()).map(c=>({
+     ...c,
+     sourceName:c.sourceName||c.name,
+     displayName:KO_NAMES[c.sourceName||c.name]||c.name
+   }));
  }catch(e){console.warn(e);CHARACTERS=[]}
  renderSubjectGrid();renderSelectedSubjects();renderSubjectPreview();
 }
 
 function makeLocalImage(c, cls=''){
- const img=document.createElement('img');img.alt=c.name;img.className=cls;img.src=imagePath(c);
+ const img=document.createElement('img');img.alt=c.displayName||c.name;img.className=cls;img.src=imagePath(c);
  return img;
 }
 
@@ -48,15 +54,15 @@ function renderSubjectGrid(){
  const root=$('#subjectGrid'); if(!root)return;
  const q=$('#subjectSearch').value.trim().toLowerCase();
  root.innerHTML='';
- const filtered=CHARACTERS.filter(c=>c.name.toLowerCase().includes(q));
+ const filtered=CHARACTERS.filter(c=>(c.displayName+' '+c.sourceName).toLowerCase().includes(q));
  filtered.forEach(c=>{
    const b=document.createElement('button');b.type='button';
-   b.className='subject-card'+(state.favoriteCharacters.includes(c.name)?' selected':'');
+   b.className='subject-card'+(state.favoriteCharacters.includes(c.displayName)?' selected':'');
    const img=makeLocalImage(c);
-   const fb=document.createElement('span');fb.className='subject-fallback';fb.textContent=fallbackLetters(c.name);
+   const fb=document.createElement('span');fb.className='subject-fallback';fb.textContent=fallbackLetters(c.displayName);
    img.addEventListener('error',()=>b.classList.add('broken'));
-   const n=document.createElement('b');n.textContent=c.name;
-   b.append(img,fb,n); b.addEventListener('click',()=>toggleSubject(c.name)); root.appendChild(b);
+   const n=document.createElement('b');n.textContent=c.displayName;
+   b.append(img,fb,n); b.addEventListener('click',()=>toggleSubject(c.displayName)); root.appendChild(b);
  });
  $('#subjectCount').textContent=`${state.favoriteCharacters.length} / ${MAX_SUBJECTS}`;
 }
@@ -209,7 +215,7 @@ $('#downloadBtn').onclick=async()=>{
    await Promise.all($$('#card img').map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));
    const canvas=await html2canvas($('#card'),{scale:2,backgroundColor:null,useCORS:true,allowTaint:false});
    const a=document.createElement('a');a.download=`${(state.nickname||'ER-TCS').replace(/[\\/:*?"<>|]/g,'_')}.png`;a.href=canvas.toDataURL('image/png');a.click();
- }catch(e){console.error(e);alert('이미지 저장에 실패했습니다.')}
+ }catch(e){console.error(e);alert('이미지 저장에 실패했습니다. 새로고침 후 다시 시도해 주세요.\n\n오류: '+(e?.message||e))}
  finally{btn.disabled=false;btn.textContent=old}
 };
 
