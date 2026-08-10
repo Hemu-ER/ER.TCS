@@ -8,20 +8,23 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
   <main class="app-shell">
     <section class="hero">
       <div>
-        <p class="eyebrow">PROFILE CARD MAKER</p>
-        <h1>트친소 메이커</h1>
-        <p class="hero-copy">닉네임, 관심사, 활동 성향을 입력하고 나만의 트친소 카드를 만들어 PNG로 저장하세요.</p>
+        <p class="eyebrow">TCS // PROFILE SIGNAL</p>
+        <h1>트친소 메이커<span class="spark">✦</span></h1>
+        <p class="hero-copy">취향과 활동 성향을 한 장의 <b>프로필 티켓</b>으로. 입력한 내용은 브라우저 안에서만 처리됩니다.</p>
       </div>
-      <button id="resetBtn" class="ghost-btn" type="button">초기화</button>
+      <button id="resetBtn" class="ghost-btn" type="button">↻ 초기화</button>
     </section>
 
     <section class="workspace">
       <aside class="editor-panel">
+        <div class="editor-title"><span>EDIT CONSOLE</span><i></i><small>LIVE</small></div>
+
         <div class="panel-section">
-          <h2>기본 정보</h2>
+          <h2><em>01</em> 기본 정보</h2>
           <label>닉네임<input id="nickname" type="text" maxlength="24" placeholder="예: 라임" /></label>
           <label>아이디<input id="handle" type="text" maxlength="30" placeholder="예: @lime_daily" /></label>
           <label>한줄 소개<input id="headline" type="text" maxlength="60" placeholder="예: 게임하고 그림 그리는 사람" /></label>
@@ -29,23 +32,17 @@
         </div>
 
         <div class="panel-section">
-          <div class="section-head">
-            <h2>관심사 태그</h2>
-            <button id="addTagBtn" class="small-btn" type="button">+ 추가</button>
-          </div>
+          <div class="section-head"><h2><em>02</em> 관심사 태그</h2><button id="addTagBtn" class="small-btn" type="button">+ ADD</button></div>
           <div id="tagEditor" class="stack"></div>
         </div>
 
         <div class="panel-section">
-          <div class="section-head">
-            <h2>활동 성향</h2>
-            <button id="addTraitBtn" class="small-btn" type="button">+ 추가</button>
-          </div>
+          <div class="section-head"><h2><em>03</em> 활동 성향</h2><button id="addTraitBtn" class="small-btn" type="button">+ ADD</button></div>
           <div id="traitEditor" class="stack"></div>
         </div>
 
         <div class="panel-section">
-          <h2>접속 시간</h2>
+          <h2><em>04</em> 접속 시간</h2>
           <div class="check-grid" id="timeEditor">
             <label><input type="checkbox" value="아침" /> 아침</label>
             <label><input type="checkbox" value="낮" /> 낮</label>
@@ -55,23 +52,23 @@
         </div>
 
         <div class="panel-section">
-          <h2>좋아요 / 싫어요</h2>
+          <h2><em>05</em> 좋아요 / 싫어요</h2>
           <label>좋아요<textarea id="likes" rows="3" maxlength="140" placeholder="예: 잡담, 게임, 밈, 그림"></textarea></label>
           <label>싫어요<textarea id="dislikes" rows="3" maxlength="140" placeholder="예: 무례한 말투, 과한 싸움"></textarea></label>
         </div>
 
         <div class="panel-section">
-          <h2>자유 소개</h2>
+          <h2><em>06</em> 자유 소개</h2>
           <label><textarea id="bio" rows="5" maxlength="300" placeholder="편하게 자기소개를 적어보세요."></textarea></label>
         </div>
 
         <div class="panel-section">
-          <h2>테마</h2>
+          <h2><em>07</em> 컬러 튜닝</h2>
           <div class="theme-row">
             <label>포인트<input id="accentColor" type="color" value="#7c5cff" /></label>
-            <label>배경<input id="bgColor" type="color" value="#f7f7fb" /></label>
-            <label>카드<input id="cardColor" type="color" value="#ffffff" /></label>
-            <label>글자<input id="textColor" type="color" value="#1e1e26" /></label>
+            <label>배경<input id="bgColor" type="color" value="#f3f0ff" /></label>
+            <label>카드<input id="cardColor" type="color" value="#fffdf8" /></label>
+            <label>글자<input id="textColor" type="color" value="#211c2c" /></label>
           </div>
           <label>카드 제목<input id="cardTitle" type="text" maxlength="30" value="트친소" /></label>
         </div>
@@ -79,66 +76,76 @@
 
       <section class="preview-panel">
         <div class="preview-sticky">
+          <div class="preview-caption"><span>LIVE PREVIEW</span><span>● ONLINE</span></div>
           <div id="card" class="profile-card">
-            <div class="card-topline"></div>
-            <header class="card-header">
-              <div class="avatar-wrap">
-                <img id="avatarPreview" alt="프로필 이미지" hidden />
-                <div id="avatarFallback" class="avatar-fallback">☺</div>
-              </div>
-              <div class="identity">
-                <span id="cardTitlePreview" class="card-label">트친소</span>
-                <h3 id="nicknamePreview">닉네임</h3>
-                <p id="handlePreview">@username</p>
-              </div>
-            </header>
+            <div class="card-noise"></div>
+            <div class="corner-mark corner-tl">⌜</div><div class="corner-mark corner-br">⌟</div>
+            <div class="ticket-side">
+              <span>TCS</span><b>PROFILE<br/>SIGNAL</b><small>MAKE / MEET / CONNECT</small>
+            </div>
+            <div class="card-main">
+              <header class="card-header">
+                <div class="avatar-wrap">
+                  <img id="avatarPreview" alt="프로필 이미지" hidden />
+                  <div id="avatarFallback" class="avatar-fallback">✦</div>
+                  <span class="avatar-dot"></span>
+                </div>
+                <div class="identity">
+                  <span id="cardTitlePreview" class="card-label">트친소</span>
+                  <h3 id="nicknamePreview">닉네임</h3>
+                  <p id="handlePreview">@username</p>
+                </div>
+                <div class="serial">NO.<b id="serialPreview">0000</b></div>
+              </header>
 
-            <p id="headlinePreview" class="headline">한줄 소개를 입력해보세요.</p>
+              <p id="headlinePreview" class="headline">한줄 소개를 입력해보세요.</p>
 
-            <section class="card-block">
-              <h4>관심사</h4>
-              <div id="tagPreview" class="chips"></div>
-            </section>
+              <section class="card-block interest-block">
+                <div class="block-title"><h4>INTERESTS</h4><span>관심사</span></div>
+                <div id="tagPreview" class="chips"></div>
+              </section>
 
-            <section class="card-block two-col">
-              <div>
-                <h4>활동 성향</h4>
-                <ul id="traitPreview" class="clean-list"></ul>
-              </div>
-              <div>
-                <h4>접속 시간</h4>
-                <div id="timePreview" class="time-box">미입력</div>
-              </div>
-            </section>
+              <section class="card-block two-col">
+                <div>
+                  <div class="block-title"><h4>STYLE</h4><span>활동 성향</span></div>
+                  <ul id="traitPreview" class="clean-list"></ul>
+                </div>
+                <div>
+                  <div class="block-title"><h4>ACTIVE</h4><span>접속 시간</span></div>
+                  <div id="timePreview" class="time-box">미입력</div>
+                </div>
+              </section>
 
-            <section class="card-block like-grid">
-              <div>
-                <h4>좋아요</h4>
-                <p id="likesPreview" class="body-copy">미입력</p>
-              </div>
-              <div>
-                <h4>싫어요</h4>
-                <p id="dislikesPreview" class="body-copy">미입력</p>
-              </div>
-            </section>
+              <section class="card-block like-grid">
+                <div class="mini-card good">
+                  <span class="mini-symbol">＋</span><h4>LIKE</h4>
+                  <p id="likesPreview" class="body-copy">미입력</p>
+                </div>
+                <div class="mini-card bad">
+                  <span class="mini-symbol">−</span><h4>NOPE</h4>
+                  <p id="dislikesPreview" class="body-copy">미입력</p>
+                </div>
+              </section>
 
-            <section class="card-block bio-block">
-              <h4>자유 소개</h4>
-              <p id="bioPreview" class="body-copy">편하게 자기소개를 적어보세요.</p>
-            </section>
+              <section class="card-block bio-block">
+                <div class="block-title"><h4>ABOUT ME</h4><span>자유 소개</span></div>
+                <p id="bioPreview" class="body-copy">편하게 자기소개를 적어보세요.</p>
+              </section>
 
-            <footer class="card-footer">made with 트친소 메이커</footer>
+              <footer class="card-footer">
+                <span>FIND YOUR TIMELINE MATES</span>
+                <div class="barcode" aria-hidden="true"></div>
+                <b>ER.TCS</b>
+              </footer>
+            </div>
           </div>
 
-          <div class="actions">
-            <button id="downloadBtn" class="primary-btn" type="button">PNG로 저장</button>
-          </div>
-          <p class="hint">입력 내용은 브라우저에만 저장됩니다.</p>
+          <div class="actions"><button id="downloadBtn" class="primary-btn" type="button">이미지로 내보내기 ↗</button></div>
+          <p class="hint">PNG · 2× 해상도 · 로컬 저장</p>
         </div>
       </section>
     </section>
   </main>
-
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="script.js"></script>
 </body>
