@@ -1,90 +1,216 @@
-const $=s=>document.querySelector(s);const stateKey='trichinso-maker-v2';
-const defaults={nickname:'',handle:'',headline:'',tier:'',favoriteCharacters:[],gender:'비공',discord:'',modes:[],likes:'',dislikes:'',bio:'',cardTitle:'이터널 리턴 트친소',accentColor:'#6d5dfc',bgColor:'#eef0f5',cardColor:'#fffdf8',textColor:'#202330',tags:['이터널 리턴','게임','일상'],traits:['즐겜 위주','멘션 좋아함'],times:[],avatar:''};
-
-const CHARACTER_DATA=[{"name": "Abigail", "slug": "Abigail"}, {"name": "Adela", "slug": "Adela"}, {"name": "Adina", "slug": "Adina"}, {"name": "Adriana", "slug": "Adriana"}, {"name": "Aiden", "slug": "Aiden"}, {"name": "Alex", "slug": "Alex"}, {"name": "Alonso", "slug": "Alonso"}, {"name": "Arda", "slug": "Arda"}, {"name": "Aya", "slug": "Aya"}, {"name": "Barbara", "slug": "Barbara"}, {"name": "Bernice", "slug": "Bernice"}, {"name": "Bianca", "slug": "Bianca"}, {"name": "Bihyung", "slug": "Bihyung"}, {"name": "Blair", "slug": "Blair"}, {"name": "Camilo", "slug": "Camilo"}, {"name": "Cathy", "slug": "Cathy"}, {"name": "Celine", "slug": "Celine"}, {"name": "Charlotte", "slug": "Charlotte"}, {"name": "Chiara", "slug": "Chiara"}, {"name": "Chloe", "slug": "Chloe"}, {"name": "Coraline", "slug": "Coraline"}, {"name": "Craver", "slug": "Craver"}, {"name": "Daniel", "slug": "Daniel"}, {"name": "Darko", "slug": "Darko"}, {"name": "Debi & Marlene", "slug": "DebiMarlene"}, {"name": "Echion", "slug": "Echion"}, {"name": "Elena", "slug": "Elena"}, {"name": "Eleven", "slug": "Eleven"}, {"name": "Emma", "slug": "Emma"}, {"name": "Estelle", "slug": "Estelle"}, {"name": "Eva", "slug": "Eva"}, {"name": "Felix", "slug": "Felix"}, {"name": "Fenrir", "slug": "Fenrir"}, {"name": "Fiora", "slug": "Fiora"}, {"name": "Garnet", "slug": "Garnet"}, {"name": "Hart", "slug": "Hart"}, {"name": "Haze", "slug": "Haze"}, {"name": "Henry", "slug": "Henry"}, {"name": "Hisui", "slug": "Hisui"}, {"name": "Hyejin", "slug": "Hyejin"}, {"name": "Hyunwoo", "slug": "Hyunwoo"}, {"name": "Irem", "slug": "Irem"}, {"name": "Isaac", "slug": "Isaac"}, {"name": "Isol", "slug": "Isol"}, {"name": "Istvan", "slug": "Istvan"}, {"name": "Jackie", "slug": "Jackie"}, {"name": "Jan", "slug": "Jan"}, {"name": "Jenny", "slug": "Jenny"}, {"name": "Johann", "slug": "Johann"}, {"name": "Justyna", "slug": "Justyna"}, {"name": "Karla", "slug": "Karla"}, {"name": "Katja", "slug": "Katja"}, {"name": "Kenneth", "slug": "Kenneth"}, {"name": "Laura", "slug": "Laura"}, {"name": "Leni", "slug": "Leni"}, {"name": "Lenore", "slug": "Lenore"}, {"name": "Lenox", "slug": "Lenox"}, {"name": "Leon", "slug": "Leon"}, {"name": "Li Dailin", "slug": "LiDailin"}, {"name": "Luke", "slug": "Luke"}, {"name": "Lucia", "slug": "Lucia"}, {"name": "Ly Anh", "slug": "LyAnh"}, {"name": "Magnus", "slug": "Magnus"}, {"name": "Mai", "slug": "Mai"}, {"name": "Markus", "slug": "Markus"}, {"name": "Martina", "slug": "Martina"}, {"name": "Mirka", "slug": "Mirka"}, {"name": "Nadine", "slug": "Nadine"}, {"name": "Nathapon", "slug": "Nathapon"}, {"name": "NiaH", "slug": "NiaH"}, {"name": "Nicky", "slug": "Nicky"}, {"name": "Piolo", "slug": "Piolo"}, {"name": "Priya", "slug": "Priya"}, {"name": "Rio", "slug": "Rio"}, {"name": "Rozzi", "slug": "Rozzi"}, {"name": "Shoichi", "slug": "Shoichi"}, {"name": "Silvia", "slug": "Silvia"}, {"name": "Sissela", "slug": "Sissela"}, {"name": "Sua", "slug": "Sua"}, {"name": "Tazia", "slug": "Tazia"}, {"name": "Theodore", "slug": "Theodore"}, {"name": "Tia", "slug": "Tia"}, {"name": "Tsubame", "slug": "Tsubame"}, {"name": "Vanya", "slug": "Vanya"}, {"name": "William", "slug": "William"}, {"name": "Xiukai", "slug": "Xiukai"}, {"name": "Xuelin", "slug": "Xuelin"}, {"name": "Yuki", "slug": "Yuki"}, {"name": "Yumin", "slug": "Yumin"}, {"name": "Zahir", "slug": "Zahir"}];
-const TIER_DATA=["아이언", "브론즈", "실버", "골드", "플래티넘", "다이아몬드", "미스릴", "데미갓", "이터니티"];
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
+const STORE='er-tcs-v5';
 const MAX_SUBJECTS=5;
-function charImageUrl(c){return `https://cdn.dak.gg/assets/er/game-assets/12.0.0/CharCommunity_${c.slug}_S000.png`}
-function getCharacter(name){return CHARACTER_DATA.find(c=>c.name===name)}
-function renderTierPicker(){
-  const root=$('#tierEditor');root.innerHTML='';
-  TIER_DATA.forEach(t=>{
-    const b=document.createElement('button');b.type='button';b.className='tier-choice'+(state.tier===t?' selected':'');b.dataset.tier=t;
-    b.innerHTML=`<i class="tier-emblem"></i><span>${t}</span>`;
-    b.addEventListener('click',()=>{state.tier=state.tier===t?'':t;renderTierPicker();sync()});
-    root.appendChild(b);
-  });
+const defaults={
+ nickname:'',handle:'',headline:'',tier:'',gender:'비공',discord:'',modes:[],
+ tags:['이터널 리턴','게임','일상'],traits:['즐겜 위주','멘션 좋아함'],times:[],
+ likes:'',dislikes:'',bio:'',avatar:'',
+ accentColor:'#7967ff',bgColor:'#302a48',cardColor:'#fffdf7',textColor:'#1e1f28',
+ favoriteCharacters:[]
+};
+let CHARACTERS=[];
+let state=load();
+
+function load(){
+ try{
+   const s=JSON.parse(localStorage.getItem(STORE)||'{}');
+   return {...defaults,...s,
+    tags:Array.isArray(s.tags)?s.tags:defaults.tags,
+    traits:Array.isArray(s.traits)?s.traits:defaults.traits,
+    times:Array.isArray(s.times)?s.times:[],
+    modes:Array.isArray(s.modes)?s.modes:[],
+    favoriteCharacters:Array.isArray(s.favoriteCharacters)?s.favoriteCharacters:[]
+   };
+ }catch{return structuredClone(defaults)}
 }
-function renderTierPreview(){
-  const root=$('#tierPreview');root.innerHTML='';
-  if(!state.tier){root.textContent='미입력';return}
-  const s=document.createElement('span');s.className='rank-preview';s.textContent=state.tier;root.appendChild(s);
+function save(){localStorage.setItem(STORE,JSON.stringify(state))}
+function esc(s){return String(s??'')}
+function imagePath(c){return c.image||`assets/characters/${c.resource}.png`}
+function getChar(name){return CHARACTERS.find(c=>c.name===name)}
+function fallbackLetters(name){return name.replace(/[^A-Za-z0-9가-힣]/g,'').slice(0,2).toUpperCase()||'ER'}
+
+async function loadCharacters(){
+ try{
+   const r=await fetch(`characters.json?v=${Date.now()}`,{cache:'no-store'});
+   if(!r.ok)throw new Error('characters.json');
+   CHARACTERS=await r.json();
+ }catch(e){console.warn(e);CHARACTERS=[]}
+ renderSubjectGrid();renderSelectedSubjects();renderSubjectPreview();
 }
-function setBroken(el){el.classList.add('broken')}
-function makeSubjectImg(c){
-  const img=document.createElement('img');img.alt=c.name;img.crossOrigin='anonymous';img.referrerPolicy='no-referrer';img.src=charImageUrl(c);
-  return img;
+
+function makeLocalImage(c, cls=''){
+ const img=document.createElement('img');img.alt=c.name;img.className=cls;img.src=imagePath(c);
+ return img;
 }
+
 function renderSubjectGrid(){
-  const q=($('#subjectSearch')?.value||'').trim().toLowerCase();
-  const root=$('#subjectGrid');root.innerHTML='';
-  CHARACTER_DATA.filter(c=>c.name.toLowerCase().includes(q)).forEach(c=>{
-    const b=document.createElement('button');b.type='button';b.className='subject-card'+(state.favoriteCharacters.includes(c.name)?' selected':'');
-    const img=makeSubjectImg(c);img.addEventListener('error',()=>setBroken(b));
-    const fb=document.createElement('span');fb.className='subject-fallback';fb.textContent=c.name.slice(0,2).toUpperCase();
-    const name=document.createElement('b');name.textContent=c.name;
-    b.append(img,fb,name);
-    b.addEventListener('click',()=>toggleSubject(c.name));
-    root.appendChild(b);
-  });
-  $('#subjectCount').textContent=`${state.favoriteCharacters.length} / ${MAX_SUBJECTS}`;
+ const root=$('#subjectGrid'); if(!root)return;
+ const q=$('#subjectSearch').value.trim().toLowerCase();
+ root.innerHTML='';
+ const filtered=CHARACTERS.filter(c=>c.name.toLowerCase().includes(q));
+ filtered.forEach(c=>{
+   const b=document.createElement('button');b.type='button';
+   b.className='subject-card'+(state.favoriteCharacters.includes(c.name)?' selected':'');
+   const img=makeLocalImage(c);
+   const fb=document.createElement('span');fb.className='subject-fallback';fb.textContent=fallbackLetters(c.name);
+   img.addEventListener('error',()=>b.classList.add('broken'));
+   const n=document.createElement('b');n.textContent=c.name;
+   b.append(img,fb,n); b.addEventListener('click',()=>toggleSubject(c.name)); root.appendChild(b);
+ });
+ $('#subjectCount').textContent=`${state.favoriteCharacters.length} / ${MAX_SUBJECTS}`;
 }
+
 function toggleSubject(name){
-  const i=state.favoriteCharacters.indexOf(name);
-  if(i>=0)state.favoriteCharacters.splice(i,1);
-  else if(state.favoriteCharacters.length<MAX_SUBJECTS)state.favoriteCharacters.push(name);
-  else{alert(`선호 실험체는 최대 ${MAX_SUBJECTS}명까지 선택할 수 있습니다.`);return}
-  renderSubjectGrid();renderSelectedSubjects();sync();
+ const i=state.favoriteCharacters.indexOf(name);
+ if(i>=0)state.favoriteCharacters.splice(i,1);
+ else if(state.favoriteCharacters.length<MAX_SUBJECTS)state.favoriteCharacters.push(name);
+ else return alert(`선호 실험체는 최대 ${MAX_SUBJECTS}명까지 선택할 수 있습니다.`);
+ renderSubjectGrid();renderSelectedSubjects();sync();
 }
 function renderSelectedSubjects(){
-  const root=$('#selectedSubjects');root.innerHTML='';
-  state.favoriteCharacters.forEach(name=>{
-    const c=getCharacter(name);if(!c)return;
-    const chip=document.createElement('span');chip.className='selected-subject-chip';
-    const img=makeSubjectImg(c);const txt=document.createElement('span');txt.textContent=name;
-    const x=document.createElement('button');x.type='button';x.textContent='×';x.addEventListener('click',()=>toggleSubject(name));
-    chip.append(img,txt,x);root.appendChild(chip);
-  });
+ const root=$('#selectedSubjects');root.innerHTML='';
+ state.favoriteCharacters.forEach(name=>{
+   const c=getChar(name);if(!c)return;
+   const chip=document.createElement('span');chip.className='selected-subject-chip';
+   const img=makeLocalImage(c);const t=document.createElement('span');t.textContent=name;
+   const x=document.createElement('button');x.type='button';x.textContent='×';x.onclick=()=>toggleSubject(name);
+   chip.append(img,t,x);root.appendChild(chip);
+ });
 }
 function renderSubjectPreview(){
-  const root=$('#favoriteCharactersPreview');root.innerHTML='';
-  if(!state.favoriteCharacters.length){root.textContent='미입력';return}
-  state.favoriteCharacters.forEach(name=>{
-    const c=getCharacter(name);if(!c)return;
-    const item=document.createElement('span');item.className='subject-preview-item';
-    const img=makeSubjectImg(c);const lab=document.createElement('span');lab.textContent=name;
-    item.append(img,lab);root.appendChild(item);
-  });
+ const root=$('#favoriteCharactersPreview');root.innerHTML='';
+ if(!state.favoriteCharacters.length){root.textContent='미입력';return}
+ state.favoriteCharacters.forEach(name=>{
+   const c=getChar(name);if(!c)return;
+   const item=document.createElement('span');item.className='subject-preview-item';
+   const img=makeLocalImage(c);const t=document.createElement('span');t.textContent=name;
+   item.append(img,t);root.appendChild(item);
+ });
+}
+function makeRow(value,onInput,onDelete){
+ const row=document.createElement('div');row.className='row-item';
+ const input=document.createElement('input');input.type='text';input.maxLength=24;input.value=value;input.oninput=e=>onInput(e.target.value);
+ const del=document.createElement('button');del.type='button';del.className='icon-btn';del.textContent='×';del.onclick=onDelete;
+ row.append(input,del);return row;
+}
+function renderEditors(){
+ const t=$('#tagEditor');t.innerHTML='';
+ state.tags.forEach((v,i)=>t.appendChild(makeRow(v,x=>{state.tags[i]=x;sync()},()=>{state.tags.splice(i,1);renderEditors();sync()})));
+ const r=$('#traitEditor');r.innerHTML='';
+ state.traits.forEach((v,i)=>r.appendChild(makeRow(v,x=>{state.traits[i]=x;sync()},()=>{state.traits.splice(i,1);renderEditors();sync()})));
+}
+function hydrate(){
+ ['nickname','handle','headline','tier','likes','dislikes','bio','accentColor','bgColor','cardColor','textColor'].forEach(id=>$('#'+id).value=state[id]??'');
+ $$('#timeEditor input').forEach(x=>x.checked=state.times.includes(x.value));
+ $$('#modeEditor input').forEach(x=>x.checked=state.modes.includes(x.value));
+ $$('#genderEditor input').forEach(x=>x.checked=x.value===state.gender);
+ $$('#discordEditor input').forEach(x=>x.checked=x.value===state.discord);
+ if(state.avatar)showAvatar(state.avatar);
+}
+function showAvatar(src){
+ const img=$('#avatarPreview');img.src=src;img.hidden=false;$('#avatarFallback').hidden=true;
+}
+function setCss(){
+ document.documentElement.style.setProperty('--accent',state.accentColor);
+ document.documentElement.style.setProperty('--accent2',lighten(state.accentColor,.28));
+ document.documentElement.style.setProperty('--page',state.bgColor);
+ document.documentElement.style.setProperty('--page-dark',darken(state.bgColor,.48));
+ document.documentElement.style.setProperty('--card',state.cardColor);
+ document.documentElement.style.setProperty('--text',state.textColor);
+ document.querySelector('meta[name="theme-color"]').content=state.bgColor;
+}
+function sync(){
+ state.nickname=$('#nickname').value;state.handle=$('#handle').value;state.headline=$('#headline').value;state.tier=$('#tier').value;
+ state.likes=$('#likes').value;state.dislikes=$('#dislikes').value;state.bio=$('#bio').value;
+ state.accentColor=$('#accentColor').value;state.bgColor=$('#bgColor').value;state.cardColor=$('#cardColor').value;state.textColor=$('#textColor').value;
+ state.gender=$('#genderEditor input:checked')?.value||'비공';
+ state.discord=$('#discordEditor input:checked')?.value||'';
+ state.times=$$('#timeEditor input:checked').map(x=>x.value);
+ state.modes=$$('#modeEditor input:checked').map(x=>x.value);
+ setCss();
+ $('#nicknamePreview').textContent=state.nickname||'닉네임';
+ $('#handlePreview').textContent=state.handle||'@username';
+ $('#headlinePreview').textContent=state.headline||'한줄 소개를 입력해보세요.';
+ $('#tierPreview').textContent=state.tier||'미입력';
+ $('#genderPreview').textContent=state.gender||'비공';
+ $('#discordPreview').textContent=state.discord||'미입력';
+ $('#likesPreview').textContent=state.likes||'미입력';
+ $('#dislikesPreview').textContent=state.dislikes||'미입력';
+ $('#bioPreview').textContent=state.bio||'편하게 자기소개를 적어보세요.';
+ renderSubjectPreview();
+ const tp=$('#tagPreview');tp.innerHTML='';state.tags.filter(Boolean).forEach(v=>{const s=document.createElement('span');s.className='chip';s.textContent='#'+v;tp.appendChild(s)});if(!state.tags.some(Boolean))tp.textContent='미입력';
+ const tr=$('#traitPreview');tr.innerHTML='';state.traits.filter(Boolean).forEach(v=>{const li=document.createElement('li');li.textContent=v;tr.appendChild(li)});if(!state.traits.some(Boolean))tr.innerHTML='<li>미입력</li>';
+ const times=$('#timePreview');times.innerHTML='';if(!state.times.length)times.textContent='미입력';else state.times.forEach(v=>{const s=document.createElement('span');s.className='time-pill';s.textContent=v;times.appendChild(s)});
+ const modes=$('#modePreview');modes.innerHTML='';if(!state.modes.length)modes.textContent='미입력';else state.modes.forEach(v=>{const s=document.createElement('span');s.className='mode-pill';s.textContent=v;modes.appendChild(s)});
+ save();
+}
+function rgbToHex(r,g,b){return '#'+[r,g,b].map(v=>Math.max(0,Math.min(255,v)).toString(16).padStart(2,'0')).join('')}
+function hexToRgb(hex){const n=parseInt(hex.slice(1),16);return[(n>>16)&255,(n>>8)&255,n&255]}
+function mix(hex,target,amount){const a=hexToRgb(hex),b=hexToRgb(target);return rgbToHex(...a.map((v,i)=>Math.round(v+(b[i]-v)*amount)))}
+function lighten(hex,a){return mix(hex,'#ffffff',a)}
+function darken(hex,a){return mix(hex,'#000000',a)}
+function perceived([r,g,b]){return .2126*r+.7152*g+.0722*b}
+
+function dominantColor(img){
+ const c=document.createElement('canvas'),ctx=c.getContext('2d',{willReadFrequently:true});c.width=48;c.height=48;
+ ctx.drawImage(img,0,0,48,48);
+ const d=ctx.getImageData(0,0,48,48).data, bins=new Map();
+ for(let i=0;i<d.length;i+=4){
+   if(d[i+3]<200)continue;
+   const rgb=[d[i],d[i+1],d[i+2]];
+   const lum=perceived(rgb); if(lum<28||lum>238)continue;
+   // 32-step color quantization: near-identical pixels count together.
+   const q=rgb.map(v=>Math.min(255,Math.round(v/32)*32));
+   const sat=Math.max(...q)-Math.min(...q); if(sat<18)continue;
+   const key=q.join(',');
+   bins.set(key,(bins.get(key)||0)+1);
+ }
+ let best=null,count=-1;
+ for(const [k,v] of bins){if(v>count){count=v;best=k}}
+ if(!best)return '#7967ff';
+ return rgbToHex(...best.split(',').map(Number));
+}
+function applyAvatarPalette(img){
+ try{
+   const main=dominantColor(img);
+   // Keep enough saturation/contrast for a page background.
+   state.accentColor=main;
+   state.bgColor=mix(main, perceived(hexToRgb(main))>150?'#171923':'#ffffff', .30);
+   if(perceived(hexToRgb(state.bgColor))>150)state.bgColor=darken(state.bgColor,.48);
+   $('#accentColor').value=state.accentColor;$('#bgColor').value=state.bgColor;
+   $('#colorStatus').textContent=`대표색 ${main} 감지 → 배경과 포인트 색상에 적용했습니다.`;
+   sync();
+ }catch(e){console.warn('색상 추출 실패',e)}
 }
 
-let state=loadState();
-function loadState(){try{const saved=JSON.parse(localStorage.getItem(stateKey)||'{}');return{...defaults,...saved,tags:saved.tags||defaults.tags,traits:saved.traits||defaults.traits,times:saved.times||[],modes:saved.modes||[],favoriteCharacters:Array.isArray(saved.favoriteCharacters)?saved.favoriteCharacters:(saved.favoriteCharacters?[saved.favoriteCharacters]:[])}}catch{return structuredClone(defaults)}}
-function saveState(){localStorage.setItem(stateKey,JSON.stringify(state))}
-function renderEditors(){const t=$('#tagEditor');t.innerHTML='';state.tags.forEach((v,i)=>t.appendChild(makeTextRow(v,x=>{state.tags[i]=x;sync()},()=>{state.tags.splice(i,1);renderEditors();sync()})));const r=$('#traitEditor');r.innerHTML='';state.traits.forEach((v,i)=>r.appendChild(makeTextRow(v,x=>{state.traits[i]=x;sync()},()=>{state.traits.splice(i,1);renderEditors();sync()})))}
-function makeTextRow(value,onInput,onDelete){const row=document.createElement('div');row.className='row-item';const input=document.createElement('input');input.type='text';input.value=value;input.maxLength=24;input.addEventListener('input',e=>onInput(e.target.value));const del=document.createElement('button');del.type='button';del.className='icon-btn';del.textContent='×';del.title='삭제';del.addEventListener('click',onDelete);row.append(input,del);return row}
-function hydrateInputs(){['nickname','handle','headline','likes','dislikes','bio','cardTitle','accentColor','bgColor','cardColor','textColor'].forEach(id=>{const el=$('#'+id);if(el)el.value=state[id]??''});document.querySelectorAll('#timeEditor input').forEach(cb=>cb.checked=state.times.includes(cb.value));document.querySelectorAll('#modeEditor input').forEach(cb=>cb.checked=state.modes.includes(cb.value));document.querySelectorAll('#genderEditor input').forEach(r=>r.checked=r.value===state.gender);document.querySelectorAll('#discordEditor input').forEach(r=>r.checked=r.value===state.discord);if(state.avatar)showAvatar(state.avatar);renderTierPicker();renderSubjectGrid();renderSelectedSubjects()}
-function serialFromText(text){let n=0;for(const c of(text||'TCS'))n=(n*31+c.charCodeAt(0))%10000;return String(n).padStart(4,'0')}
-function sync(){state.nickname=$('#nickname').value;state.handle=$('#handle').value;state.headline=$('#headline').value;state.gender=document.querySelector('#genderEditor input:checked')?.value||'비공';state.discord=document.querySelector('#discordEditor input:checked')?.value||'';state.modes=[...document.querySelectorAll('#modeEditor input:checked')].map(x=>x.value);state.likes=$('#likes').value;state.dislikes=$('#dislikes').value;state.bio=$('#bio').value;state.cardTitle=$('#cardTitle').value;state.accentColor=$('#accentColor').value;state.bgColor=$('#bgColor').value;state.cardColor=$('#cardColor').value;state.textColor=$('#textColor').value;state.times=[...document.querySelectorAll('#timeEditor input:checked')].map(x=>x.value);
-document.documentElement.style.setProperty('--accent',state.accentColor);document.documentElement.style.setProperty('--page',state.bgColor);document.documentElement.style.setProperty('--card',state.cardColor);document.documentElement.style.setProperty('--text',state.textColor);
-$('#nicknamePreview').textContent=state.nickname||'닉네임';$('#handlePreview').textContent=state.handle||'@username';$('#headlinePreview').textContent=state.headline||'한줄 소개를 입력해보세요.';renderTierPreview();renderSubjectPreview();$('#genderPreview').textContent=state.gender||'비공';$('#discordPreview').textContent=state.discord||'미입력';const mp=$('#modePreview');mp.innerHTML='';if(!state.modes.length)mp.textContent='미입력';else state.modes.forEach(m=>{const s=document.createElement('span');s.className='mode-pill';s.textContent=m;mp.appendChild(s)});$('#cardTitlePreview').textContent=state.cardTitle||'트친소';$('#likesPreview').textContent=state.likes||'미입력';$('#dislikesPreview').textContent=state.dislikes||'미입력';$('#bioPreview').textContent=state.bio||'편하게 자기소개를 적어보세요.';$('#serialPreview').textContent=serialFromText(state.handle||state.nickname);
-$('#tagPreview').innerHTML='';state.tags.filter(Boolean).forEach(tag=>{const s=document.createElement('span');s.className='chip';s.textContent='#'+tag;$('#tagPreview').appendChild(s)});if(!state.tags.some(Boolean))$('#tagPreview').textContent='미입력';
-$('#traitPreview').innerHTML='';state.traits.filter(Boolean).forEach(trait=>{const li=document.createElement('li');li.textContent=trait;$('#traitPreview').appendChild(li)});if(!state.traits.some(Boolean))$('#traitPreview').innerHTML='<li>미입력</li>';
-const time=$('#timePreview');time.innerHTML='';if(!state.times.length)time.textContent='미입력';else state.times.forEach(t=>{const s=document.createElement('span');s.className='time-pill';s.textContent=t;time.appendChild(s)});saveState()}
-function showAvatar(src){const img=$('#avatarPreview');img.src=src;img.hidden=false;$('#avatarFallback').hidden=true}
-['nickname','handle','headline','likes','dislikes','bio','cardTitle','accentColor','bgColor','cardColor','textColor'].forEach(id=>$('#'+id).addEventListener('input',sync));document.querySelectorAll('#timeEditor input').forEach(cb=>cb.addEventListener('change',sync));document.querySelectorAll('#modeEditor input,#genderEditor input,#discordEditor input').forEach(el=>el.addEventListener('change',sync));
+['nickname','handle','headline','tier','likes','dislikes','bio','accentColor','bgColor','cardColor','textColor'].forEach(id=>$('#'+id).addEventListener('input',sync));
+$$('#timeEditor input,#modeEditor input,#genderEditor input,#discordEditor input').forEach(x=>x.addEventListener('change',sync));
 $('#subjectSearch').addEventListener('input',renderSubjectGrid);
-$('#addTagBtn').addEventListener('click',()=>{state.tags.push('새 태그');renderEditors();sync()});$('#addTraitBtn').addEventListener('click',()=>{state.traits.push('새 항목');renderEditors();sync()});
-$('#avatarInput').addEventListener('change',e=>{const file=e.target.files?.[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{state.avatar=reader.result;showAvatar(state.avatar);saveState()};reader.readAsDataURL(file)});
-$('#resetBtn').addEventListener('click',()=>{if(!confirm('모든 입력값을 초기화할까요?'))return;state=structuredClone(defaults);localStorage.removeItem(stateKey);hydrateInputs();renderEditors();$('#avatarPreview').hidden=true;$('#avatarFallback').hidden=false;$('#avatarInput').value='';sync()});
-$('#downloadBtn').addEventListener('click',async()=>{const btn=$('#downloadBtn'),old=btn.textContent;btn.disabled=true;btn.textContent='이미지 만드는 중...';try{if(document.fonts?.ready)await document.fonts.ready;const canvas=await html2canvas($('#card'),{scale:2,backgroundColor:null,useCORS:true,allowTaint:false});const link=document.createElement('a');const safe=(state.nickname||'trichinso').replace(/[\\/:*?"<>|]/g,'_');link.download=`${safe}-card.png`;link.href=canvas.toDataURL('image/png');link.click()}catch(err){console.error(err);alert('이미지 저장에 실패했습니다.')}finally{btn.disabled=false;btn.textContent=old}});
-hydrateInputs();renderEditors();renderTierPicker();renderSubjectGrid();renderSelectedSubjects();sync();
+$('#addTagBtn').onclick=()=>{state.tags.push('새 태그');renderEditors();sync()};
+$('#addTraitBtn').onclick=()=>{state.traits.push('새 항목');renderEditors();sync()};
+$('#avatarInput').addEventListener('change',e=>{
+ const file=e.target.files?.[0];if(!file)return;
+ const rd=new FileReader();
+ rd.onload=()=>{
+   state.avatar=rd.result;showAvatar(state.avatar);save();
+   const img=new Image();img.onload=()=>applyAvatarPalette(img);img.src=state.avatar;
+ };rd.readAsDataURL(file);
+});
+$('#resetBtn').onclick=()=>{
+ if(!confirm('모든 입력값을 초기화할까요?'))return;
+ state=structuredClone(defaults);localStorage.removeItem(STORE);hydrate();renderEditors();renderSelectedSubjects();renderSubjectGrid();
+ $('#avatarPreview').hidden=true;$('#avatarFallback').hidden=false;$('#avatarInput').value='';$('#colorStatus').textContent='프로필 이미지를 올리면 가장 많이 쓰인 색을 자동으로 추출합니다.';sync();
+};
+$('#downloadBtn').onclick=async()=>{
+ const btn=$('#downloadBtn'),old=btn.textContent;btn.disabled=true;btn.textContent='이미지 생성 중...';
+ try{
+   if(document.fonts?.ready)await document.fonts.ready;
+   await Promise.all($$('#card img').map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));
+   const canvas=await html2canvas($('#card'),{scale:2,backgroundColor:null,useCORS:true,allowTaint:false});
+   const a=document.createElement('a');a.download=`${(state.nickname||'ER-TCS').replace(/[\\/:*?"<>|]/g,'_')}.png`;a.href=canvas.toDataURL('image/png');a.click();
+ }catch(e){console.error(e);alert('이미지 저장에 실패했습니다.')}
+ finally{btn.disabled=false;btn.textContent=old}
+};
+
+hydrate();renderEditors();setCss();sync();loadCharacters();
