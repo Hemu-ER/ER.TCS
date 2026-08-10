@@ -228,3 +228,29 @@ input[type=text],textarea,input[type=file]{
     background-position:center center !important;
   }
 }
+
+
+/* v5.5 — 슈린 포커스 사이드 레일 */
+.side-rail{
+  background:
+    linear-gradient(rgba(8,10,22,.42), rgba(8,10,22,.42)),
+    url("assets/season12.jpg") 20% 48% / auto 100% no-repeat !important;
+  background-color:#11101d !important;
+}
+.side-rail:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(to right, rgba(6,7,16,.10), rgba(6,7,16,.34));
+  box-shadow:
+    inset -8px 0 16px rgba(0,0,0,.28),
+    inset 0 0 18px rgba(0,0,0,.12);
+}
+@media(max-width:650px){
+  .side-rail{
+    background:
+      linear-gradient(rgba(8,10,22,.46), rgba(8,10,22,.46)),
+      url("assets/season12.jpg") 20% 48% / auto 100% no-repeat !important;
+  }
+}
