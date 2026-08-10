@@ -199,3 +199,32 @@ input[type=text],textarea,input[type=file]{
   .side-rail small{font-size:6px}
   .identity h3{font-size:22px}
 }
+
+
+/* v5.4 — 시즌 이미지 사이드 레일 */
+.side-rail{
+  padding:0 !important;
+  background:
+    linear-gradient(to bottom, rgba(8,12,28,.04), rgba(8,12,28,.18)),
+    url("assets/season12.jpg") center center / cover no-repeat !important;
+  border-right:2px solid var(--text);
+  overflow:hidden;
+}
+.side-rail b,
+.side-rail span,
+.side-rail small{
+  display:none !important;
+}
+.side-rail:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  box-shadow:inset -7px 0 15px rgba(0,0,0,.14);
+}
+@media(max-width:650px){
+  .side-rail{
+    padding:0 !important;
+    background-position:center center !important;
+  }
+}
