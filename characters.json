@@ -120,7 +120,7 @@
     "image": "assets/characters/Darko.png"
   },
   {
-    "name": "Debi & Marlene",
+    "name": "DebiMarlene",
     "resource": "DebiMarlene",
     "image": "assets/characters/DebiMarlene.png"
   },
@@ -290,7 +290,7 @@
     "image": "assets/characters/Leon.png"
   },
   {
-    "name": "Li Dailin",
+    "name": "LiDailin",
     "resource": "LiDailin",
     "image": "assets/characters/LiDailin.png"
   },
@@ -300,14 +300,9 @@
     "image": "assets/characters/Luke.png"
   },
   {
-    "name": "Lucia",
-    "resource": "Lucia",
-    "image": "assets/characters/Lucia.png"
-  },
-  {
-    "name": "Ly Anh",
-    "resource": "LyAnh",
-    "image": "assets/characters/LyAnh.png"
+    "name": "Lyanh",
+    "resource": "Lyanh",
+    "image": "assets/characters/Lyanh.png"
   },
   {
     "name": "Magnus",
@@ -345,9 +340,9 @@
     "image": "assets/characters/Nathapon.png"
   },
   {
-    "name": "NiaH",
-    "resource": "NiaH",
-    "image": "assets/characters/NiaH.png"
+    "name": "Niah",
+    "resource": "Niah",
+    "image": "assets/characters/Niah.png"
   },
   {
     "name": "Nicky",
@@ -440,9 +435,9 @@
     "image": "assets/characters/Yuki.png"
   },
   {
-    "name": "Yumin",
-    "resource": "Yumin",
-    "image": "assets/characters/Yumin.png"
+    "name": "YuMin",
+    "resource": "YuMin",
+    "image": "assets/characters/YuMin.png"
   },
   {
     "name": "Zahir",
