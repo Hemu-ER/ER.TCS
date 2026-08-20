@@ -295,6 +295,11 @@
     "image": "assets/characters/LiDailin.png"
   },
   {
+    "name": "Lucia",
+    "resource": "Lucia",
+    "image": "assets/characters/Lucia.png"
+  },
+  {
     "name": "Luke",
     "resource": "Luke",
     "image": "assets/characters/Luke.png"
