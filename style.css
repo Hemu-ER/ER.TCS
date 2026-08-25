@@ -486,15 +486,15 @@ body[data-template="dossier"] #card{display:none !important}
   position:absolute;left:9px;bottom:8px;z-index:3;padding:3px 5px;
   font-size:7px;letter-spacing:.16em;color:#dce6ef;background:rgba(7,11,17,.78);
 }
-.dossier-code-label{margin:18px 0 5px;font-size:8px;color:#8498aa;letter-spacing:.12em}
+.dossier-code-label{margin:18px 0 5px;font-size:10px;color:#8498aa;letter-spacing:.12em}
 .dossier-code{
   padding:9px 10px;color:#1b222c;background:#dce2e8;
-  font-family:monospace;font-size:19px;letter-spacing:.06em;
+  font-family:monospace;font-size:24px;letter-spacing:.06em;
   border-left:4px solid #d5a847;
 }
 .dossier-field{margin-top:10px;padding:8px 9px;border:1px solid rgba(185,205,220,.13);background:rgba(45,54,66,.48)}
-.dossier-field small{display:block;font-size:7px;color:#8294a7;margin-bottom:4px}
-.dossier-field strong{display:block;font-size:13px;font-weight:500;word-break:break-word}
+.dossier-field small{display:block;font-size:9px;color:#8294a7;margin-bottom:4px}
+.dossier-field strong{display:block;font-size:16px;font-weight:500;word-break:break-word}
 .dossier-risk{
   margin-top:12px;padding:7px 9px;display:flex;justify-content:space-between;align-items:center;
   border:1px solid rgba(210,168,71,.3);background:rgba(49,42,26,.32);
