@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#171923">
   <title>이터널 리턴 트친소 메이커</title>
   <meta name="description" content="이터널 리턴 유저를 위한 트친소 카드 생성기">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
   <div class="pixel-bg" aria-hidden="true"></div>
@@ -118,7 +118,21 @@
 
       <section class="preview-panel">
         <div class="preview-sticky">
-          <div class="preview-caption"><span>▶ 카드 미리보기</span><span>● 실시간</span></div>
+          <div class="template-toolbar" aria-label="카드 템플릿 선택">
+  <div>
+    <span class="template-label">카드 템플릿</span>
+    <strong>원하는 분위기로 골라보세요</strong>
+  </div>
+  <div class="template-buttons">
+    <button id="templateClassic" class="template-btn active" type="button" data-template="classic">
+      <b>01</b><span>픽셀 게임</span><small>기본 트친소</small>
+    </button>
+    <button id="templateDossier" class="template-btn" type="button" data-template="dossier">
+      <b>02</b><span>VF 분석 기록</span><small>실험체 분석실</small>
+    </button>
+  </div>
+</div>
+<div class="preview-caption"><span>▶ 카드 미리보기</span><span>● 실시간</span></div>
 
           <article id="card" class="profile-card">
             <div class="scanlines"></div>
@@ -194,7 +208,78 @@
             </div>
           </article>
 
-          <button id="downloadBtn" class="pixel-button primary" type="button">PNG로 저장 ▷</button>
+          <article id="dossierCard" class="dossier-card template-card" aria-label="VF 분석 기록 템플릿">
+            <div class="dossier-grid" aria-hidden="true"></div>
+            <div class="dossier-glow" aria-hidden="true"></div>
+            <div class="dossier-topline"><span>VF RESEARCH // ER.TCS</span><span>SECURE RECORD</span></div>
+            <div class="dossier-content">
+              <aside class="dossier-profile">
+                <div class="dossier-avatar">
+                  <img id="dossierAvatar" alt="프로필 이미지" hidden>
+                  <div id="dossierAvatarFallback">?</div>
+                  <span>PROFILE</span>
+                </div>
+                <div class="dossier-code-label">실험체 코드</div>
+                <div id="dossierCode" class="dossier-code">ER-000</div>
+                <div class="dossier-field">
+                  <small>닉네임</small><strong id="dossierNickname">닉네임</strong>
+                </div>
+                <div class="dossier-field">
+                  <small>X 아이디</small><strong id="dossierHandle">@username</strong>
+                </div>
+                <div class="dossier-field">
+                  <small>티어</small><strong id="dossierTier">미입력</strong>
+                </div>
+                <div class="dossier-risk"><span>활동 위험도</span><b id="dossierRisk">A</b></div>
+              </aside>
+
+              <section class="dossier-main">
+                <header class="dossier-title">
+                  <div>
+                    <small>개인 기록 / LUMIA ISLAND</small>
+                    <h3 id="dossierTitle">닉네임</h3>
+                    <p id="dossierHeadline">한줄 소개를 입력해보세요.</p>
+                  </div>
+                  <div class="dossier-percent"><small>분석률</small><strong>100<span>%</span></strong><i></i></div>
+                </header>
+
+                <section class="dossier-stats">
+                  <div><b>성별</b><strong id="dossierGender">비공</strong></div>
+                  <div><b>디스코드</b><strong id="dossierDiscord">미입력</strong></div>
+                  <div><b>게임 종류</b><strong id="dossierModes">미입력</strong></div>
+                  <div><b>접속 시간</b><strong id="dossierTimes">미입력</strong></div>
+                </section>
+
+                <section class="dossier-panel">
+                  <div class="dossier-panel-head"><span>▣ 선호 실험체</span><b id="dossierSubjectCount">0 / 5</b></div>
+                  <div id="dossierSubjects" class="dossier-subjects"><span>미입력</span></div>
+                </section>
+
+                <section class="dossier-panel log-panel">
+                  <div class="dossier-panel-head"><span>▣ 관찰 로그</span><b>LIVE</b></div>
+                  <div class="dossier-log">
+                    <p><em>01</em><strong>관심사</strong><span id="dossierTags">미입력</span></p>
+                    <p><em>02</em><strong>활동 성향</strong><span id="dossierTraits">미입력</span></p>
+                    <p><em>03</em><strong>좋아요</strong><span id="dossierLikes">미입력</span></p>
+                    <p><em>04</em><strong>싫어요</strong><span id="dossierDislikes">미입력</span></p>
+                  </div>
+                </section>
+
+                <section class="dossier-voice">
+                  <div class="voice-title"><span>음성 기록 / 자유 소개</span><i>● REC</i></div>
+                  <p id="dossierBio">편하게 자기소개를 적어보세요.</p>
+                </section>
+
+                <footer class="dossier-footer">
+                  <span>ER.TCS // LUMIA ISLAND</span>
+                  <div class="dossier-meter"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                  <b>NO. <span id="dossierNumber">001</span></b>
+                </footer>
+              </section>
+            </div>
+          </article>
+
+          <button id="downloadBtn" class="pixel-button primary" type="button">선택한 템플릿 PNG로 저장 ▷</button>
           <p class="save-note">2배 해상도 · 로컬 저장 · 프로필 대표색 자동 연동</p>
         </div>
       </section>
@@ -202,6 +287,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="script.js?v=5"></script>
+  <script src="script.js?v=7"></script>
 </body>
 </html>

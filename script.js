@@ -133,21 +133,71 @@ function setCss(){
 }
 
 function applyTemplate(){
- document.body.dataset.template=state.template||'classic';
- const classic=$('#templateClassic'), dossier=$('#templateDossier');
- if(classic)classic.classList.toggle('active',state.template==='classic');
- if(dossier)dossier.classList.toggle('active',state.template==='dossier');
+  const template=state.template==='dossier'?'dossier':'classic';
+  state.template=template;
+  document.body.dataset.template=template;
+  const classic=$('#templateClassic'), dossier=$('#templateDossier');
+  classic?.classList.toggle('active',template==='classic');
+  dossier?.classList.toggle('active',template==='dossier');
+  const classicCard=$('#card'), dossierCard=$('#dossierCard');
+  classicCard?.classList.toggle('active',template==='classic');
+  dossierCard?.classList.toggle('active',template==='dossier');
 }
 function installTemplatePicker(){
- if(document.querySelector('.template-switcher'))return;
- const caption=document.querySelector('.preview-caption');
- if(!caption)return;
- const wrap=document.createElement('div');wrap.className='template-switcher';
- wrap.innerHTML='<span class="template-label">카드 템플릿</span><button id="templateClassic" type="button">픽셀 게임</button><button id="templateDossier" type="button">VF 분석 기록</button>';
- caption.parentNode.insertBefore(wrap,caption);
- $('#templateClassic').onclick=()=>{state.template='classic';applyTemplate();save()};
- $('#templateDossier').onclick=()=>{state.template='dossier';applyTemplate();save()};
- applyTemplate();
+  const classic=$('#templateClassic'), dossier=$('#templateDossier');
+  if(!classic||!dossier)return;
+  classic.onclick=()=>{state.template='classic';applyTemplate();save();};
+  dossier.onclick=()=>{state.template='dossier';applyTemplate();save();};
+  applyTemplate();
+}
+function setText(id,value,fallback='미입력'){
+  const el=$('#'+id); if(el)el.textContent=value||fallback;
+}
+function renderDossier(){
+  const names=state.favoriteCharacters.filter(Boolean);
+  setText('dossierNickname',state.nickname,'닉네임');
+  setText('dossierTitle',state.nickname,'닉네임');
+  setText('dossierHandle',state.handle,'@username');
+  setText('dossierHeadline',state.headline,'한줄 소개를 입력해보세요.');
+  setText('dossierTier',state.tier,'미입력');
+  setText('dossierGender',state.gender,'비공');
+  setText('dossierDiscord',state.discord,'미입력');
+  setText('dossierModes',state.modes.join(' · '),'미입력');
+  setText('dossierTimes',state.times.join(' · '),'미입력');
+  setText('dossierTags',state.tags.filter(Boolean).join(' / '),'미입력');
+  setText('dossierTraits',state.traits.filter(Boolean).join(' / '),'미입력');
+  setText('dossierLikes',state.likes,'미입력');
+  setText('dossierDislikes',state.dislikes,'미입력');
+  setText('dossierBio',state.bio,'편하게 자기소개를 적어보세요.');
+  setText('dossierSubjectCount',`${names.length} / 5`,'0 / 5');
+  const root=$('#dossierSubjects');
+  if(root){
+    root.innerHTML='';
+    if(!names.length)root.innerHTML='<span>미입력</span>';
+    else names.forEach(name=>{
+      const c=getChar(name);
+      const item=document.createElement('div'); item.className='dossier-subject';
+      if(c){
+        const img=makeLocalImage(c); item.appendChild(img);
+        const t=document.createElement('strong');t.textContent=c.displayName;item.appendChild(t);
+      }else{
+        const t=document.createElement('strong');t.textContent=name;item.appendChild(t);
+      }
+      root.appendChild(item);
+    });
+  }
+  const codeSource=(names[0]||state.nickname||'ER').replace(/[^A-Za-z0-9가-힣]/g,'');
+  const codeNum=Math.abs([...codeSource].reduce((a,ch)=>((a*31+ch.charCodeAt(0))|0),7))%100000;
+  setText('dossierCode',`ER-${String(codeNum).padStart(5,'0')}`);
+  setText('dossierNumber',String((codeNum%999)+1).padStart(3,'0'));
+  const risk=names.length>=4?'S':names.length>=2?'A+':'A';
+  setText('dossierRisk',risk);
+  const avatar=$('#avatarPreview'), dAvatar=$('#dossierAvatar'), fallback=$('#dossierAvatarFallback');
+  if(state.avatar){
+    dAvatar.src=state.avatar;dAvatar.hidden=false;if(fallback)fallback.hidden=true;
+  }else{
+    dAvatar.hidden=true;if(fallback){fallback.hidden=false;fallback.textContent=fallbackLetters(state.nickname||'ER')}
+  }
 }
 function sync(){
  applyTemplate();
@@ -236,8 +286,8 @@ $('#downloadBtn').onclick=async()=>{
  const btn=$('#downloadBtn'),old=btn.textContent;btn.disabled=true;btn.textContent='이미지 생성 중...';
  try{
    if(document.fonts?.ready)await document.fonts.ready;
-   await Promise.all($$('#card img').map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));
-   const canvas=await html2canvas($('#card'),{scale:2,backgroundColor:null,useCORS:true,allowTaint:false});
+   await Promise.all($$('.template-card.active img').map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));
+   const canvas=await html2canvas($('.template-card.active'),{scale:2,backgroundColor:null,useCORS:true,allowTaint:false});
    const a=document.createElement('a');a.download=`${(state.nickname||'ER-TCS').replace(/[\\/:*?"<>|]/g,'_')}.png`;a.href=canvas.toDataURL('image/png');a.click();
  }catch(e){console.error(e);alert('이미지 저장에 실패했습니다. 새로고침 후 다시 시도해 주세요.\n\n오류: '+(e?.message||e))}
  finally{btn.disabled=false;btn.textContent=old}
