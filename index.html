@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#171923">
   <title>이터널 리턴 트친소 메이커</title>
   <meta name="description" content="이터널 리턴 유저를 위한 트친소 카드 생성기">
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
   <div class="pixel-bg" aria-hidden="true"></div>
@@ -63,7 +63,7 @@
           </div>
 
           <div class="option-group">
-            <div class="option-title"><span>게임 종류</span><small>다중 선택 가능</small></div>
+            <div class="option-title"><span>선호 게임 모드</span><small>다중 선택 가능</small></div>
             <div class="mode-grid" id="modeEditor">
               <label><input type="checkbox" value="일반"><span>일반</span></label>
               <label><input type="checkbox" value="랭크"><span>랭크</span></label>
@@ -84,7 +84,16 @@
         </section>
 
         <section class="editor-section">
-          <h2><i>05</i> 접속 시간</h2>
+          <h2><i>05</i> 활동 위험도</h2>
+          <div class="risk-editor-grid">
+            <label>이름<input id="riskLabel" type="text" maxlength="24" placeholder="예: 퇴근 후 파워"></label>
+            <label>랭크<input id="riskRank" type="text" maxlength="8" placeholder="예: A"></label>
+          </div>
+          <p class="tiny-note">원하는 이름과 랭크를 직접 정해서 트친소 분위기에 맞게 꾸밀 수 있습니다.</p>
+        </section>
+
+        <section class="editor-section">
+          <h2><i>06</i> 접속 시간</h2>
           <div class="check-grid" id="timeEditor">
             <label><input type="checkbox" value="아침"><span>아침</span></label>
             <label><input type="checkbox" value="낮"><span>낮</span></label>
@@ -94,18 +103,18 @@
         </section>
 
         <section class="editor-section">
-          <h2><i>06</i> 취향</h2>
+          <h2><i>07</i> 취향</h2>
           <label>좋아요<textarea id="likes" rows="3" maxlength="140" placeholder="예: 즐겜, 잡담, 듀오큐"></textarea></label>
           <label>싫어요<textarea id="dislikes" rows="3" maxlength="140" placeholder="예: 남탓, 과한 훈수"></textarea></label>
         </section>
 
         <section class="editor-section">
-          <h2><i>07</i> 자유 소개</h2>
+          <h2><i>08</i> 자유 소개</h2>
           <label><textarea id="bio" rows="5" maxlength="300" placeholder="편하게 자기소개를 적어보세요."></textarea></label>
         </section>
 
         <section class="editor-section">
-          <h2><i>08</i> 색상 보정</h2>
+          <h2><i>09</i> 색상 보정</h2>
           <div class="theme-row">
             <label>포인트<input id="accentColor" type="color" value="#7967ff"></label>
             <label>배경<input id="bgColor" type="color" value="#302a48"></label>
@@ -125,7 +134,7 @@
   </div>
   <div class="template-buttons">
     <button id="templateClassic" class="template-btn active" type="button" data-template="classic">
-      <b>01</b><span>픽셀 게임</span><small>기본 트친소</small>
+      <b>01</b><span>기본</span><small>기본 트친소</small>
     </button>
     <button id="templateDossier" class="template-btn" type="button" data-template="dossier">
       <b>02</b><span>VF 분석 기록</span><small>실험체 분석실</small>
@@ -182,7 +191,7 @@
 
               <section class="card-block two-col">
                 <div><h4>관심사</h4><div id="tagPreview" class="chips"></div></div>
-                <div><h4>활동 성향</h4><ul id="traitPreview" class="clean-list"></ul></div>
+                <div><h4>활동 성향</h4><ul id="traitPreview" class="clean-list"></ul><div class="classic-risk"><span id="riskLabelPreview">활동 위험도</span><b id="riskRankPreview">A</b></div></div>
               </section>
 
               <section class="card-block">
@@ -230,7 +239,7 @@
                 <div class="dossier-field">
                   <small>티어</small><strong id="dossierTier">미입력</strong>
                 </div>
-                <div class="dossier-risk"><span>활동 위험도</span><b id="dossierRisk">A</b></div>
+                <div class="dossier-risk"><span id="dossierRiskLabel">활동 위험도</span><b id="dossierRisk">A</b></div>
               </aside>
 
               <section class="dossier-main">
@@ -246,7 +255,7 @@
                 <section class="dossier-stats">
                   <div><b>성별</b><strong id="dossierGender">비공</strong></div>
                   <div><b>디스코드</b><strong id="dossierDiscord">미입력</strong></div>
-                  <div><b>게임 종류</b><strong id="dossierModes">미입력</strong></div>
+                  <div><b>선호 게임 모드</b><strong id="dossierModes">미입력</strong></div>
                   <div><b>접속 시간</b><strong id="dossierTimes">미입력</strong></div>
                 </section>
 
@@ -287,6 +296,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="script.js?v=7"></script>
+  <script src="script.js?v=8"></script>
 </body>
 </html>

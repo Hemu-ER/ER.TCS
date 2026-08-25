@@ -572,3 +572,12 @@ body[data-template="dossier"] .pixel-corner.pc2{display:none}
   .dossier-percent{width:100%}
   .dossier-footer{margin-left:-14px;margin-right:-14px}
 }
+
+
+/* v5.8 custom activity risk */
+.risk-editor-grid{display:grid;grid-template-columns:1fr 110px;gap:10px}
+.classic-risk{margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 9px;border:1px solid var(--text);background:rgba(121,103,255,.08)}
+.classic-risk span{font-size:9px;font-weight:500;color:var(--muted)}
+.classic-risk b{min-width:30px;text-align:center;padding:3px 6px;background:var(--text);color:#fff;font-size:12px;font-weight:500}
+.dossier-risk span{max-width:145px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:650px){.risk-editor-grid{grid-template-columns:1fr 90px}.classic-risk{margin-top:8px}}

@@ -7,7 +7,7 @@ function displayName(c){return KO_NAMES[c.sourceName]||KO_NAMES[c.name]||KO_NAME
 const defaults={
  nickname:'',handle:'',headline:'',tier:'',gender:'비공',discord:'',modes:[],
  tags:['이터널 리턴','게임','일상'],traits:['즐겜 위주','멘션 좋아함'],times:[],
- likes:'',dislikes:'',bio:'',avatar:'',
+ likes:'',dislikes:'',bio:'',avatar:'',riskLabel:'활동 위험도',riskRank:'A',
  accentColor:'#7967ff',bgColor:'#302a48',cardColor:'#fffdf7',textColor:'#1e1f28',
  favoriteCharacters:[],template:'classic'
 };
@@ -112,7 +112,7 @@ function renderEditors(){
  state.traits.forEach((v,i)=>r.appendChild(makeRow(v,x=>{state.traits[i]=x;sync()},()=>{state.traits.splice(i,1);renderEditors();sync()})));
 }
 function hydrate(){
- ['nickname','handle','headline','tier','likes','dislikes','bio','accentColor','bgColor','cardColor','textColor'].forEach(id=>$('#'+id).value=state[id]??'');
+ ['nickname','handle','headline','tier','likes','dislikes','bio','riskLabel','riskRank','accentColor','bgColor','cardColor','textColor'].forEach(id=>$('#'+id).value=state[id]??'');
  $$('#timeEditor input').forEach(x=>x.checked=state.times.includes(x.value));
  $$('#modeEditor input').forEach(x=>x.checked=state.modes.includes(x.value));
  $$('#genderEditor input').forEach(x=>x.checked=x.value===state.gender);
@@ -160,6 +160,8 @@ function renderDossier(){
   setText('dossierHandle',state.handle,'@username');
   setText('dossierHeadline',state.headline,'한줄 소개를 입력해보세요.');
   setText('dossierTier',state.tier,'미입력');
+  setText('dossierRiskLabel',state.riskLabel,'활동 위험도');
+  setText('dossierRisk',state.riskRank,'A');
   setText('dossierGender',state.gender,'비공');
   setText('dossierDiscord',state.discord,'미입력');
   setText('dossierModes',state.modes.join(' · '),'미입력');
@@ -190,8 +192,6 @@ function renderDossier(){
   const codeNum=Math.abs([...codeSource].reduce((a,ch)=>((a*31+ch.charCodeAt(0))|0),7))%100000;
   setText('dossierCode',`ER-${String(codeNum).padStart(5,'0')}`);
   setText('dossierNumber',String((codeNum%999)+1).padStart(3,'0'));
-  const risk=names.length>=4?'S':names.length>=2?'A+':'A';
-  setText('dossierRisk',risk);
   const avatar=$('#avatarPreview'), dAvatar=$('#dossierAvatar'), fallback=$('#dossierAvatarFallback');
   if(state.avatar){
     dAvatar.src=state.avatar;dAvatar.hidden=false;if(fallback)fallback.hidden=true;
@@ -202,7 +202,7 @@ function renderDossier(){
 function sync(){
  applyTemplate();
  state.nickname=$('#nickname').value;state.handle=$('#handle').value;state.headline=$('#headline').value;state.tier=$('#tier').value;
- state.likes=$('#likes').value;state.dislikes=$('#dislikes').value;state.bio=$('#bio').value;
+ state.likes=$('#likes').value;state.dislikes=$('#dislikes').value;state.bio=$('#bio').value;state.riskLabel=$('#riskLabel').value.trim()||'활동 위험도';state.riskRank=$('#riskRank').value.trim()||'A';
  state.accentColor=$('#accentColor').value;state.bgColor=$('#bgColor').value;state.cardColor=$('#cardColor').value;state.textColor=$('#textColor').value;
  state.gender=$('#genderEditor input:checked')?.value||'비공';
  state.discord=$('#discordEditor input:checked')?.value||'';
@@ -221,8 +221,10 @@ function sync(){
  renderSubjectPreview();
  const tp=$('#tagPreview');tp.innerHTML='';state.tags.filter(Boolean).forEach(v=>{const s=document.createElement('span');s.className='chip';s.textContent='#'+v;tp.appendChild(s)});if(!state.tags.some(Boolean))tp.textContent='미입력';
  const tr=$('#traitPreview');tr.innerHTML='';state.traits.filter(Boolean).forEach(v=>{const li=document.createElement('li');li.textContent=v;tr.appendChild(li)});if(!state.traits.some(Boolean))tr.innerHTML='<li>미입력</li>';
+ setText('riskLabelPreview',state.riskLabel,'활동 위험도');setText('riskRankPreview',state.riskRank,'A');
  const times=$('#timePreview');times.innerHTML='';if(!state.times.length)times.textContent='미입력';else state.times.forEach(v=>{const s=document.createElement('span');s.className='time-pill';s.textContent=v;times.appendChild(s)});
  const modes=$('#modePreview');modes.innerHTML='';if(!state.modes.length)modes.textContent='미입력';else state.modes.forEach(v=>{const s=document.createElement('span');s.className='mode-pill';s.textContent=v;modes.appendChild(s)});
+ renderDossier();
  save();
 }
 function rgbToHex(r,g,b){return '#'+[r,g,b].map(v=>Math.max(0,Math.min(255,v)).toString(16).padStart(2,'0')).join('')}
@@ -264,7 +266,7 @@ function applyAvatarPalette(img){
  }catch(e){console.warn('색상 추출 실패',e)}
 }
 
-['nickname','handle','headline','tier','likes','dislikes','bio','accentColor','bgColor','cardColor','textColor'].forEach(id=>$('#'+id).addEventListener('input',sync));
+['nickname','handle','headline','tier','likes','dislikes','bio','riskLabel','riskRank','accentColor','bgColor','cardColor','textColor'].forEach(id=>$('#'+id).addEventListener('input',sync));
 $$('#timeEditor input,#modeEditor input,#genderEditor input,#discordEditor input').forEach(x=>x.addEventListener('change',sync));
 $('#subjectSearch').addEventListener('input',renderSubjectGrid);
 $('#addTagBtn').onclick=()=>{state.tags.push('새 태그');renderEditors();sync()};
