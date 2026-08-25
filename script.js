@@ -9,7 +9,7 @@ const defaults={
  tags:['이터널 리턴','게임','일상'],traits:['즐겜 위주','멘션 좋아함'],times:[],
  likes:'',dislikes:'',bio:'',avatar:'',
  accentColor:'#7967ff',bgColor:'#302a48',cardColor:'#fffdf7',textColor:'#1e1f28',
- favoriteCharacters:[]
+ favoriteCharacters:[],template:'classic'
 };
 let CHARACTERS=[];
 let state=load();
@@ -22,7 +22,7 @@ function load(){
     traits:Array.isArray(s.traits)?s.traits:defaults.traits,
     times:Array.isArray(s.times)?s.times:[],
     modes:Array.isArray(s.modes)?s.modes:[],
-    favoriteCharacters:Array.isArray(s.favoriteCharacters)?s.favoriteCharacters:[]
+    favoriteCharacters:Array.isArray(s.favoriteCharacters)?s.favoriteCharacters:[],template:s.template==='dossier'?'dossier':'classic'
    };
  }catch{return structuredClone(defaults)}
 }
@@ -131,7 +131,26 @@ function setCss(){
  document.documentElement.style.setProperty('--text',state.textColor);
  document.querySelector('meta[name="theme-color"]').content=state.bgColor;
 }
+
+function applyTemplate(){
+ document.body.dataset.template=state.template||'classic';
+ const classic=$('#templateClassic'), dossier=$('#templateDossier');
+ if(classic)classic.classList.toggle('active',state.template==='classic');
+ if(dossier)dossier.classList.toggle('active',state.template==='dossier');
+}
+function installTemplatePicker(){
+ if(document.querySelector('.template-switcher'))return;
+ const caption=document.querySelector('.preview-caption');
+ if(!caption)return;
+ const wrap=document.createElement('div');wrap.className='template-switcher';
+ wrap.innerHTML='<span class="template-label">카드 템플릿</span><button id="templateClassic" type="button">픽셀 게임</button><button id="templateDossier" type="button">VF 분석 기록</button>';
+ caption.parentNode.insertBefore(wrap,caption);
+ $('#templateClassic').onclick=()=>{state.template='classic';applyTemplate();save()};
+ $('#templateDossier').onclick=()=>{state.template='dossier';applyTemplate();save()};
+ applyTemplate();
+}
 function sync(){
+ applyTemplate();
  state.nickname=$('#nickname').value;state.handle=$('#handle').value;state.headline=$('#headline').value;state.tier=$('#tier').value;
  state.likes=$('#likes').value;state.dislikes=$('#dislikes').value;state.bio=$('#bio').value;
  state.accentColor=$('#accentColor').value;state.bgColor=$('#bgColor').value;state.cardColor=$('#cardColor').value;state.textColor=$('#textColor').value;
@@ -210,7 +229,7 @@ $('#avatarInput').addEventListener('change',e=>{
 });
 $('#resetBtn').onclick=()=>{
  if(!confirm('모든 입력값을 초기화할까요?'))return;
- state=structuredClone(defaults);localStorage.removeItem(STORE);hydrate();renderEditors();renderSelectedSubjects();renderSubjectGrid();
+ state=structuredClone(defaults);state.template='classic';localStorage.removeItem(STORE);hydrate();applyTemplate();renderEditors();renderSelectedSubjects();renderSubjectGrid();
  $('#avatarPreview').hidden=true;$('#avatarFallback').hidden=false;$('#avatarInput').value='';$('#colorStatus').textContent='프로필 이미지를 올리면 가장 많이 쓰인 색을 자동으로 추출합니다.';sync();
 };
 $('#downloadBtn').onclick=async()=>{
@@ -224,4 +243,4 @@ $('#downloadBtn').onclick=async()=>{
  finally{btn.disabled=false;btn.textContent=old}
 };
 
-hydrate();renderEditors();setCss();sync();loadCharacters();
+hydrate();renderEditors();setCss();installTemplatePicker();sync();loadCharacters();

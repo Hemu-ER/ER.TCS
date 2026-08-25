@@ -229,8 +229,7 @@ input[type=text],textarea,input[type=file]{
   }
 }
 
-
-/* v5.5 — 슈린 포커스 사이드 레일 */
+/* v5.5 rail retained */
 .side-rail{
   background:
     linear-gradient(rgba(8,10,22,.42), rgba(8,10,22,.42)),
@@ -238,19 +237,144 @@ input[type=text],textarea,input[type=file]{
   background-color:#11101d !important;
 }
 .side-rail:before{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:linear-gradient(to right, rgba(6,7,16,.10), rgba(6,7,16,.34));
-  box-shadow:
-    inset -8px 0 16px rgba(0,0,0,.28),
-    inset 0 0 18px rgba(0,0,0,.12);
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to right,rgba(6,7,16,.10),rgba(6,7,16,.34));
+  box-shadow:inset -8px 0 16px rgba(0,0,0,.28),inset 0 0 18px rgba(0,0,0,.12);
 }
 @media(max-width:650px){
-  .side-rail{
-    background:
-      linear-gradient(rgba(8,10,22,.46), rgba(8,10,22,.46)),
-      url("assets/season12.jpg") 20% 48% / auto 100% no-repeat !important;
-  }
+ .side-rail{background:
+   linear-gradient(rgba(8,10,22,.46),rgba(8,10,22,.46)),
+   url("assets/season12.jpg") 20% 48% / auto 100% no-repeat !important;}
+}
+
+/* ===== 템플릿 선택기 ===== */
+.template-switcher{
+  width:min(840px,100%);margin:0 auto 10px;display:flex;gap:6px;align-items:center;
+  color:rgba(255,255,255,.68);font-size:10px;letter-spacing:.08em;
+}
+.template-switcher .template-label{margin-right:3px}
+.template-switcher button{
+  border:1px solid rgba(255,255,255,.22);background:rgba(10,12,22,.62);color:rgba(255,255,255,.78);
+  padding:6px 10px;font-size:10px;border-radius:0;cursor:pointer;
+}
+.template-switcher button.active{
+  border-color:var(--accent2);color:#fff;background:rgba(121,103,255,.22);
+  box-shadow:2px 2px 0 rgba(121,103,255,.5);
+}
+
+/* ===== 템플릿 02 : VF 분석 기록 / SF dossier ===== */
+body[data-template="dossier"] .profile-card{
+  --dossier-bg:#151a27;--dossier-panel:#222936;--dossier-line:rgba(178,199,224,.24);
+  width:min(920px,100%);grid-template-columns:0 1fr;
+  background:
+    linear-gradient(rgba(21,26,39,.94),rgba(21,26,39,.96)),
+    repeating-linear-gradient(0deg,transparent 0,transparent 31px,rgba(130,155,190,.045) 32px),
+    repeating-linear-gradient(90deg,transparent 0,transparent 47px,rgba(130,155,190,.04) 48px);
+  color:#edf2f7;border:1px solid rgba(210,225,240,.28);
+  box-shadow:0 18px 35px rgba(0,0,0,.38);
+  overflow:hidden;
+}
+body[data-template="dossier"] .profile-card:before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:
+    linear-gradient(90deg,transparent 0 3%,rgba(92,153,211,.13) 3.1%,transparent 3.2%),
+    linear-gradient(0deg,transparent 0 93%,rgba(255,196,90,.12) 93.1%,transparent 93.2%);
+}
+body[data-template="dossier"] .scanlines{opacity:.075}
+body[data-template="dossier"] .pixel-corner{background:#6fb9e8;z-index:9}
+body[data-template="dossier"] .side-rail{display:none}
+body[data-template="dossier"] .card-main{position:relative;z-index:2}
+body[data-template="dossier"] .card-header{
+  grid-template-columns:300px 1fr 80px;gap:26px;padding:30px 34px 20px;
+  align-items:start;
+}
+body[data-template="dossier"] .avatar-wrap{
+  width:290px;height:290px;border:1px solid rgba(220,230,240,.55);
+  background:#20293a;box-shadow:0 0 0 8px rgba(70,125,174,.10),6px 6px 0 rgba(72,142,193,.35);
+}
+body[data-template="dossier"] .avatar-wrap img{filter:saturate(.85) contrast(1.04)}
+body[data-template="dossier"] .avatar-fallback{color:#79bce8;background:#182233}
+body[data-template="dossier"] .level-dot{display:none}
+body[data-template="dossier"] .identity{padding-top:6px}
+body[data-template="dossier"] .card-kicker{
+  background:transparent;color:#c9d5e4;padding:0;box-shadow:none;
+  font-size:11px;letter-spacing:.18em;border-left:4px solid #6fb9e8;padding-left:9px;
+}
+body[data-template="dossier"] .identity h3{
+  margin:14px 0 4px;font-size:44px;font-weight:600;letter-spacing:-.04em;color:#f3f5f8;
+}
+body[data-template="dossier"] .identity>p:not(.headline){color:#9faec0;font-size:12px;font-weight:400}
+body[data-template="dossier"] .headline{
+  margin-top:22px;padding:12px 15px;background:rgba(79,94,117,.28);
+  border-left:3px solid #d8a94c;color:#e9eef4;font-weight:400;
+}
+body[data-template="dossier"] .qr-box{opacity:.78}
+body[data-template="dossier"] .qr-box img{border:1px solid rgba(220,230,240,.5);background:#fff}
+body[data-template="dossier"] .game-strip{
+  margin:0 34px;border:0;box-shadow:none;grid-template-columns:1fr 2fr;
+  border-top:1px solid #d8a94c;border-bottom:1px solid rgba(216,169,76,.45);
+}
+body[data-template="dossier"] .stat-box{
+  padding:13px 15px;background:rgba(42,50,64,.82);color:#f0f3f6;
+}
+body[data-template="dossier"] .stat-box+.stat-box{border-left:1px solid rgba(210,225,240,.12)}
+body[data-template="dossier"] .stat-box small{color:#75b8e8;letter-spacing:.12em}
+body[data-template="dossier"] .stat-box strong{font-size:18px;font-weight:500}
+body[data-template="dossier"] .card-block{
+  margin:0 34px;padding:17px 0;border-bottom:1px solid var(--dossier-line);
+}
+body[data-template="dossier"] .card-block h4{
+  color:#8fa0b4;font-size:10px;font-weight:500;letter-spacing:.15em;
+}
+body[data-template="dossier"] .compact-grid{
+  grid-template-columns:1fr 1fr 1fr;gap:8px;
+}
+body[data-template="dossier"] .value-badge{
+  display:flex;justify-content:space-between;padding:11px 13px;
+  border:1px solid rgba(220,230,240,.14);background:#262e3c;color:#e8edf3;
+  box-shadow:none;font-weight:400;
+}
+body[data-template="dossier"] .mode-pill,
+body[data-template="dossier"] .time-pill{
+  padding:6px 9px;background:#2a3342;color:#dce5ee;border:1px solid rgba(150,180,210,.18);font-weight:400;
+}
+body[data-template="dossier"] .mode-pill:before{color:#d8a94c}
+body[data-template="dossier"] .chip{
+  padding:6px 9px;border:1px solid rgba(130,180,220,.25);background:#222b39;
+  box-shadow:none;color:#dce6ef;font-weight:400;
+}
+body[data-template="dossier"] .clean-list li{color:#d7e0e9}
+body[data-template="dossier"] .clean-list li:before{color:#d8a94c}
+body[data-template="dossier"] .like-grid{gap:10px}
+body[data-template="dossier"] .mini-card{
+  min-height:100px;padding:13px;border:1px solid rgba(200,215,230,.18);background:#232c3a;
+}
+body[data-template="dossier"] .mini-card.like,
+body[data-template="dossier"] .mini-card.nope{background:#232c3a}
+body[data-template="dossier"] .mini-card p,
+body[data-template="dossier"] .bio-block p{color:#dce4ed;font-weight:400}
+body[data-template="dossier"] .bio-block{border-bottom:0}
+body[data-template="dossier"] .card-footer{
+  grid-template-columns:auto 1fr auto;padding:12px 34px;background:#0f141f;
+  color:#8595a9;border-top:1px solid rgba(220,230,240,.12);
+}
+body[data-template="dossier"] .card-footer b{color:#d8a94c}
+body[data-template="dossier"] .pixel-meter i{background:#d8a94c}
+body[data-template="dossier"] .subject-preview-item img{border:1px solid rgba(180,205,225,.35)}
+body[data-template="dossier"] .subject-preview-item span{color:#c8d4df}
+body[data-template="dossier"] .pixel-corner.pc2{display:none}
+
+@media(max-width:760px){
+ body[data-template="dossier"] .card-header{grid-template-columns:150px 1fr 0;gap:16px;padding:20px}
+ body[data-template="dossier"] .avatar-wrap{width:145px;height:145px}
+ body[data-template="dossier"] .qr-box{display:none}
+ body[data-template="dossier"] .identity h3{font-size:30px}
+ body[data-template="dossier"] .game-strip,
+ body[data-template="dossier"] .card-block{margin-left:20px;margin-right:20px}
+ body[data-template="dossier"] .card-footer{padding-left:20px;padding-right:20px}
+}
+@media(max-width:520px){
+ body[data-template="dossier"] .card-header{grid-template-columns:1fr}
+ body[data-template="dossier"] .avatar-wrap{width:100%;height:210px}
+ body[data-template="dossier"] .game-strip{grid-template-columns:1fr}
 }
