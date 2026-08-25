@@ -190,7 +190,6 @@ function renderDossier(){
   }
   const codeSource=(names[0]||state.nickname||'ER').replace(/[^A-Za-z0-9가-힣]/g,'');
   const codeNum=Math.abs([...codeSource].reduce((a,ch)=>((a*31+ch.charCodeAt(0))|0),7))%100000;
-  setText('dossierCode',`ER-${String(codeNum).padStart(5,'0')}`);
   setText('dossierNumber',String((codeNum%999)+1).padStart(3,'0'));
   const avatar=$('#avatarPreview'), dAvatar=$('#dossierAvatar'), fallback=$('#dossierAvatarFallback');
   if(state.avatar){
