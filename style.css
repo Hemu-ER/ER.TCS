@@ -486,26 +486,26 @@ body[data-template="dossier"] #card{display:none !important}
   position:absolute;left:9px;bottom:8px;z-index:3;padding:3px 5px;
   font-size:7px;letter-spacing:.16em;color:#dce6ef;background:rgba(7,11,17,.78);
 }
-.dossier-code-label{margin:18px 0 5px;font-size:10px;color:#8498aa;letter-spacing:.12em}
+.dossier-code-label{margin:18px 0 5px;font-size:20px;color:#8498aa;letter-spacing:.12em}
 .dossier-code{
   padding:9px 10px;color:#1b222c;background:#dce2e8;
   font-family:monospace;font-size:24px;letter-spacing:.06em;
   border-left:4px solid #d5a847;
 }
 .dossier-field{margin-top:10px;padding:8px 9px;border:1px solid rgba(185,205,220,.13);background:rgba(45,54,66,.48)}
-.dossier-field small{display:block;font-size:9px;color:#8294a7;margin-bottom:4px}
+.dossier-field small{display:block;font-size:12px;color:#8294a7;margin-bottom:4px}
 .dossier-field strong{display:block;font-size:16px;font-weight:500;word-break:break-word}
 .dossier-risk{
   margin-top:12px;padding:7px 9px;display:flex;justify-content:space-between;align-items:center;
   border:1px solid rgba(210,168,71,.3);background:rgba(49,42,26,.32);
 }
-.dossier-risk span{font-size:8px;color:#9a9d9e}.dossier-risk b{font-size:22px;color:#d9aa4b}
+.dossier-risk span{font-size:15px;color:#9a9d9e}.dossier-risk b{font-size:22px;color:#d9aa4b}
 .dossier-main{min-width:0;padding:18px 20px 0}
 .dossier-title{
   display:flex;justify-content:space-between;gap:20px;align-items:flex-start;
   padding-bottom:13px;border-bottom:1px solid rgba(188,208,225,.16);
 }
-.dossier-title small{font-size:7px;letter-spacing:.13em;color:#7e91a4}
+.dossier-title small{font-size:10px;letter-spacing:.13em;color:#7e91a4}
 .dossier-title h3{margin:7px 0 2px;font-size:28px;line-height:1;font-weight:500;color:#f0f3f5}
 .dossier-title p{margin:7px 0 0;color:#aebbc7;font-size:11px}
 .dossier-percent{width:130px;flex:none}
@@ -521,15 +521,15 @@ body[data-template="dossier"] #card{display:none !important}
   min-height:39px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;
   background:rgba(72,82,96,.55);border-left:3px solid #8793a0;
 }
-.dossier-stats b{font-size:9px;color:#dce4eb;font-weight:500}
+.dossier-stats b{font-size:12px;color:#dce4eb;font-weight:500}
 .dossier-stats strong{font-size:10px;color:#f1f4f6;font-weight:500;text-align:right}
 .dossier-panel{margin-top:9px;border:1px solid rgba(177,199,218,.17);background:rgba(17,24,34,.55)}
 .dossier-panel-head{
   min-height:31px;padding:7px 10px;display:flex;justify-content:space-between;align-items:center;
   background:rgba(70,82,96,.36);border-bottom:1px solid rgba(177,199,218,.12);
-  font-size:9px;color:#dce4ea
+  font-size:12px;color:#dce4ea
 }
-.dossier-panel-head b{font-size:7px;color:#d5a847;letter-spacing:.12em}
+.dossier-panel-head b{font-size:12px;color:#d5a847;letter-spacing:.12em}
 .dossier-subjects{padding:9px;display:flex;gap:7px;min-height:76px;align-items:center;flex-wrap:wrap}
 .dossier-subject{
   width:70px;display:grid;justify-items:center;gap:4px;
@@ -539,7 +539,7 @@ body[data-template="dossier"] #card{display:none !important}
 .dossier-log{padding:7px 10px}
 .dossier-log p{
   margin:0;padding:6px 0;display:grid;grid-template-columns:22px 76px 1fr;gap:5px;
-  border-bottom:1px solid rgba(180,200,220,.08);font-size:8px;line-height:1.45
+  border-bottom:1px solid rgba(180,200,220,.08);font-size:12px;line-height:1.45
 }
 .dossier-log p:last-child{border-bottom:0}
 .dossier-log em{color:#708395;font-style:normal;font-family:monospace}
@@ -549,9 +549,9 @@ body[data-template="dossier"] #card{display:none !important}
   margin-top:9px;min-height:70px;padding:10px 12px;
   border:1px solid rgba(177,199,218,.19);background:rgba(9,14,21,.48);
 }
-.voice-title{display:flex;justify-content:space-between;margin-bottom:8px;font-size:8px;color:#9bacbc}
-.voice-title i{color:#c85050;font-style:normal;font-size:7px}
-.dossier-voice p{margin:0;color:#d9e2e9;font-size:10px;line-height:1.65;white-space:pre-wrap;word-break:break-word}
+.voice-title{display:flex;justify-content:space-between;margin-bottom:8px;font-size:10px;color:#9bacbc}
+.voice-title i{color:#c85050;font-style:normal;font-size:10px}
+.dossier-voice p{margin:0;color:#d9e2e9;font-size:13px;line-height:1.65;white-space:pre-wrap;word-break:break-word}
 .dossier-footer{
   margin:11px -20px 0;padding:9px 16px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;
   background:#0a1018;border-top:1px solid rgba(188,208,225,.13);color:#718294;font-size:7px;letter-spacing:.08em
