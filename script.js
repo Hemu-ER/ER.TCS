@@ -5,6 +5,8 @@ const defaults={nickname:'',xid:'',oneLine:'',gender:'비공개',discord:'',disc
 let state={...defaults},step=0,characters=[],photoImage=null,seasonImage=null;const charImages=new Map();
 try{const saved=JSON.parse(localStorage.getItem('ertcs_s13_v2')||'null');if(saved&&typeof saved==='object')state={...defaults,...saved,modes:Array.isArray(saved.modes)?saved.modes:[],characters:Array.isArray(saved.characters)?saved.characters:[]}}catch(e){}
 const canvas=$('#profileCanvas'),ctx=canvas.getContext('2d');const W=1000,H=1414;
+const uiAssets={};for(const key of ['imperial-header','section-plaque','portrait-gothic','slot-frame','footer-crest']){const im=new Image();im.onload=()=>{if(step===5)draw()};im.src=`assets/design/${key}.png`;uiAssets[key]=im;}
+function asset(key,x,y,w,h){const im=uiAssets[key];if(im?.complete&&im.naturalWidth){ctx.drawImage(im,x,y,w,h);return true}return false;}
 const ko={Bihyung:'비형',Charlotte:'샬럿',Coraline:'코랄린',Craver:'크레이버',Darko:'다르코',Fenrir:'펜리르',Garnet:'가넷',Henry:'헨리',Hisui:'히스이',Isol:'이솔',Istvan:'이슈트반',Justyna:'유스티나',Katja:'카티야',Leni:'레니',Lenore:'레노어',Lucia:'루시아',Mirka:'미르카',NiaH:'니아',Tazia:'타지아',Xuelin:'쉐린',Shoichi:'쇼이치',Aya:'아야',Jackie:'재키',Fiora:'피오라',Hyunwoo:'현우',LiDailin:'리 다이린','Li Dailin':'리 다이린',Yuki:'유키',Hyejin:'혜진',Nadine:'나딘',Hart:'하트',Adriana:'아드리아나',Bianca:'비앙카',Chiara:'키아라',Cathy:'캐시',Daniel:'다니엘',Emma:'엠마',Eleven:'일레븐',Felix:'펠릭스',Irem:'이렘',Jenny:'제니',Laura:'라우라',Lyanh:'이안','Ly Anh':'이안',Martha:'마르타',Nicky:'니키',Rio:'리오',Rozzi:'로지',Sissela:'시셀라',Sua:'수아',Tia:'티아',Vanya:'바냐',William:'윌리엄',Zahir:'자히르',Abigail:'아비게일',Adela:'아델라',Adina:'아디나',Aiden:'에이든',Alex:'알렉스',Alonso:'알론소',Arda:'아르다',Barbara:'바바라',Bernice:'버니스',Blair:'블레어',Camilo:'카밀로',Celine:'셀린',Chloe:'클로에',DebiMarlene:'데비&마를렌','Debi & Marlene':'데비&마를렌',Echion:'에키온',Elena:'엘레나',Estelle:'에스텔',Eva:'에바',Haze:'헤이즈',Isaac:'아이작',Jan:'얀',Johann:'요한',Karla:'칼라',Kenneth:'케네스',Lenox:'레녹스',Leon:'레온',Lidia:'리디아',Luke:'루크',Magnus:'매그너스',Mai:'마이',Markus:'마커스',Martina:'마르티나',Nathapon:'나타폰',Piolo:'피올로',Priya:'프리야',Schoichi:'쇼이치',Silvia:'실비아',Theodore:'테오도르',Tsubame:'츠바메',Xiukai:'쇼우',Yumin:'유민',Seres:'세레스'};
 function charName(id){const c=characters.find(x=>x.name===id);return (c&&(c.nameKo||c.koreanName||c.ko||c.displayName))||ko[id]||id}
 function save(){try{localStorage.setItem('ertcs_s13_v2',JSON.stringify(state))}catch(e){}}
@@ -98,11 +100,8 @@ function laurel(cx,cy,flip=1){
  ctx.restore();
 }
 function sectionBanner(label,y){
- const w=Math.min(385,Math.max(210,measure(label,25,700)+91));
- ctx.fillStyle='#1a2f3c';ctx.beginPath();ctx.moveTo(65,y-32);ctx.lineTo(65+w-24,y-32);ctx.lineTo(65+w,y-12);ctx.lineTo(65+w-24,y+10);ctx.lineTo(65,y+10);ctx.closePath();ctx.fill();
- ctx.strokeStyle='#b79a65';ctx.lineWidth=2;ctx.stroke();
- sacredStar(87,y-11,10,'#cbb07b');text(label,108,y-2,25,'#f4e8cf',700);
- line(65+w+14,y-11,931,y-11,'#b79a65');diamond(931,y-11,4,'#b79a65');
+ asset('section-plaque',65,y-42,870,64);
+ text(label,119,y-2,25,'#f5e9d0',700);
 }
 function infoValue(value,x,y,width,size=21,weight=400){
  const v=String(value||'—');text(fitText(v,width,size,weight),x,y,size,'#253746',weight);
@@ -112,22 +111,16 @@ function draw(){
  ctx.clearRect(0,0,W,H);
  const ink='#243746',gold='#ae8e58',paper='#f8f4ea',navy='#172d3b';
  const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#fbf8f0');bg.addColorStop(.55,'#f4eee1');bg.addColorStop(1,'#e9deca');rect(0,0,W,H,bg);
- // The texture is deliberately subtle and drawn in Canvas rather than requiring external artwork.
- ctx.save();ctx.globalAlpha=.12;for(let i=0;i<48;i++){const y=60+i*28;line(56,y,944,y,'#e4d5b7',.4)}ctx.restore();
- ctx.strokeStyle='#a68b58';ctx.lineWidth=3;ctx.strokeRect(24,24,952,1366);
- ctx.strokeStyle='#c9b88f';ctx.lineWidth=1;ctx.strokeRect(36,36,928,1342);
- imperialCorner(44,44,1,1);imperialCorner(956,44,-1,1);imperialCorner(44,1370,1,-1);imperialCorner(956,1370,-1,-1);
- // Imperial crest and title: restrained sacred fantasy, no background season artwork.
- sacredStar(500,88,24,gold);laurel(435,127,-1);laurel(565,127,1);
- // Canvas text is left-aligned; place the title with measured width.
- text('ER.TCS',500-measure('ER.TCS',51,700)/2,153,51,ink,700);
- text('SEASON 13',429,181,17,'#8e7449',700);
- line(75,199,925,199,'#bda778');diamond(75,199,4,gold);diamond(925,199,4,gold);
+ // Crisp imperial design: restrained ink, gold rules, and gothic architectural motifs.
+ ctx.strokeStyle='#aa9062';ctx.lineWidth=2;ctx.strokeRect(20,20,960,1374);
+ ctx.strokeStyle='#d6c39e';ctx.lineWidth=1;ctx.strokeRect(34,34,932,1346);
+ asset('imperial-header',51,41,898,175);
+ text('ER.TCS',500-measure('ER.TCS',49,700)/2,139,49,ink,700);
+ text('SEASON 13',500-measure('SEASON 13',17,700)/2,173,17,'#94764a',700);
  // Profile: portrait is the focus, framed like a commissioned imperial register.
- rect(73,225,276,295,navy);ctx.strokeStyle=gold;ctx.lineWidth=3;ctx.strokeRect(73,225,276,295);
- ctx.strokeStyle='#e2cfaa';ctx.lineWidth=1;ctx.strokeRect(80,232,262,281);
+ rect(73,225,276,295,navy);
  if(!portrait(photoImage,85,237,252,271)){sacredStar(211,366,40,'#d2b986');text('프로필 이미지',151,430,18,'#e3d3b3')}
- sacredStar(73,225,12,gold);sacredStar(349,520,12,gold);
+ asset('portrait-gothic',66,218,290,310);
  rect(376,229,552,38,navy);text('나의 기록',404,256,24,'#f0e2c5',700);sacredStar(897,249,11,'#c9ab72');
  const nick=state.nickname||'이름 미입력';
  const nsize=Math.max(29,Math.min(50,50*515/Math.max(515,measure(nick,50,700))));
@@ -150,13 +143,14 @@ function draw(){
   rect(x,y,w,h,'#e8dfcd');ctx.strokeStyle='#b8a47c';ctx.lineWidth=1.5;ctx.strokeRect(x,y,w,h);
   if(img?.complete&&img.naturalWidth){ctx.imageSmoothingEnabled=false;const size=Math.min(w-8,h-8);ctx.drawImage(img,x+(w-size)/2,y+(h-size)/2,size,size);ctx.imageSmoothingEnabled=true}
   else sacredStar(x+w/2,y+h/2,17,'#b6a17a');
+  asset('slot-frame',x-2,y-2,154,134);
   if(id)text(fitText(charName(id),150,20,700),x+4,y+154,20,ink,700);
  }
  sectionBanner('나의 이야기',1064);
  const notes=[['관심사',state.interests],['좋아요',state.likes],['싫어요',state.dislikes]];
  notes.forEach(([k,v],i)=>{const y=1109+i*42;text(k,84,y,19,'#91754c');infoValue(v,215,y,687,20);line(83,y+12,916,y+12,'#ded2ba')});
  wrap(state.intro||'자기소개를 작성하지 않았습니다.',85,1262,830,31,3,21,ink);
- sacredStar(500,1350,13,gold);line(380,1350,473,1350,'#bca577');line(527,1350,620,1350,'#bca577');
+ asset('footer-crest',160,1324,680,58);
 }
 
 function measure(s,size,weight=400){ctx.font=`${weight} ${size}px Heiro`;return ctx.measureText(s).width}
