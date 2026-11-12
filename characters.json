@@ -1,0 +1,452 @@
+[
+  {
+    "name": "Abigail",
+    "resource": "Abigail",
+    "image": "assets/characters/Abigail.png"
+  },
+  {
+    "name": "Adela",
+    "resource": "Adela",
+    "image": "assets/characters/Adela.png"
+  },
+  {
+    "name": "Adina",
+    "resource": "Adina",
+    "image": "assets/characters/Adina.png"
+  },
+  {
+    "name": "Adriana",
+    "resource": "Adriana",
+    "image": "assets/characters/Adriana.png"
+  },
+  {
+    "name": "Aiden",
+    "resource": "Aiden",
+    "image": "assets/characters/Aiden.png"
+  },
+  {
+    "name": "Alex",
+    "resource": "Alex",
+    "image": "assets/characters/Alex.png"
+  },
+  {
+    "name": "Alonso",
+    "resource": "Alonso",
+    "image": "assets/characters/Alonso.png"
+  },
+  {
+    "name": "Arda",
+    "resource": "Arda",
+    "image": "assets/characters/Arda.png"
+  },
+  {
+    "name": "Aya",
+    "resource": "Aya",
+    "image": "assets/characters/Aya.png"
+  },
+  {
+    "name": "Barbara",
+    "resource": "Barbara",
+    "image": "assets/characters/Barbara.png"
+  },
+  {
+    "name": "Bernice",
+    "resource": "Bernice",
+    "image": "assets/characters/Bernice.png"
+  },
+  {
+    "name": "Bianca",
+    "resource": "Bianca",
+    "image": "assets/characters/Bianca.png"
+  },
+  {
+    "name": "Bihyung",
+    "resource": "Bihyung",
+    "image": "assets/characters/Bihyung.png"
+  },
+  {
+    "name": "Blair",
+    "resource": "Blair",
+    "image": "assets/characters/Blair.png"
+  },
+  {
+    "name": "Camilo",
+    "resource": "Camilo",
+    "image": "assets/characters/Camilo.png"
+  },
+  {
+    "name": "Cathy",
+    "resource": "Cathy",
+    "image": "assets/characters/Cathy.png"
+  },
+  {
+    "name": "Celine",
+    "resource": "Celine",
+    "image": "assets/characters/Celine.png"
+  },
+  {
+    "name": "Charlotte",
+    "resource": "Charlotte",
+    "image": "assets/characters/Charlotte.png"
+  },
+  {
+    "name": "Chiara",
+    "resource": "Chiara",
+    "image": "assets/characters/Chiara.png"
+  },
+  {
+    "name": "Chloe",
+    "resource": "Chloe",
+    "image": "assets/characters/Chloe.png"
+  },
+  {
+    "name": "Coraline",
+    "resource": "Coraline",
+    "image": "assets/characters/Coraline.png"
+  },
+  {
+    "name": "Craver",
+    "resource": "Craver",
+    "image": "assets/characters/Craver.png"
+  },
+  {
+    "name": "Daniel",
+    "resource": "Daniel",
+    "image": "assets/characters/Daniel.png"
+  },
+  {
+    "name": "Darko",
+    "resource": "Darko",
+    "image": "assets/characters/Darko.png"
+  },
+  {
+    "name": "Debi & Marlene",
+    "resource": "DebiMarlene",
+    "image": "assets/characters/DebiMarlene.png"
+  },
+  {
+    "name": "Echion",
+    "resource": "Echion",
+    "image": "assets/characters/Echion.png"
+  },
+  {
+    "name": "Elena",
+    "resource": "Elena",
+    "image": "assets/characters/Elena.png"
+  },
+  {
+    "name": "Eleven",
+    "resource": "Eleven",
+    "image": "assets/characters/Eleven.png"
+  },
+  {
+    "name": "Emma",
+    "resource": "Emma",
+    "image": "assets/characters/Emma.png"
+  },
+  {
+    "name": "Estelle",
+    "resource": "Estelle",
+    "image": "assets/characters/Estelle.png"
+  },
+  {
+    "name": "Eva",
+    "resource": "Eva",
+    "image": "assets/characters/Eva.png"
+  },
+  {
+    "name": "Felix",
+    "resource": "Felix",
+    "image": "assets/characters/Felix.png"
+  },
+  {
+    "name": "Fenrir",
+    "resource": "Fenrir",
+    "image": "assets/characters/Fenrir.png"
+  },
+  {
+    "name": "Fiora",
+    "resource": "Fiora",
+    "image": "assets/characters/Fiora.png"
+  },
+  {
+    "name": "Garnet",
+    "resource": "Garnet",
+    "image": "assets/characters/Garnet.png"
+  },
+  {
+    "name": "Hart",
+    "resource": "Hart",
+    "image": "assets/characters/Hart.png"
+  },
+  {
+    "name": "Haze",
+    "resource": "Haze",
+    "image": "assets/characters/Haze.png"
+  },
+  {
+    "name": "Henry",
+    "resource": "Henry",
+    "image": "assets/characters/Henry.png"
+  },
+  {
+    "name": "Hisui",
+    "resource": "Hisui",
+    "image": "assets/characters/Hisui.png"
+  },
+  {
+    "name": "Hyejin",
+    "resource": "Hyejin",
+    "image": "assets/characters/Hyejin.png"
+  },
+  {
+    "name": "Hyunwoo",
+    "resource": "Hyunwoo",
+    "image": "assets/characters/Hyunwoo.png"
+  },
+  {
+    "name": "Irem",
+    "resource": "Irem",
+    "image": "assets/characters/Irem.png"
+  },
+  {
+    "name": "Isaac",
+    "resource": "Isaac",
+    "image": "assets/characters/Isaac.png"
+  },
+  {
+    "name": "Isol",
+    "resource": "Isol",
+    "image": "assets/characters/Isol.png"
+  },
+  {
+    "name": "Istvan",
+    "resource": "Istvan",
+    "image": "assets/characters/Istvan.png"
+  },
+  {
+    "name": "Jackie",
+    "resource": "Jackie",
+    "image": "assets/characters/Jackie.png"
+  },
+  {
+    "name": "Jan",
+    "resource": "Jan",
+    "image": "assets/characters/Jan.png"
+  },
+  {
+    "name": "Jenny",
+    "resource": "Jenny",
+    "image": "assets/characters/Jenny.png"
+  },
+  {
+    "name": "Johann",
+    "resource": "Johann",
+    "image": "assets/characters/Johann.png"
+  },
+  {
+    "name": "Justyna",
+    "resource": "Justyna",
+    "image": "assets/characters/Justyna.png"
+  },
+  {
+    "name": "Karla",
+    "resource": "Karla",
+    "image": "assets/characters/Karla.png"
+  },
+  {
+    "name": "Katja",
+    "resource": "Katja",
+    "image": "assets/characters/Katja.png"
+  },
+  {
+    "name": "Kenneth",
+    "resource": "Kenneth",
+    "image": "assets/characters/Kenneth.png"
+  },
+  {
+    "name": "Laura",
+    "resource": "Laura",
+    "image": "assets/characters/Laura.png"
+  },
+  {
+    "name": "Leni",
+    "resource": "Leni",
+    "image": "assets/characters/Leni.png"
+  },
+  {
+    "name": "Lenore",
+    "resource": "Lenore",
+    "image": "assets/characters/Lenore.png"
+  },
+  {
+    "name": "Lenox",
+    "resource": "Lenox",
+    "image": "assets/characters/Lenox.png"
+  },
+  {
+    "name": "Leon",
+    "resource": "Leon",
+    "image": "assets/characters/Leon.png"
+  },
+  {
+    "name": "Li Dailin",
+    "resource": "LiDailin",
+    "image": "assets/characters/LiDailin.png"
+  },
+  {
+    "name": "Luke",
+    "resource": "Luke",
+    "image": "assets/characters/Luke.png"
+  },
+  {
+    "name": "Lucia",
+    "resource": "Lucia",
+    "image": "assets/characters/Lucia.png"
+  },
+  {
+    "name": "Ly Anh",
+    "resource": "LyAnh",
+    "image": "assets/characters/LyAnh.png"
+  },
+  {
+    "name": "Magnus",
+    "resource": "Magnus",
+    "image": "assets/characters/Magnus.png"
+  },
+  {
+    "name": "Mai",
+    "resource": "Mai",
+    "image": "assets/characters/Mai.png"
+  },
+  {
+    "name": "Markus",
+    "resource": "Markus",
+    "image": "assets/characters/Markus.png"
+  },
+  {
+    "name": "Martina",
+    "resource": "Martina",
+    "image": "assets/characters/Martina.png"
+  },
+  {
+    "name": "Mirka",
+    "resource": "Mirka",
+    "image": "assets/characters/Mirka.png"
+  },
+  {
+    "name": "Nadine",
+    "resource": "Nadine",
+    "image": "assets/characters/Nadine.png"
+  },
+  {
+    "name": "Nathapon",
+    "resource": "Nathapon",
+    "image": "assets/characters/Nathapon.png"
+  },
+  {
+    "name": "NiaH",
+    "resource": "NiaH",
+    "image": "assets/characters/NiaH.png"
+  },
+  {
+    "name": "Nicky",
+    "resource": "Nicky",
+    "image": "assets/characters/Nicky.png"
+  },
+  {
+    "name": "Piolo",
+    "resource": "Piolo",
+    "image": "assets/characters/Piolo.png"
+  },
+  {
+    "name": "Priya",
+    "resource": "Priya",
+    "image": "assets/characters/Priya.png"
+  },
+  {
+    "name": "Rio",
+    "resource": "Rio",
+    "image": "assets/characters/Rio.png"
+  },
+  {
+    "name": "Rozzi",
+    "resource": "Rozzi",
+    "image": "assets/characters/Rozzi.png"
+  },
+  {
+    "name": "Shoichi",
+    "resource": "Shoichi",
+    "image": "assets/characters/Shoichi.png"
+  },
+  {
+    "name": "Silvia",
+    "resource": "Silvia",
+    "image": "assets/characters/Silvia.png"
+  },
+  {
+    "name": "Sissela",
+    "resource": "Sissela",
+    "image": "assets/characters/Sissela.png"
+  },
+  {
+    "name": "Sua",
+    "resource": "Sua",
+    "image": "assets/characters/Sua.png"
+  },
+  {
+    "name": "Tazia",
+    "resource": "Tazia",
+    "image": "assets/characters/Tazia.png"
+  },
+  {
+    "name": "Theodore",
+    "resource": "Theodore",
+    "image": "assets/characters/Theodore.png"
+  },
+  {
+    "name": "Tia",
+    "resource": "Tia",
+    "image": "assets/characters/Tia.png"
+  },
+  {
+    "name": "Tsubame",
+    "resource": "Tsubame",
+    "image": "assets/characters/Tsubame.png"
+  },
+  {
+    "name": "Vanya",
+    "resource": "Vanya",
+    "image": "assets/characters/Vanya.png"
+  },
+  {
+    "name": "William",
+    "resource": "William",
+    "image": "assets/characters/William.png"
+  },
+  {
+    "name": "Xiukai",
+    "resource": "Xiukai",
+    "image": "assets/characters/Xiukai.png"
+  },
+  {
+    "name": "Xuelin",
+    "resource": "Xuelin",
+    "image": "assets/characters/Xuelin.png"
+  },
+  {
+    "name": "Yuki",
+    "resource": "Yuki",
+    "image": "assets/characters/Yuki.png"
+  },
+  {
+    "name": "Yumin",
+    "resource": "Yumin",
+    "image": "assets/characters/Yumin.png"
+  },
+  {
+    "name": "Zahir",
+    "resource": "Zahir",
+    "image": "assets/characters/Zahir.png"
+  }
+]
