@@ -448,5 +448,10 @@
     "name": "Zahir",
     "resource": "Zahir",
     "image": "assets/characters/Zahir.png"
+  },
+  {
+    "name": "Seres",
+    "resource": "Seres",
+    "image": "assets/characters/Seres.png"
   }
 ]
