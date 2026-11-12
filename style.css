@@ -38,3 +38,28 @@
 @media(max-width:1000px){.content.is-finished{display:flex;flex-direction:column}.content.is-finished .form-panel,.content.is-finished .reveal-panel{width:100%}}
 @media(max-width:700px){.form-panel{padding:24px 20px}.char-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}.reveal-panel .canvas-wrap{max-width:390px}}
 @media(prefers-reduced-motion:reduce){.reveal-panel{animation:none}.choice,.char,.controls button{transition:none}}
+
+/* v0.4 — 페이지를 쓰는 경험: 종이 가장자리와 글쓰기 도구의 촉감 */
+.content{isolation:isolate;perspective:1400px}
+.form-panel{background:linear-gradient(100deg,#e5dcc9 0,#f7f3e9 3%,#f6f1e6 94%,#e9e0cf 100%);border:0;border-left:8px solid #b59a69;border-radius:2px 9px 9px 2px;box-shadow:inset 16px 0 22px -22px #352c20,14px 22px 50px #0007;padding:clamp(28px,5vw,62px)}
+.form-panel:before{inset:13px;border:1px solid #c4b18b77;border-left:0}
+.form-title{font-size:clamp(27px,3vw,38px);border-bottom:1px solid #bba578;padding-bottom:18px;margin-bottom:17px}
+.form-hint{margin-bottom:40px}
+.field{margin-bottom:31px}
+.field-label{color:#79613c;font-size:16px;margin-bottom:9px}
+.field input:not([type=file]),.field textarea,#charSearch{border:0;border-bottom:1px solid #9e8c6c!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;padding:12px 5px!important;min-height:56px;font-size:21px;transition:background .2s,border-color .2s,transform .2s}
+.field input:not([type=file]):focus,.field textarea:focus,#charSearch:focus{border-bottom:2px solid #8a6b34!important;outline:none;background:#ffffff38!important;transform:translateY(-2px)}
+.field input::placeholder,.field textarea::placeholder{color:#9a9489}
+.field textarea{line-height:1.8;background:repeating-linear-gradient(transparent,transparent 37px,#c9bda055 38px)!important;resize:vertical}
+.field input[type=file]{border:1px dashed #b9a57e;background:#eee6d5;padding:15px}
+.choice{border-radius:0!important;border:1px solid #c1b295!important;background:transparent!important;min-width:96px}
+.choice.selected{background:#203747!important;border-color:#203747!important}
+.page-turn{display:none;position:absolute;inset:0;z-index:10;pointer-events:none;transform-origin:left center}
+.page-turn.turning{display:block}
+.page-turn-front{position:absolute;inset:0;background:linear-gradient(105deg,#d1c2a2 0%,#f9f4e8 10%,#e6dcca 80%,#b6a383 100%);clip-path:polygon(0 0,100% 0,94% 100%,0 100%);box-shadow:16px 0 28px #0005;opacity:.65}
+.page-turn-back{position:absolute;right:0;top:0;bottom:0;width:9%;background:linear-gradient(90deg,transparent,#9c896c77)}
+.page-turn.reverse{transform-origin:right center}
+.content.is-finished .form-panel{min-height:0}
+.canvas-wrap canvas{aspect-ratio:1000/1414}
+@media(max-width:700px){.form-panel{padding:27px 22px;border-left-width:5px}.field input:not([type=file]),.field textarea{font-size:19px}}
+@media(prefers-reduced-motion:reduce){.page-turn{display:none!important}}
