@@ -79,42 +79,86 @@ function wrap(s,x,y,maxW,lineH,maxLines=2,size=22,color='#e8e8df',weight=400){co
 function cropImage(img,x,y,w,h){ctx.drawImage(img,...cropParams(img,w,h),x,y,w,h)}
 function portrait(img,x,y,w,h){if(img?.complete&&img.naturalWidth){ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();cropImage(img,x,y,w,h);ctx.restore();return true}return false}
 function separator(y){line(70,y,930,y,'#cbbd9e',1)}
+function imperialCorner(x,y,sx,sy){
+ ctx.save();ctx.translate(x,y);ctx.scale(sx,sy);ctx.strokeStyle='#a88a54';ctx.lineWidth=2;
+ ctx.beginPath();ctx.moveTo(0,72);ctx.lineTo(0,0);ctx.lineTo(72,0);ctx.stroke();
+ ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(9,57);ctx.lineTo(9,9);ctx.lineTo(57,9);ctx.stroke();
+ diamond(24,24,5,'#ad915c');ctx.beginPath();ctx.arc(24,24,14,Math.PI,1.5*Math.PI);ctx.stroke();
+ ctx.restore();
+}
+function sacredStar(x,y,r=18,color='#b99a61'){
+ ctx.save();ctx.translate(x,y);ctx.strokeStyle=color;ctx.lineWidth=1.6;
+ ctx.beginPath();ctx.moveTo(0,-r);ctx.lineTo(r*.2,-r*.2);ctx.lineTo(r,0);ctx.lineTo(r*.2,r*.2);ctx.lineTo(0,r);ctx.lineTo(-r*.2,r*.2);ctx.lineTo(-r,0);ctx.lineTo(-r*.2,-r*.2);ctx.closePath();ctx.stroke();
+ diamond(0,0,Math.max(2,r*.14),color);ctx.restore();
+}
+function laurel(cx,cy,flip=1){
+ ctx.save();ctx.translate(cx,cy);ctx.scale(flip,1);ctx.strokeStyle='#b89b63';ctx.fillStyle='#b89b63';ctx.lineWidth=1.5;
+ ctx.beginPath();ctx.moveTo(0,0);ctx.quadraticCurveTo(34,-30,40,-88);ctx.stroke();
+ for(let i=0;i<6;i++){let x=8+i*5,y=-9-i*13;ctx.save();ctx.translate(x,y);ctx.rotate(-.58+i*.055);ctx.beginPath();ctx.ellipse(0,0,4.3,11,0,0,Math.PI*2);ctx.fill();ctx.restore()}
+ ctx.restore();
+}
+function sectionBanner(label,y){
+ const w=Math.min(385,Math.max(210,measure(label,25,700)+91));
+ ctx.fillStyle='#1a2f3c';ctx.beginPath();ctx.moveTo(65,y-32);ctx.lineTo(65+w-24,y-32);ctx.lineTo(65+w,y-12);ctx.lineTo(65+w-24,y+10);ctx.lineTo(65,y+10);ctx.closePath();ctx.fill();
+ ctx.strokeStyle='#b79a65';ctx.lineWidth=2;ctx.stroke();
+ sacredStar(87,y-11,10,'#cbb07b');text(label,108,y-2,25,'#f4e8cf',700);
+ line(65+w+14,y-11,931,y-11,'#b79a65');diamond(931,y-11,4,'#b79a65');
+}
+function infoValue(value,x,y,width,size=21,weight=400){
+ const v=String(value||'—');text(fitText(v,width,size,weight),x,y,size,'#253746',weight);
+}
 function draw(){
  if(!ctx||step!==5)return;
  ctx.clearRect(0,0,W,H);
- const ink='#253746',gold='#b59b68',navy='#142b3b',paper='#f5f0e5';
- const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#fbf7ed');bg.addColorStop(1,'#eae1d0');rect(0,0,W,H,bg);
- ctx.strokeStyle='#b59b68';ctx.lineWidth=2;ctx.strokeRect(28,28,944,1358);
- ctx.strokeStyle='#cfc3aa';ctx.lineWidth=1;ctx.strokeRect(41,41,918,1332);
- // 인물 영역은 배경 일러스트 없이 단색으로 유지합니다.
- rect(56,56,888,365,navy);line(78,111,922,111,'#8c805e');
- text('ER.TCS',78,95,35,'#f4e7c8',700);text('SEASON 13',776,93,18,'#d5bd86');
- const px=78,py=137,pw=248,ph=247;rect(px-3,py-3,pw+6,ph+6,'#c2a773');rect(px,py,pw,ph,'#243c4a');
- if(!portrait(photoImage,px,py,pw,ph)){text('✧',185,266,65,'#c7ae7d')}
- text('나의 기록',363,172,22,'#cbb384');
- const nick=state.nickname||'이름 미입력';const nameSize=Math.max(28,Math.min(52,52*510/Math.max(510,measure(nick,52,700))));wrap(nick,362,235,540,55,2,nameSize,'#fff3da',700);
- text(fitText(state.xid||'X 아이디',520,22),363,284,22,'#d0dedf');line(363,302,916,302,'#7e8175');
- wrap(state.oneLine||'한 줄 소개',363,342,530,32,2,24,'#f2e6d1');
- // 본문: 목록보다 독서 흐름을 우선합니다.
- text('플레이',72,483,30,ink,700);separator(501);
- const playRows=[['티어',state.tier||'미입력'],['선호 게임 모드',state.modes.join(' · ')||'미선택'],['주 활동 시간',state.time||'미입력']];
- playRows.forEach(([label,value],i)=>{const y=547+i*62;text(label,83,y,19,'#967d50');wrap(value,290,y,620,28,1,23,ink,i===0?700:400);if(i<2)line(83,y+17,917,y+17,'#e0d6c4')});
- text('성별',83,744,19,'#967d50');text(state.gender||'비공개',290,744,21,ink);
- if(state.discordPublic&&state.discord){text('디스코드',530,744,19,'#967d50');text(fitText(state.discord,220,20),664,744,20,ink)}
- text('선호 실험체',72,805,30,ink,700);separator(823);
+ const ink='#243746',gold='#ae8e58',paper='#f8f4ea',navy='#172d3b';
+ const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#fbf8f0');bg.addColorStop(.55,'#f4eee1');bg.addColorStop(1,'#e9deca');rect(0,0,W,H,bg);
+ // The texture is deliberately subtle and drawn in Canvas rather than requiring external artwork.
+ ctx.save();ctx.globalAlpha=.12;for(let i=0;i<48;i++){const y=60+i*28;line(56,y,944,y,'#e4d5b7',.4)}ctx.restore();
+ ctx.strokeStyle='#a68b58';ctx.lineWidth=3;ctx.strokeRect(24,24,952,1366);
+ ctx.strokeStyle='#c9b88f';ctx.lineWidth=1;ctx.strokeRect(36,36,928,1342);
+ imperialCorner(44,44,1,1);imperialCorner(956,44,-1,1);imperialCorner(44,1370,1,-1);imperialCorner(956,1370,-1,-1);
+ // Imperial crest and title: restrained sacred fantasy, no background season artwork.
+ sacredStar(500,88,24,gold);laurel(435,127,-1);laurel(565,127,1);
+ // Canvas text is left-aligned; place the title with measured width.
+ text('ER.TCS',500-measure('ER.TCS',51,700)/2,153,51,ink,700);
+ text('SEASON 13',429,181,17,'#8e7449',700);
+ line(75,199,925,199,'#bda778');diamond(75,199,4,gold);diamond(925,199,4,gold);
+ // Profile: portrait is the focus, framed like a commissioned imperial register.
+ rect(73,225,276,295,navy);ctx.strokeStyle=gold;ctx.lineWidth=3;ctx.strokeRect(73,225,276,295);
+ ctx.strokeStyle='#e2cfaa';ctx.lineWidth=1;ctx.strokeRect(80,232,262,281);
+ if(!portrait(photoImage,85,237,252,271)){sacredStar(211,366,40,'#d2b986');text('프로필 이미지',151,430,18,'#e3d3b3')}
+ sacredStar(73,225,12,gold);sacredStar(349,520,12,gold);
+ rect(376,229,552,38,navy);text('나의 기록',404,256,24,'#f0e2c5',700);sacredStar(897,249,11,'#c9ab72');
+ const nick=state.nickname||'이름 미입력';
+ const nsize=Math.max(29,Math.min(50,50*515/Math.max(515,measure(nick,50,700))));
+ text(fitText(nick,515,nsize,700),388,337,nsize,ink,700);
+ text(fitText(state.xid||'X 아이디',510,23),390,377,23,'#677582');
+ line(389,397,915,397,'#bca779');
+ wrap(state.oneLine||'한 줄 소개',389,440,520,32,2,23,ink);
+ // Deliberately separate chapter labels from the old tabular report design.
+ sectionBanner('플레이',576);
+ const entries=[['티어',state.tier],['선호 게임 모드',state.modes.join(' · ')],['활동 시간',state.time],['성별',state.gender]];
+ entries.forEach(([k,v],i)=>{
+  const col=i%2,row=Math.floor(i/2),x=82+col*444,y=622+row*57;
+  text(k,x,y,19,'#94774d');infoValue(v,x+145,y,290,21,i===0?700:400);
+  line(x,y+16,x+398,y+16,'#ded2ba');
+ });
+ if(state.discordPublic&&state.discord){text('디스코드',82,759,18,'#94774d');infoValue(state.discord,227,759,650,20)}
+ sectionBanner('함께하는 실험체',815);
  for(let i=0;i<5;i++){
-  const x=76+i*174,y=844,w=151,h=124,id=state.characters[i],entry=characters.find(c=>c.name===id),img=entry&&charImages.get(id);
-  rect(x,y,w,h,'#e2dacc');ctx.strokeStyle='#c1b28f';ctx.lineWidth=1;ctx.strokeRect(x,y,w,h);
-  if(img?.complete&&img.naturalWidth){const size=Math.min(w-8,h-8);ctx.drawImage(img,x+(w-size)/2,y+(h-size)/2,size,size)}
-  else text('✧',x+63,y+74,31,'#a18b65');
-  const label=id?charName(id):'';text(fitText(label,150,19),x+2,y+149,19,id?ink:'#9b907c');
+  const x=81+i*173,y=841,w=150,h=130,id=state.characters[i],entry=characters.find(c=>c.name===id),img=entry&&charImages.get(id);
+  rect(x,y,w,h,'#e8dfcd');ctx.strokeStyle='#b8a47c';ctx.lineWidth=1.5;ctx.strokeRect(x,y,w,h);
+  if(img?.complete&&img.naturalWidth){ctx.imageSmoothingEnabled=false;const size=Math.min(w-8,h-8);ctx.drawImage(img,x+(w-size)/2,y+(h-size)/2,size,size);ctx.imageSmoothingEnabled=true}
+  else sacredStar(x+w/2,y+h/2,17,'#b6a17a');
+  if(id)text(fitText(charName(id),150,20,700),x+4,y+154,20,ink,700);
  }
- text('나의 이야기',72,1044,30,ink,700);separator(1062);
- const info=[['관심사',state.interests],['좋아요',state.likes],['싫어요',state.dislikes]];
- info.forEach(([label,value],i)=>{const y=1105+i*47;text(label,82,y,19,'#967d50');wrap(value||'—',217,y,700,26,1,20,ink)});
- separator(1232);wrap(state.intro||'자기소개를 작성하지 않았습니다.',83,1271,832,30,3,21,ink);
- diamond(500,1355,7,gold);line(382,1355,481,1355,'#c7b48b');line(519,1355,618,1355,'#c7b48b');
+ sectionBanner('나의 이야기',1064);
+ const notes=[['관심사',state.interests],['좋아요',state.likes],['싫어요',state.dislikes]];
+ notes.forEach(([k,v],i)=>{const y=1109+i*42;text(k,84,y,19,'#91754c');infoValue(v,215,y,687,20);line(83,y+12,916,y+12,'#ded2ba')});
+ wrap(state.intro||'자기소개를 작성하지 않았습니다.',85,1262,830,31,3,21,ink);
+ sacredStar(500,1350,13,gold);line(380,1350,473,1350,'#bca577');line(527,1350,620,1350,'#bca577');
 }
+
 function measure(s,size,weight=400){ctx.font=`${weight} ${size}px Heiro`;return ctx.measureText(s).width}
 function download(){draw();const a=document.createElement('a');a.download=`ER-TCS-S13-${(state.nickname||'profile').replace(/[\\/:*?"<>|]/g,'_')}.png`;a.href=canvas.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove()}
 async function init(){try{const res=await fetch('characters.json');if(res.ok)characters=await res.json()}catch(e){}if(!characters.length)characters=['Aya','Jackie','Fiora','Yuki','Hyunwoo','Bianca','Rio','Nadine','Hart','Hyejin','Emma','Adriana'].map(name=>({name}));for(const c of characters){if(!c.image)continue;const img=new Image();img.onload=()=>{if(step===5)draw()};img.onerror=()=>{};img.src=c.image;charImages.set(c.name,img)}if(document.fonts?.ready)document.fonts.ready.then(()=>{if(step===5)draw()});loadPhoto();render()}
