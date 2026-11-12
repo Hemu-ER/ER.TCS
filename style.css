@@ -63,3 +63,15 @@
 .canvas-wrap canvas{aspect-ratio:1000/1414}
 @media(max-width:700px){.form-panel{padding:27px 22px;border-left-width:5px}.field input:not([type=file]),.field textarea{font-size:19px}}
 @media(prefers-reduced-motion:reduce){.page-turn{display:none!important}}
+
+/* v0.5: 사진 편집 및 선택한 실험체 가시성 */
+.photo-editor{display:grid;grid-template-columns:minmax(150px,240px) minmax(0,1fr);gap:24px;align-items:start;margin:0 0 34px}
+.photo-visual{min-width:0}.photo-visual canvas{width:100%;aspect-ratio:1;display:block;border:3px solid #bba273;cursor:grab;touch-action:none;background:#142b3b}.photo-visual canvas:active{cursor:grabbing}
+.photo-visual-caption{text-align:center;color:#7c6846;font-size:14px;margin-top:8px}
+.photo-tools{display:flex;flex-direction:column;gap:13px}.photo-upload{display:block;background:#1e3948;color:#f6ead3;text-align:center;padding:14px;cursor:pointer;border:1px solid #b8a074}.photo-upload input{display:none}
+.crop-label{display:flex;flex-direction:column;gap:8px;color:#725d3e}.crop-label input{width:100%;accent-color:#8d7444}.crop-hint{font-size:14px;color:#66737a;line-height:1.6;margin:0}
+.photo-tools button{border:1px solid #b6a581;background:transparent;color:#273d48;padding:9px}.photo-tools button:hover{background:#e4d8bf}
+.selected-characters{position:sticky;top:8px;z-index:3;background:#e8dfcc;border:1px solid #bca77b;padding:14px;margin:10px 0 15px;box-shadow:0 4px 12px #352b1c16}
+.selected-characters strong{display:block;margin-bottom:9px;color:#273c47}.selected-strip{display:flex;gap:7px;flex-wrap:wrap}.selected-chip{display:flex;align-items:center;gap:5px;background:#203948;color:#f5e8cb;border:1px solid #ae9466;padding:5px 9px 5px 5px;font-size:15px}.selected-chip img{width:32px;height:32px;object-fit:contain}.selected-empty{font-size:14px;color:#65747a}
+.char{position:relative}.char-check{position:absolute;right:4px;top:3px;background:#203948;color:#f9e7c0;border-radius:50%;width:22px;height:22px;display:grid;place-items:center}
+@media(max-width:620px){.photo-editor{grid-template-columns:1fr}.photo-visual{max-width:240px;margin:auto}.selected-characters{top:0}}
