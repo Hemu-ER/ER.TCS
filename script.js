@@ -180,72 +180,117 @@ function docSection(s,y){
  }
 }
 function docField(k,v,x,y,max=225){text(k,x,y,17,'#536F7D',700);text(fitText(v||'—',max,22),x,y+31,22,'#172632')}
+// Single finished layout: sacred-imperial archival dossier. Form UI remains unchanged.
+const documentFont='DocSerif';
+function dt(s,x,y,size=23,color='#172632',weight=400,maxWidth){
+ ctx.save();ctx.font=`${weight} ${size}px ${documentFont}, serif`;
+ ctx.fillStyle=color;ctx.textBaseline='alphabetic';
+ if(maxWidth)ctx.fillText(String(s),x,y,maxWidth);else ctx.fillText(String(s),x,y);
+ ctx.restore();
+}
+function dmeasure(s,size=23,weight=400){ctx.save();ctx.font=`${weight} ${size}px ${documentFont}, serif`;const m=ctx.measureText(String(s)).width;ctx.restore();return m;}
+function dfit(s,w,size=23,weight=400){let a=String(s??'');if(dmeasure(a,size,weight)<=w)return a;while(a&&dmeasure(a+'…',size,weight)>w)a=a.slice(0,-1);return a+'…'}
+function dwlines(s,width,size=23,weight=400){const result=[];for(const para of String(s??'').split('\n')){let l='';for(const ch of para){if(l&&dmeasure(l+ch,size,weight)>width){result.push(l);l=ch}else l+=ch}result.push(l)}return result;}
+function dw(s,x,y,width,size=23,lineHeight=31,maxLines=2,color='#172632',weight=400){const lines=dwlines(s,width,size,weight);lines.slice(0,maxLines).forEach((a,i)=>dt(i===maxLines-1&&lines.length>maxLines?dfit(a+'…',width,size,weight):a,x,y+i*lineHeight,size,color,weight))}
+function dline(x,y,r,color='#b5aea2',lw=1){ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(r,y);ctx.stroke()}
+function dlabel(s,x,y,w=132){rect(x,y,w,37,'#365363');rect(x,y,w,2,'#67818b');dt(s,x+16,y+26,21,'#F3F0E6',400,w-26)}
+function dcorner(x,y,sx,sy){ctx.save();ctx.translate(x,y);ctx.scale(sx,sy);ctx.strokeStyle='#375264';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,51);ctx.lineTo(0,0);ctx.lineTo(51,0);ctx.stroke();ctx.strokeStyle='#d6c29a';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(8,40);ctx.lineTo(8,8);ctx.lineTo(40,8);ctx.stroke();ctx.restore()}
+function dphoto(img,x,y,w,h){
+ ctx.save();ctx.beginPath();ctx.roundRect(x,y,w,h,12);ctx.clip();rect(x,y,w,h,'#203342');
+ if(img?.complete&&img.naturalWidth)cropImage(img,x,y,w,h);
+ else {ctx.fillStyle='#7a8a90';ctx.beginPath();ctx.arc(x+w/2,y+h*.34,w*.19,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.ellipse(x+w/2,y+h*.88,w*.36,h*.35,0,0,Math.PI*2);ctx.fill()}
+ ctx.restore();
+ ctx.strokeStyle='#425c67';ctx.lineWidth=7;ctx.strokeRect(x-2,y-2,w+4,h+4);
+ ctx.strokeStyle='#D6C29A';ctx.lineWidth=3;ctx.strokeRect(x-6,y-6,w+12,h+12);
+ for(const [xx,yy,rx,ry] of [[x-7,y-7,1,1],[x+w+7,y-7,-1,1],[x-7,y+h+7,1,-1],[x+w+7,y+h+7,-1,-1]]){
+  ctx.save();ctx.translate(xx,yy);ctx.scale(rx,ry);ctx.fillStyle='#E8D9BB';ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(26,0);ctx.lineTo(0,26);ctx.closePath();ctx.fill();ctx.restore();
+ }
+}
+function dseal(){
+ // Object center deliberately outside the document. Only the upper-left portion is visible.
+ const im=docImages.seal;
+ if(!im?.naturalWidth)return;
+ ctx.save();ctx.translate(946,1326);ctx.rotate(-0.20);
+ // crop the existing image to its wax medallion, partially outside the page
+ ctx.drawImage(im,310,185,600,610,-116,-116,234,234);
+ ctx.restore();
+}
+function dslot(i,id,x,y,w,h){
+ const navy='#172632',gold='#D6C29A';
+ const entry=characters.find(c=>c.name===id),im=entry&&charImages.get(id);
+ ctx.fillStyle='#ebe8de';ctx.fillRect(x,y,w,h);ctx.strokeStyle='#abb0ac';ctx.lineWidth=2;ctx.strokeRect(x,y,w,h);
+ const ih=h-36;
+ if(im?.complete&&im.naturalWidth){
+  ctx.save();ctx.beginPath();ctx.rect(x+4,y+4,w-8,ih-6);ctx.clip();
+  // Original portraits are typically square; fill width without aspect distortion.
+  const rw=(w-8),rh=ih-6;
+  const scale=Math.max(rw/im.naturalWidth,rh/im.naturalHeight);
+  const iw=im.naturalWidth*scale,hh=im.naturalHeight*scale;
+  ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(im,x+(w-iw)/2,y+4+(rh-hh)/2,iw,hh);ctx.restore();
+ }else{
+  ctx.fillStyle='#d9d7cd';ctx.font='54px serif';ctx.textAlign='center';ctx.fillText('⚜',x+w/2,y+ih*.57);ctx.textAlign='left';
+ }
+ rect(x+1,y+ih,w-2,34,'#f1eee5');dline(x+6,y+ih,x+w-6,'#b8ac92');
+ const name=id?charName(id):'—';const size=id?20:24;
+ dt(dfit(name,w-10,size,400),x+(w-dmeasure(dfit(name,w-10,size,400),size))/2,y+h-10,size,navy);
+ // Quiet archival corner notches, no thick fantasy card frames.
+ ctx.strokeStyle=gold;ctx.lineWidth=2;for(const [xx,yy,sx,sy] of [[x,y,1,1],[x+w,y,-1,1],[x,y+h,1,-1],[x+w,y+h,-1,-1]]){ctx.beginPath();ctx.moveTo(xx+sx*15,yy);ctx.lineTo(xx,yy);ctx.lineTo(xx,yy+sy*15);ctx.stroke()}
+}
 function draw(){
  if(!ctx||step!==5)return;
  ctx.clearRect(0,0,W,H);
- if(!doc('paper',0,0,W,H)){rect(0,0,W,H,'#F3F0E6');}
- const navy='#172632',slate='#536F7D',gold='#D6C29A',cyan='#6FC7D6';
- // Two subtle printed rules, intentionally not a second decorative frame.
- ctx.strokeStyle='#b9af95';ctx.lineWidth=1;ctx.strokeRect(43,40,914,1332);
- ctx.strokeStyle='#dfd5bb';ctx.strokeRect(51,48,898,1316);
- text('SEASON  XIII',85,102,19,slate,700);
- text('ETERNAL RETURN',755,102,17,slate,700);
- // Keep only the emblem; the large title and plaque needlessly dominated the document.
- doc('crest',444,71,112,125,.91);
- docSection('프로필',249);
- // PROFILE
- // Portrait is masked to the usable opening INSIDE the enlarged ornamental frame.
- const frameX=67,frameY=267,frameW=343,frameH=385;
- const px=121,py=362,pw=235,ph=234;
- rect(px,py,pw,ph,navy);
- if(!portrait(photoImage,px,py,pw,ph)){
-   ctx.save();ctx.beginPath();ctx.rect(px,py,pw,ph);ctx.clip();
-   rect(px,py,pw,ph,'#263f4a');
-   ctx.fillStyle='#617783';ctx.beginPath();ctx.arc(px+pw/2,py+81,39,0,Math.PI*2);ctx.fill();
-   ctx.beginPath();ctx.ellipse(px+pw/2,py+229,87,76,0,0,Math.PI*2);ctx.fill();ctx.restore();
- }
- drawFrame3(frameX,frameY,frameW,frameH);
- const infoX=439,infoRight=909,infoW=infoRight-infoX;
- const nick=state.nickname||'닉네임';
- text(fitText(nick,infoW,43,700),infoX,353,43,navy,700);
- text(fitText(state.xid||'@x_id',infoW,22),infoX,390,22,slate);
- if(state.discordPublic&&state.discord)text('DISCORD  '+fitText(state.discord,330,17),infoX,420,17,slate);
- line(infoX,437,infoRight,437,'#c8bfa7',1);
- wrap(state.oneLine||'한 줄 소개가 여기에 표시됩니다.',infoX,474,infoW,30,2,21,navy);
- docField('티어',state.tier,infoX,548,215);
- docField('주 활동 시간',state.time,695,548,205);
- docField('선호 모드',(state.modes||[]).join(' / '),infoX,614,215);
- docField('성별',state.gender,695,614,205);
- docSection('선호 실험체',751);
- // PREFERRED CHARACTERS
- const ids=state.characters||[];
- for(let i=0;i<5;i++){
-  const x=86+i*169,y=798,w=151,id=ids[i],entry=characters.find(c=>c.name===id),im=entry&&charImages.get(id);
-  rect(x,y,w,145,'#e8e7df');
-  if(im?.complete&&im.naturalWidth)ctx.drawImage(im,x,y,w,145);
-  else {rect(x,y,w,145,'#e6e6dd');ctx.fillStyle='#D6C29A';ctx.beginPath();ctx.arc(x+75,y+73,24,0,Math.PI*2);ctx.fill();}
-  ctx.strokeStyle='#bfb394';ctx.lineWidth=1.5;ctx.strokeRect(x-1,y-1,w+2,147);
-  ctx.strokeStyle='#f6f2e9';ctx.strokeRect(x+5,y+5,w-10,135);
-  centerText(fitText(id?charName(id):'미선택',153,19,700),x+75.5,976,19,id?navy:'#7c8a87',700);
- }
- // USER WORDS, never invent headings from 'certificate' theme
- // STORY / FREEFORM CONTENT — keep the content, remove the redundant big section title.
- line(90,1038,910,1038,'#d0c4aa',1);
- const info=[['관심사',state.interests],['좋아요',state.likes],['싫어요',state.dislikes]];
- info.forEach(([k,v],i)=>{const y=1081+i*48;text(k,92,y,18,slate,700);text(fitText(v||'—',703,21),208,y,21,navy);line(91,y+15,910,y+15,'#d9d1c0',1)});
- text('자유 소개',92,1230,18,slate,700);
- wrap(state.intro||'자유 소개를 작성해 주세요.',92,1269,687,31,3,20,navy);
- ctx.save();
- ctx.translate(913,1305);
- ctx.rotate(0.13);
- doc('seal',-38,-47,170,173,.98);
- ctx.restore();
- // Footer is small and purely structural; no fabricated legal/certification copy.
- line(86,1371,914,1371,'#c6b99c',1);
- centerText('SEASON XIII  ·  ETERNAL RETURN',500,1396,15,slate,400);
+ const navy='#172632',slate='#536F7D',ivory='#F3F0E6',gold='#D6C29A';
+ if(!doc('paper',0,0,W,H))rect(0,0,W,H,ivory);
+ // Preserve subdued parchment and print-like boundaries; not an overlay mockup.
+ ctx.strokeStyle='#456073';ctx.lineWidth=1.7;ctx.strokeRect(30,43,940,1345);
+ ctx.strokeStyle='#d6c29a';ctx.lineWidth=1;ctx.strokeRect(39,52,922,1327);
+ dcorner(31,44,1,1);dcorner(969,44,-1,1);dcorner(31,1387,1,-1);dcorner(969,1387,-1,-1);
+ // Small crest rather than the old oversized title/plaque.
+ doc('crest',427,-4,146,130,.68);
+ dline(82,118,272,'#9b9989');dline(728,118,918,'#9b9989');
+ const header='S E A S O N   X I I I  ·  E T E R N A L   R E T U R N';
+ dt(header,(W-dmeasure(header,15,700))/2,125,15,navy,700);
+ // IDENTITY / PHOTO BLOCK
+ const px=68,py=170,pw=424,ph=445;
+ dphoto(photoImage,px,py,pw,ph);
+ const ix=536,right=932,iw=right-ix;
+ dlabel('이름',ix,184,98);dt(dfit(state.nickname||'닉네임',iw-130,38,700),654,216,38,navy,700);dline(ix,236,right);
+ dlabel('ID',ix,248,98);dt(dfit(state.xid||'@x_id',iw-130,26),654,278,26,navy);dline(ix,300,right);
+ if(state.discordPublic&&state.discord){dt('DISCORD  '+dfit(state.discord,285,16),ix,326,16,slate)}
+ dlabel('한 줄 소개',ix,337,120);dw(state.oneLine||'—',ix+138,364,iw-142,22,29,2,navy);dline(ix,408,right);
+ // Four labeled rows, never invent new fields or change their meaning.
+ const values=[['티어',state.tier],['선호 모드',(state.modes||[]).join(' / ')],['활동 시간',state.time],['성별',state.gender]];
+ const rowY=[427,471,515,559];
+ values.forEach(([label,val],i)=>{
+  const y=rowY[i];dlabel(label,ix,y,137);dt(dfit(val||'—',iw-167,21),ix+155,y+27,21,navy);dline(ix,y+42,right,'#aaa99f');
+ });
+ // SUBJECT RECORDS
+ dt('선호 실험체',65,696,33,navy,700);
+ dline(279,688,934,'#8e9695');
+ const ids=state.characters||[],xs=[65,246,427,608,789];
+ for(let i=0;i<5;i++)dslot(i,ids[i],xs[i],730,160,217);
+ // Existing story values remain unchanged; only the redundant section heading is removed.
+ dline(65,994,935,'#a8ada4');
+ const info=[['관심사',state.interests],['좋아요',state.likes],['싫어요',state.dislikes],['자유 소개',state.intro]];
+ const ys=[1030,1109,1188,1267];
+ info.forEach(([k,val],i)=>{
+  const y=ys[i];dlabel(k,67,y,187);dw(val||'—',293,y+29,i===3?500:617,i===3?22:24,31,i===3?3:2,navy);if(i<3)dline(67,y+65,936,'#b9b7ac');
+ });
+ // Draw partial wax seal last: it overlays the printed right/bottom borders.
+ dseal();
 }
 
 function measure(s,size,weight=400){ctx.font=`${weight} ${size}px Heiro`;return ctx.measureText(s).width}
 function download(){draw();const a=document.createElement('a');a.download=`ER-TCS-S13-${(state.nickname||'profile').replace(/[\\/:*?"<>|]/g,'_')}.png`;a.href=canvas.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove()}
-async function init(){try{const res=await fetch('characters.json');if(res.ok)characters=await res.json()}catch(e){}if(!characters.length)characters=['Aya','Jackie','Fiora','Yuki','Hyunwoo','Bianca','Rio','Nadine','Hart','Hyejin','Emma','Adriana'].map(name=>({name}));for(const c of characters){if(!c.image)continue;const img=new Image();img.onload=()=>{if(step===5)draw()};img.onerror=()=>{};img.src=c.image;charImages.set(c.name,img)}if(document.fonts?.ready)document.fonts.ready.then(()=>{if(step===5)draw()});loadOfficialImages();loadDocImages();loadPhoto();render()}
+async function init(){try{const res=await fetch('characters.json');if(res.ok)characters=await res.json()}catch(e){}if(!characters.length)characters=['Aya','Jackie','Fiora','Yuki','Hyunwoo','Bianca','Rio','Nadine','Hart','Hyejin','Emma','Adriana'].map(name=>({name}));for(const c of characters){if(!c.image)continue;const img=new Image();img.onload=()=>{if(step===5)draw()};img.onerror=()=>{};img.src=c.image;charImages.set(c.name,img)}if(document.fonts?.ready)document.fonts.ready.then(()=>{if(step===5)draw()});loadOfficialImages();loadDocImages();loadPhoto();render();loadDocumentFont()}
 init();
+
+async function loadDocumentFont(){
+ try{
+  await Promise.all([400,700].map(async weight=>{
+   const face=new FontFace('DocSerif',`url(assets/fonts/DocSerif-${weight}.woff2)`,{weight:String(weight),style:'normal'});
+   document.fonts.add(face);await face.load();
+  }));
+ }catch(e){console.warn('Document font unavailable, falling back to serif',e)}
+ if(step===5)draw();
+}
