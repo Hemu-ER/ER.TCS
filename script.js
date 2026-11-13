@@ -208,10 +208,10 @@ function draw(){
  const infoX=439,infoRight=909,infoW=infoRight-infoX;
  const nick=state.nickname||'닉네임';
  text(fitText(nick,infoW,43,700),infoX,353,43,navy,700);
- text(fitText(state.xid||'@X_ID',infoW,22),infoX,390,22,slate);
+ text(fitText(state.xid||'@x_id',infoW,22),infoX,390,22,slate);
  if(state.discordPublic&&state.discord)text('DISCORD  '+fitText(state.discord,330,17),infoX,420,17,slate);
  line(infoX,437,infoRight,437,'#c8bfa7',1);
- wrap(state.oneLine||'한 줄 소개를 작성해 줘',infoX,474,infoW,30,2,21,navy);
+ wrap(state.oneLine||'한 줄 소개가 여기에 표시됩니다.',infoX,474,infoW,30,2,21,navy);
  docField('티어',state.tier,infoX,548,215);
  docField('주 활동 시간',state.time,695,548,205);
  docField('선호 모드',(state.modes||[]).join(' / '),infoX,614,215);
@@ -229,12 +229,17 @@ function draw(){
   centerText(fitText(id?charName(id):'미선택',153,19,700),x+75.5,976,19,id?navy:'#7c8a87',700);
  }
  // USER WORDS, never invent headings from 'certificate' theme
- docSection('나의 이야기',1037);
+ // STORY / FREEFORM CONTENT — keep the content, remove the redundant big section title.
+ line(90,1038,910,1038,'#d0c4aa',1);
  const info=[['관심사',state.interests],['좋아요',state.likes],['싫어요',state.dislikes]];
- info.forEach(([k,v],i)=>{const y=1090+i*48;text(k,92,y,18,slate,700);text(fitText(v||'—',703,21),208,y,21,navy);line(91,y+15,910,y+15,'#d9d1c0',1)});
- text('자유 소개',92,1241,18,slate,700);
- wrap(state.intro||'자유 소개를 작성해 줘.',92,1280,687,31,3,20,navy);
- doc('seal',794,1235,155,158,.96);
+ info.forEach(([k,v],i)=>{const y=1081+i*48;text(k,92,y,18,slate,700);text(fitText(v||'—',703,21),208,y,21,navy);line(91,y+15,910,y+15,'#d9d1c0',1)});
+ text('자유 소개',92,1230,18,slate,700);
+ wrap(state.intro||'자유 소개를 작성해 주세요.',92,1269,687,31,3,20,navy);
+ ctx.save();
+ ctx.translate(913,1305);
+ ctx.rotate(0.13);
+ doc('seal',-38,-47,170,173,.98);
+ ctx.restore();
  // Footer is small and purely structural; no fabricated legal/certification copy.
  line(86,1371,914,1371,'#c6b99c',1);
  centerText('SEASON XIII  ·  ETERNAL RETURN',500,1396,15,slate,400);
