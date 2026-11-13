@@ -140,85 +140,95 @@ function centerText(s,cx,y,size,color,weight=400){text(s,cx-measure(s,size,weigh
 function thinRule(y,x=78,r=922){line(x,y,r,y,'#b7a27f',1);line(x,y+4,r,y+4,'#dfd3bb',1)}
 function labelText(s,x,y){text(s,x,y,17,'#8c7557',700)}
 function infoText(s,x,y,w,sz=23,bold=400){text(fitText(s||'—',w,sz,bold),x,y,sz,'#263c47',bold)}
+// Season XIII document art: independent raster PNG layers, geometry only for content guides.
+const docFiles={paper:'paper.png',crest:'01_lily_crest.png',plaque:'02_blank_title_plaque.png',divider:'03_thin_divider.png',frame:'04_portrait_frame.png',stamp:'05_ink_seal_with_stamp.png',seal:'06_sealing_ribbon.png'};
+const docImages={};
+function loadDocImages(){for(const [k,f] of Object.entries(docFiles)){
+ const im=new Image(); docImages[k]=im; im.onload=()=>{if(step===5)draw()}; im.src='assets/season13doc/'+f;
+}}
+function doc(k,x,y,w,h,alpha=1){let im=docImages[k];if(!im?.complete||!im.naturalWidth)return false;
+ ctx.save();ctx.globalAlpha*=alpha;ctx.drawImage(im,x,y,w,h);ctx.restore();return true;}
+// Five-slice: do not stretch the central lily or the two ornate end caps.
+function drawPlaque5(x,y,w,h){let im=docImages.plaque;if(!im?.naturalWidth)return;
+ const cuts=[0,575,790,1382,1597,2172];
+ const widths=[w*.22,w*.115,w*.33,w*.115,w*.22];let dest=x;
+ for(let i=0;i<5;i++){const sw=cuts[i+1]-cuts[i];ctx.drawImage(im,cuts[i],0,sw,724,dest,y,widths[i],h);dest+=widths[i];}
+}
+// Three-slice portrait: immutable decorated crown/footer, extend only the side rails.
+function drawFrame3(x,y,w,h){let im=docImages.frame;if(!im?.naturalWidth)return;
+ let tops=355,bottoms=345,src=1254,srcMid=src-tops-bottoms;
+ let ht=h*.295,hb=h*.285,hm=h-ht-hb;
+ ctx.drawImage(im,0,0,src,tops,x,y,w,ht);
+ ctx.drawImage(im,0,tops,src,srcMid,x,y+ht,w,hm);
+ ctx.drawImage(im,0,src-bottoms,src,bottoms,x,y+ht+hm,w,hb);
+}
+function docRule(y){let im=docImages.divider;
+ if(im?.naturalWidth){ // crop to the painted horizontal region; no excess transparent margins
+  ctx.save();ctx.globalAlpha=.68;ctx.drawImage(im,30,180,2110,330,88,y-18,824,48);ctx.restore();
+ }else line(84,y,916,y,'#c6b896',1)}
+function docSection(s,y){text(s,88,y,28,'#172632',700);}
+function docField(k,v,x,y,max=225){text(k,x,y,17,'#536F7D',700);text(fitText(v||'—',max,22),x,y+31,22,'#172632')}
 function draw(){
  if(!ctx||step!==5)return;
  ctx.clearRect(0,0,W,H);
- const ink='#263846',gold='#b39664',navy='#1c3243';
- // Airy official stationery, NOT a wall of fantasy borders.
- const bg=ctx.createLinearGradient(0,0,W,H);
- bg.addColorStop(0,'#faf6ee');bg.addColorStop(.55,'#f4eddf');bg.addColorStop(1,'#eee3d0');rect(0,0,W,H,bg);
- ctx.save();ctx.globalAlpha=.1;for(let i=0;i<45;i++){const y=45+i*30;line(45,y,955,y,'#ccb892',.35)}ctx.restore();
- ctx.strokeStyle='#ad956c';ctx.lineWidth=2;ctx.strokeRect(27,27,946,1360);
- ctx.strokeStyle='#d2bfa0';ctx.lineWidth=1;ctx.strokeRect(38,38,924,1338);
- // Subtle embossed paper watermarks and original ornament PNGs.
- official('watermark',300,865,410,410,.055);
- official('corners',57,47,135,72,.49);
- official('corners',807,47,135,72,.49,true);
- official('cathedral',337,45,326,112,.95);
- text('LUMIA / SOCIAL ARCHIVE',73,98,16,'#847255',700);
- text('ISSUED • SEASON XIII',763,98,16,'#847255',700);
- centerText('교류 등록 증명서',500,192,53,ink,700);
- centerText('ETERNAL RETURN  ·  THIRTEENTH SEASON',500,226,17,'#937c56',400);
- thinRule(249,76,924);
- // 01 / Registrant. Portrait is the visual anchor, while labels stay quiet.
- official('blankLabel',403,281,233,78,.96);
- text('I. 등록자 정보',449,325,23,ink,700);
- const px=91,py=325,pw=242,ph=242;
- rect(px-7,py-7,pw+14,ph+14,'#d6c8ad');
+ if(!doc('paper',0,0,W,H)){rect(0,0,W,H,'#F3F0E6');}
+ const navy='#172632',slate='#536F7D',gold='#D6C29A',cyan='#6FC7D6';
+ // Two subtle printed rules, intentionally not a second decorative frame.
+ ctx.strokeStyle='#b9af95';ctx.lineWidth=1;ctx.strokeRect(43,40,914,1332);
+ ctx.strokeStyle='#dfd5bb';ctx.strokeRect(51,48,898,1316);
+ text('SEASON  XIII',85,102,19,slate,700);
+ text('ETERNAL RETURN',755,102,17,slate,700);
+ doc('crest',418,62,164,118,.92);
+ drawPlaque5(184,172,632,140);
+ centerText('트친소',500,265,47,navy,700);
+ docRule(330);
+ // PROFILE
+ docSection('프로필',356);
+ const px=106,py=405,pw=245,ph=255;
+ rect(px,py,pw,ph,navy);
  if(!portrait(photoImage,px,py,pw,ph)){
-  rect(px,py,pw,ph,navy);official('watermark',px+34,py+37,174,174,.27);
-  centerText('PROFILE',px+pw/2,py+222,18,'#e1d1b6');
+  ctx.save();ctx.fillStyle='#263f4a';ctx.fillRect(px,py,pw,ph);
+  ctx.save();ctx.beginPath();ctx.rect(px,py,pw,ph);ctx.clip();ctx.fillStyle='#617783';ctx.beginPath();ctx.arc(px+pw/2,py+91,43,0,7);ctx.fill();
+  ctx.beginPath();ctx.ellipse(px+pw/2,py+227,92,76,0,0,7);ctx.fill();ctx.restore();ctx.restore();
  }
- official('portrait',65,299,293,293,.94);
- text('Nº 01 / APPLICANT',98,611,15,'#957c56',700);
- const nick=state.nickname||'이름 미입력';
- let nsize=Math.min(49,Math.max(31,49*494/Math.max(494,measure(nick,49,700))));
- text(fitText(nick,493,nsize,700),413,388,nsize,ink,700);
- text(fitText(state.xid||'@X_ID',493,23),416,422,23,'#6c7b81');
- if(state.discordPublic&&state.discord)text('DISCORD  '+fitText(state.discord,340,17),416,451,18,'#60747d');
- line(414,468,909,468,'#c6b59a',1);
- wrap(state.oneLine||'함께할 인연을 기다리는 중',414,507,489,31,2,23,ink);
- // Information as typeset lines, not ornate SVG boxes.
- const details=[['티어',state.tier||'—'],['주 활동 시간',state.time||'—'],['선호 모드',state.modes.join(' / ')||'—'],['성별',state.gender||'—']];
- const dpos=[[414,575],[663,575],[414,623],[663,623]];
- details.forEach(([k,v],i)=>{const [x,y]=dpos[i];labelText(k,x,y-19);infoText(v,x,y+9,i%2===0?225:233,21,i===0?700:400)});
- thinRule(665,76,924);
- // 02 / Characters. Five sober archival portrait fields, not sticker tiles.
- text('II. 선호 실험체',83,714,28,ink,700);
- text('PREFERRED SUBJECTS / FIVE MAX',634,714,16,'#917c59');
+ drawFrame3(82,375,292,313);
+ const nick=state.nickname||'닉네임';
+ text(fitText(nick,478,46,700),409,434,46,navy,700);
+ text(fitText(state.xid||'@X_ID',468,22),411,472,23,slate);
+ if(state.discordPublic && state.discord)text('DISCORD  '+fitText(state.discord,310,18),412,506,18,slate);
+ line(410,522,909,522,'#c8bfa7',1);
+ wrap(state.oneLine||'한 줄 소개를 작성해 줘',411,560,482,31,2,21,navy);
+ docField('티어',state.tier,411,609,220);
+ docField('주 활동 시간',state.time,668,609,220);
+ docField('선호 모드',(state.modes||[]).join(' / '),411,672,220);
+ docField('성별',state.gender,668,672,220);
+ docRule(738);
+ // PREFERRED CHARACTERS
+ docSection('선호 실험체',765);
+ const ids=state.characters||[];
  for(let i=0;i<5;i++){
-   const x=83+i*170,y=749,w=152,h=145,id=state.characters[i],entry=characters.find(c=>c.name===id),img=entry&&charImages.get(id);
-   ctx.fillStyle='#ebe3d3';ctx.fillRect(x,y,w,h);
-   ctx.strokeStyle='#bcab8c';ctx.lineWidth=2;ctx.strokeRect(x,y,w,h);
-   ctx.strokeStyle='#e7ddc8';ctx.lineWidth=1;ctx.strokeRect(x+5,y+5,w-10,h-10);
-   if(img?.complete&&img.naturalWidth){ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(img,x+13,y+8,w-26,w-26)}
-   else official('watermark',x+28,y+25,96,96,.16);
-   rect(x+10,y+122,132,23,'#203747');
-   text(String(i+1).padStart(2,'0'),x+18,y+140,17,'#e8d7b5',700);
-   if(id)centerText(fitText(charName(id),139,19,700),x+76,y+177,19,ink,700);
-   else centerText('미선택',x+76,y+177,18,'#a19a88');
+  const x=86+i*169,y=798,w=151,id=ids[i],entry=characters.find(c=>c.name===id),im=entry&&charImages.get(id);
+  rect(x,y,w,145,'#e8e7df');
+  if(im?.complete&&im.naturalWidth)ctx.drawImage(im,x,y,w,145);
+  else {rect(x,y,w,145,'#e6e6dd');ctx.fillStyle='#D6C29A';ctx.beginPath();ctx.arc(x+75,y+73,24,0,Math.PI*2);ctx.fill();}
+  ctx.strokeStyle='#bfb394';ctx.lineWidth=1.5;ctx.strokeRect(x-1,y-1,w+2,147);
+  ctx.strokeStyle='#f6f2e9';ctx.strokeRect(x+5,y+5,w-10,135);
+  centerText(fitText(id?charName(id):'미선택',153,19,700),x+75.5,976,19,id?navy:'#7c8a87',700);
  }
- thinRule(952,76,924);
- // 03 / Written record.
- text('III. 교류 기록',83,1006,29,ink,700);
- text('PERSONAL NOTES',727,1006,16,'#917c59');
- const rows=[['관심사',state.interests],['좋아요',state.likes],['싫어요',state.dislikes]];
- rows.forEach(([k,v],i)=>{
-   const y=1053+i*56;labelText(k,91,y);
-   text(fitText(v||'—',725,22),213,y,22,ink);
-   line(91,y+16,907,y+16,'#dacdb6',1);
- });
- labelText('자유 소개',91,1235);
- wrap(state.intro||'자유 소개를 작성하지 않았습니다.',91,1271,682,34,3,21,ink);
- // Genuine wax and blue ink document stamps from uploaded files.
- official('lilies',764,1219,136,136,.31);
- official('wax',813,1212,131,131,.95);
- official('stamp',784,1065,128,128,.15);
- line(75,1356,925,1356,'#c5b393');
- centerText('이 문서는 작성자의 소개를 기록한 교류용 증명서입니다.',500,1377,15,'#88775d');
+ docRule(1007);
+ // USER WORDS, never invent headings from 'certificate' theme
+ docSection('나의 이야기',1044);
+ const info=[['관심사',state.interests],['좋아요',state.likes],['싫어요',state.dislikes]];
+ info.forEach(([k,v],i)=>{const y=1090+i*48;text(k,92,y,18,slate,700);text(fitText(v||'—',703,21),208,y,21,navy);line(91,y+15,910,y+15,'#d9d1c0',1)});
+ text('자유 소개',92,1241,18,slate,700);
+ wrap(state.intro||'자유 소개를 작성해 줘.',92,1280,687,31,3,20,navy);
+ doc('seal',794,1235,155,158,.96);
+ // Footer is small and purely structural; no fabricated legal/certification copy.
+ line(86,1371,914,1371,'#c6b99c',1);
+ centerText('SEASON XIII  ·  ETERNAL RETURN',500,1396,15,slate,400);
 }
 
 function measure(s,size,weight=400){ctx.font=`${weight} ${size}px Heiro`;return ctx.measureText(s).width}
 function download(){draw();const a=document.createElement('a');a.download=`ER-TCS-S13-${(state.nickname||'profile').replace(/[\\/:*?"<>|]/g,'_')}.png`;a.href=canvas.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove()}
-async function init(){try{const res=await fetch('characters.json');if(res.ok)characters=await res.json()}catch(e){}if(!characters.length)characters=['Aya','Jackie','Fiora','Yuki','Hyunwoo','Bianca','Rio','Nadine','Hart','Hyejin','Emma','Adriana'].map(name=>({name}));for(const c of characters){if(!c.image)continue;const img=new Image();img.onload=()=>{if(step===5)draw()};img.onerror=()=>{};img.src=c.image;charImages.set(c.name,img)}if(document.fonts?.ready)document.fonts.ready.then(()=>{if(step===5)draw()});loadOfficialImages();loadPhoto();render()}
+async function init(){try{const res=await fetch('characters.json');if(res.ok)characters=await res.json()}catch(e){}if(!characters.length)characters=['Aya','Jackie','Fiora','Yuki','Hyunwoo','Bianca','Rio','Nadine','Hart','Hyejin','Emma','Adriana'].map(name=>({name}));for(const c of characters){if(!c.image)continue;const img=new Image();img.onload=()=>{if(step===5)draw()};img.onerror=()=>{};img.src=c.image;charImages.set(c.name,img)}if(document.fonts?.ready)document.fonts.ready.then(()=>{if(step===5)draw()});loadOfficialImages();loadDocImages();loadPhoto();render()}
 init();
