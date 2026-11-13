@@ -166,7 +166,19 @@ function docRule(y){let im=docImages.divider;
  if(im?.naturalWidth){ // crop to the painted horizontal region; no excess transparent margins
   ctx.save();ctx.globalAlpha=.68;ctx.drawImage(im,30,180,2110,330,88,y-18,824,48);ctx.restore();
  }else line(84,y,916,y,'#c6b896',1)}
-function docSection(s,y){text(s,88,y,28,'#172632',700);}
+function docSection(s,y){
+ const x=88, size=27, baseline=y;
+ text(s,x,baseline,size,'#172632',700);
+ const start=Math.max(250,x+measure(s,size,700)+28);
+ line(start,baseline-11,914,baseline-11,'#b7a98c',1);
+ // Only the section header's reserved trailing space receives ornamentation.
+ const im=docImages.divider;
+ if(im?.naturalWidth && 914-start>220){
+   ctx.save();ctx.globalAlpha=.72;
+   ctx.drawImage(im,875,170,460,340,Math.floor(start+(914-start)*.53)-35,baseline-28,70,36);
+   ctx.restore();
+ }
+}
 function docField(k,v,x,y,max=225){text(k,x,y,17,'#536F7D',700);text(fitText(v||'—',max,22),x,y+31,22,'#172632')}
 function draw(){
  if(!ctx||step!==5)return;
@@ -178,33 +190,34 @@ function draw(){
  ctx.strokeStyle='#dfd5bb';ctx.strokeRect(51,48,898,1316);
  text('SEASON  XIII',85,102,19,slate,700);
  text('ETERNAL RETURN',755,102,17,slate,700);
- doc('crest',418,62,164,118,.92);
- drawPlaque5(184,172,632,140);
- centerText('트친소',500,265,47,navy,700);
- docRule(330);
+ // Keep only the emblem; the large title and plaque needlessly dominated the document.
+ doc('crest',444,71,112,125,.91);
+ docSection('프로필',249);
  // PROFILE
- docSection('프로필',356);
- const px=106,py=405,pw=245,ph=255;
+ // Portrait is masked to the usable opening INSIDE the enlarged ornamental frame.
+ const frameX=67,frameY=267,frameW=343,frameH=385;
+ const px=121,py=362,pw=235,ph=234;
  rect(px,py,pw,ph,navy);
  if(!portrait(photoImage,px,py,pw,ph)){
-  ctx.save();ctx.fillStyle='#263f4a';ctx.fillRect(px,py,pw,ph);
-  ctx.save();ctx.beginPath();ctx.rect(px,py,pw,ph);ctx.clip();ctx.fillStyle='#617783';ctx.beginPath();ctx.arc(px+pw/2,py+91,43,0,7);ctx.fill();
-  ctx.beginPath();ctx.ellipse(px+pw/2,py+227,92,76,0,0,7);ctx.fill();ctx.restore();ctx.restore();
+   ctx.save();ctx.beginPath();ctx.rect(px,py,pw,ph);ctx.clip();
+   rect(px,py,pw,ph,'#263f4a');
+   ctx.fillStyle='#617783';ctx.beginPath();ctx.arc(px+pw/2,py+81,39,0,Math.PI*2);ctx.fill();
+   ctx.beginPath();ctx.ellipse(px+pw/2,py+229,87,76,0,0,Math.PI*2);ctx.fill();ctx.restore();
  }
- drawFrame3(82,375,292,313);
+ drawFrame3(frameX,frameY,frameW,frameH);
+ const infoX=439,infoRight=909,infoW=infoRight-infoX;
  const nick=state.nickname||'닉네임';
- text(fitText(nick,478,46,700),409,434,46,navy,700);
- text(fitText(state.xid||'@X_ID',468,22),411,472,23,slate);
- if(state.discordPublic && state.discord)text('DISCORD  '+fitText(state.discord,310,18),412,506,18,slate);
- line(410,522,909,522,'#c8bfa7',1);
- wrap(state.oneLine||'한 줄 소개를 작성해 줘',411,560,482,31,2,21,navy);
- docField('티어',state.tier,411,609,220);
- docField('주 활동 시간',state.time,668,609,220);
- docField('선호 모드',(state.modes||[]).join(' / '),411,672,220);
- docField('성별',state.gender,668,672,220);
- docRule(738);
+ text(fitText(nick,infoW,43,700),infoX,353,43,navy,700);
+ text(fitText(state.xid||'@X_ID',infoW,22),infoX,390,22,slate);
+ if(state.discordPublic&&state.discord)text('DISCORD  '+fitText(state.discord,330,17),infoX,420,17,slate);
+ line(infoX,437,infoRight,437,'#c8bfa7',1);
+ wrap(state.oneLine||'한 줄 소개를 작성해 줘',infoX,474,infoW,30,2,21,navy);
+ docField('티어',state.tier,infoX,548,215);
+ docField('주 활동 시간',state.time,695,548,205);
+ docField('선호 모드',(state.modes||[]).join(' / '),infoX,614,215);
+ docField('성별',state.gender,695,614,205);
+ docSection('선호 실험체',751);
  // PREFERRED CHARACTERS
- docSection('선호 실험체',765);
  const ids=state.characters||[];
  for(let i=0;i<5;i++){
   const x=86+i*169,y=798,w=151,id=ids[i],entry=characters.find(c=>c.name===id),im=entry&&charImages.get(id);
@@ -215,9 +228,8 @@ function draw(){
   ctx.strokeStyle='#f6f2e9';ctx.strokeRect(x+5,y+5,w-10,135);
   centerText(fitText(id?charName(id):'미선택',153,19,700),x+75.5,976,19,id?navy:'#7c8a87',700);
  }
- docRule(1007);
  // USER WORDS, never invent headings from 'certificate' theme
- docSection('나의 이야기',1044);
+ docSection('나의 이야기',1037);
  const info=[['관심사',state.interests],['좋아요',state.likes],['싫어요',state.dislikes]];
  info.forEach(([k,v],i)=>{const y=1090+i*48;text(k,92,y,18,slate,700);text(fitText(v||'—',703,21),208,y,21,navy);line(91,y+15,910,y+15,'#d9d1c0',1)});
  text('자유 소개',92,1241,18,slate,700);
