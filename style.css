@@ -75,3 +75,29 @@
 .selected-characters strong{display:block;margin-bottom:9px;color:#273c47}.selected-strip{display:flex;gap:7px;flex-wrap:wrap}.selected-chip{display:flex;align-items:center;gap:5px;background:#203948;color:#f5e8cb;border:1px solid #ae9466;padding:5px 9px 5px 5px;font-size:15px}.selected-chip img{width:32px;height:32px;object-fit:contain}.selected-empty{font-size:14px;color:#65747a}
 .char{position:relative}.char-check{position:absolute;right:4px;top:3px;background:#203948;color:#f9e7c0;border-radius:50%;width:22px;height:22px;display:grid;place-items:center}
 @media(max-width:620px){.photo-editor{grid-template-columns:1fr}.photo-visual{max-width:240px;margin:auto}.selected-characters{top:0}}
+
+/* v1.0 / The Sacred Registry: document-first, legibility and breathing room */
+:root{--gold:#c1a36c;--cream:#f8f0de}
+.app{background:linear-gradient(115deg,#0c1923ef,#10232eef),url('assets/season13.png') center/cover fixed}
+.top{background:#101f2be8;border-bottom:1px solid #9e89665e}
+.top .brand-mark{font-size:31px}
+.sidebar{background:#101d28e3}
+.main-heading{border-bottom-color:#ad976d70}
+.form-panel{background:linear-gradient(120deg,#f9f4e8 0%,#f5eddd 68%,#eee3d0 100%);box-shadow:0 15px 55px #0007;border:1px solid #bca983;border-left:7px solid #9d8862;border-radius:3px;overflow:hidden}
+.form-panel:before{inset:14px;border-color:#d1bfa08c}
+.form-title{color:#273c46;border-color:#c4b08b;font-weight:700;letter-spacing:.025em}
+.form-hint{color:#6b746e}
+.field-label{color:#806b4d}
+.field input:not([type=file]),.field textarea,#charSearch{color:#263c47!important}
+.choice{background:#f8f3e7!important}
+.choice.selected{background:#1d3446!important}
+.reveal-panel .canvas-wrap{background:#efe8d9;border-color:#bea77e;box-shadow:0 20px 52px #0007}
+.reveal-panel canvas{aspect-ratio:1000 / 1414}
+.correction-panel{margin:0 0 24px;padding:16px 18px;border:1px solid #c5b394;background:#eee7d8;color:#273c47}
+.correction-switch{display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:700;color:#263d49}
+.correction-switch input{accent-color:#203f50;width:19px;height:19px}
+.correction-panel p{margin:9px 0 13px}
+.correction-panel .crop-label{margin-bottom:13px}
+.correction-panel button{border:1px solid #b8a17a;background:#f4eddd;color:#29404d;padding:8px 12px}
+.correction-panel [hidden]{display:none}
+@media(max-width:700px){.form-panel{border-left-width:5px}.reveal-panel canvas{width:100%}}
