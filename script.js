@@ -181,14 +181,14 @@ function docSection(s,y){
 }
 function docField(k,v,x,y,max=225){text(k,x,y,17,'#536F7D',700);text(fitText(v||'—',max,22),x,y+31,22,'#172632')}
 // Single finished layout: sacred-imperial archival dossier. Form UI remains unchanged.
-const documentFont='DocSerif';
+const documentFont='Heiro';
 function dt(s,x,y,size=23,color='#172632',weight=400,maxWidth){
- ctx.save();ctx.font=`${weight} ${size}px ${documentFont}, serif`;
+ ctx.save();ctx.font=`${weight} ${size}px ${documentFont}`;
  ctx.fillStyle=color;ctx.textBaseline='alphabetic';
  if(maxWidth)ctx.fillText(String(s),x,y,maxWidth);else ctx.fillText(String(s),x,y);
  ctx.restore();
 }
-function dmeasure(s,size=23,weight=400){ctx.save();ctx.font=`${weight} ${size}px ${documentFont}, serif`;const m=ctx.measureText(String(s)).width;ctx.restore();return m;}
+function dmeasure(s,size=23,weight=400){ctx.save();ctx.font=`${weight} ${size}px ${documentFont}`;const m=ctx.measureText(String(s)).width;ctx.restore();return m;}
 function dfit(s,w,size=23,weight=400){let a=String(s??'');if(dmeasure(a,size,weight)<=w)return a;while(a&&dmeasure(a+'…',size,weight)>w)a=a.slice(0,-1);return a+'…'}
 function dwlines(s,width,size=23,weight=400){const result=[];for(const para of String(s??'').split('\n')){let l='';for(const ch of para){if(l&&dmeasure(l+ch,size,weight)>width){result.push(l);l=ch}else l+=ch}result.push(l)}return result;}
 function dw(s,x,y,width,size=23,lineHeight=31,maxLines=2,color='#172632',weight=400){const lines=dwlines(s,width,size,weight);lines.slice(0,maxLines).forEach((a,i)=>dt(i===maxLines-1&&lines.length>maxLines?dfit(a+'…',width,size,weight):a,x,y+i*lineHeight,size,color,weight))}
@@ -228,7 +228,7 @@ function dslot(i,id,x,y,w,h){
   const iw=im.naturalWidth*scale,hh=im.naturalHeight*scale;
   ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(im,x+(w-iw)/2,y+4+(rh-hh)/2,iw,hh);ctx.restore();
  }else{
-  ctx.fillStyle='#d9d7cd';ctx.font='54px serif';ctx.textAlign='center';ctx.fillText('⚜',x+w/2,y+ih*.57);ctx.textAlign='left';
+  ctx.fillStyle='#d9d7cd';ctx.font='54px Heiro';ctx.textAlign='center';ctx.fillText('⚜',x+w/2,y+ih*.57);ctx.textAlign='left';
  }
  rect(x+1,y+ih,w-2,34,'#f1eee5');dline(x+6,y+ih,x+w-6,'#b8ac92');
  const name=id?charName(id):'—';const size=id?20:24;
@@ -249,23 +249,23 @@ function picture(im,x,y,w,h,useCrop=false){
  if(im?.complete&&im.naturalWidth){
   if(useCrop&&state.photo&&im===photoImage){const p=cropParams(im,w,h);ctx.drawImage(im,...p,x,y,w,h);applyPhotoCorrection(ctx,x,y,w,h)}
   else{const s=Math.max(w/im.naturalWidth,h/im.naturalHeight),iw=im.naturalWidth*s,ih=im.naturalHeight*s;ctx.drawImage(im,x+(w-iw)/2,y+(h-ih)/2,iw,ih)}
- }else{ctx.fillStyle='#e7e0d1';ctx.fillRect(x,y,w,h);ctx.fillStyle='#c4b89f';ctx.font='26px DocSerif,serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('사진',x+w/2,y+h/2)}
+ }else{ctx.fillStyle='#e7e0d1';ctx.fillRect(x,y,w,h);ctx.fillStyle='#c4b89f';ctx.font='26px Heiro';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('사진',x+w/2,y+h/2)}
  ctx.restore();
 }
 function ornateLine(x,y,w){ctx.save();ctx.strokeStyle='rgba(166,140,92,.65)';ctx.lineWidth=1.35;ctx.beginPath();ctx.moveTo(x,y+.5);ctx.lineTo(x+w,y+.5);ctx.stroke();ctx.restore()}
 function ink(t,x,y,size=24,color='#273c4c',weight=400,align='left'){
- ctx.save();ctx.font=`${weight} ${size}px DocSerif, Georgia, serif`;ctx.fillStyle=color;ctx.textBaseline='alphabetic';ctx.textAlign=align;ctx.fillText(String(t),x,y);ctx.restore()
+ ctx.save();ctx.font=`${weight} ${size}px Heiro`;ctx.fillStyle=color;ctx.textBaseline='alphabetic';ctx.textAlign=align;ctx.fillText(String(t),x,y);ctx.restore()
 }
 function fitted(t,x,y,width,size=24,weight=400,color='#273c4c',align='left'){
- const v=String(t||'—');ctx.save();ctx.font=`${weight} ${size}px DocSerif, Georgia, serif`;let n=size;while(n>14&&ctx.measureText(v).width>width){n-=1;ctx.font=`${weight} ${n}px DocSerif, Georgia, serif`};ctx.fillStyle=color;ctx.textAlign=align;ctx.textBaseline='alphabetic';ctx.fillText(v,x,y);ctx.restore()
+ const v=String(t||'—');ctx.save();ctx.font=`${weight} ${size}px Heiro`;let n=size;while(n>14&&ctx.measureText(v).width>width){n-=1;ctx.font=`${weight} ${n}px Heiro`};ctx.fillStyle=color;ctx.textAlign=align;ctx.textBaseline='alphabetic';ctx.fillText(v,x,y);ctx.restore()
 }
 function paragraph(t,x,y,w,size=22,lh=31,maxRows=2){
- ctx.save();ctx.font=`400 ${size}px DocSerif, Georgia, serif`;ctx.fillStyle='#2b3b43';ctx.textBaseline='alphabetic';ctx.textAlign='left';let line='',rows=[];
+ ctx.save();ctx.font=`400 ${size}px Heiro`;ctx.fillStyle='#2b3b43';ctx.textBaseline='alphabetic';ctx.textAlign='left';let line='',rows=[];
  for(const ch of String(t||'—')){if(ch==='\n'){rows.push(line);line='';continue}if(ctx.measureText(line+ch).width>w&&line){rows.push(line);line=ch}else line+=ch}rows.push(line);
  for(let i=0;i<Math.min(rows.length,maxRows);i++){let str=rows[i];if(i===maxRows-1&&rows.length>maxRows){while(str.length&&ctx.measureText(str+'…').width>w)str=str.slice(0,-1);str+='…'}ctx.fillText(str,x,y+i*lh)}ctx.restore()
 }
 function captionTag(label,x,y,w=137){
- ctx.save();const g=ctx.createLinearGradient(x,y,x+w,y);g.addColorStop(0,'#233d50');g.addColorStop(1,'#304f63');ctx.fillStyle=g;ctx.fillRect(x,y,w,34);ctx.strokeStyle='#bda16a';ctx.lineWidth=1.5;ctx.strokeRect(x+.7,y+.7,w-1.4,32.6);ink(label,x+w/2,y+24,20,'#fff8e9',400,'center');ctx.restore()
+ ctx.save();const g=ctx.createLinearGradient(x,y,x+w,y);g.addColorStop(0,'#233d50');g.addColorStop(1,'#304f63');ctx.fillStyle=g;ctx.fillRect(x,y,w,34);ctx.strokeStyle='#bda16a';ctx.lineWidth=1.5;ctx.strokeRect(x+.7,y+.7,w-1.4,32.6);ink(label,x+w/2,y+24,20,'#fff8e9',700,'center');ctx.restore()
 }
 function framedImage(im,x,y,w,h,main=false){
  // Image sits *under* the foreground photo frame; gold corner work stays visible.
@@ -285,23 +285,23 @@ function draw(){
  // Header begins beneath the fixed heraldic crest in the paper background.
  ink('S E A S O N  X I I I    ·    E T E R N A L  R E T U R N',500,180,17,'#394c54',400,'center');
  ornateLine(238,195,524);
- ink('루미아 섬 교류 등록부',500,247,38,'#1e3446',700,'center');
+ ink('루미아 섬 교류 등록부',500,247,36,'#1e3446',700,'center');
  ink('ETERNAL RETURN  ·  SOCIAL RECORD',500,269,13,'#8a7355',400,'center');
  // Portrait and identity block: editorial hierarchy instead of repeated boxes.
  const demoCard=isDemoCard();const portrait=photoImage||(demoCard?sampleAssets.portrait:null);
  framedImage(portrait,88,317,340,395,true);
  ink('REGISTRANT',486,344,17,'#97815c');
- fitted(val('nickname'),486,413,443,56,700,'#1c3445');
- fitted(val('xid'),489,451,420,25,400,'#5a6c71');
+ fitted(val('nickname'),486,413,443,54,700,'#1c3445');
+ fitted(val('xid'),489,451,420,23,400,'#5a6c71');
  ornateLine(487,473,431);
- paragraph('“ '+val('oneLine')+' ”',500,522,405,24,32,2);
+ paragraph('“ '+val('oneLine')+' ”',500,522,405,23,32,2);
  ornateLine(487,557,431);
  const fields=[['티어','tier'],['선호 모드','modes'],['활동 시간','time'],['성별','gender']];
- fields.forEach(([label,key],i)=>{const y=577+i*46;captionTag(label,490,y,128);fitted(val(key),640,y+25,274,21,400,'#263b47');ornateLine(640,y+36,278)});
+ fields.forEach(([label,key],i)=>{const y=577+i*46;captionTag(label,490,y,128);fitted(val(key),640,y+25,274,20,400,'#263b47');ornateLine(640,y+36,278)});
  // Small discord notation, part of the record rather than a heavyweight section.
  ink('DISCORD',490,776,15,'#806c50');fitted(val('discord'),602,777,305,19,400,'#384e5b');
  // Section header and all five characters. Names are drawn separately from portraits.
- ornateLine(78,808,844);ink('선호 실험체',500,842,30,'#1e3446',700,'center');
+ ornateLine(78,808,844);ink('선호 실험체',500,842,29,'#1e3446',700,'center');
  const ids=state.characters||[];
  for(let i=0;i<5;i++){
   const x=89+i*176, y=874, w=145,h=145;
@@ -310,30 +310,26 @@ function draw(){
   const name=id?charName(id):demoCard?(i===0?'이안':i===1?'제니':'미선택'):'미선택';
   // Restrained name slip, outside photo crop.
   ctx.fillStyle='rgba(247,241,226,.93)';ctx.fillRect(x-2,1023,w+4,34);
-  fitted(name,x+w/2,1048,w-9,20,400,'#263a45','center');
+  fitted(name,x+w/2,1048,w-9,19,700,'#263a45','center');
   ornateLine(x-1,1058,w+2);
  }
  // A clean archival notes table leaves enough room for user-entered content.
  ornateLine(76,1090,848);
  const rows=[['관심사','interests'],['좋아요','likes'],['싫어요','dislikes'],['자유 소개','intro']];
  rows.forEach(([label,key],i)=>{
-  const y=1128+i*55; ink(label,90,y,22,'#273d50',700);
+  const y=1128+i*55; ink(label,90,y,21,'#273d50',700);
   ctx.fillStyle='#bba16e';ctx.fillRect(227,y-17,2,22);
-  paragraph(val(key),252,y,665,i===3?21:22,27,i===3?2:1);
+  paragraph(val(key),252,y,665,i===3?20:21,27,i===3?2:1);
   if(i!==3)ornateLine(86,y+19,827);
  });
 }
 function measure(s,size,weight=400){ctx.font=`${weight} ${size}px Heiro`;return ctx.measureText(s).width}
 function download(){draw();const a=document.createElement('a');a.download=`ER-TCS-S13-${(state.nickname||'profile').replace(/[\\/:*?"<>|]/g,'_')}.png`;a.href=canvas.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove()}
-async function init(){try{const res=await fetch('characters.json');if(res.ok)characters=await res.json()}catch(e){}if(!characters.length)characters=['Aya','Jackie','Fiora','Yuki','Hyunwoo','Bianca','Rio','Nadine','Hart','Hyejin','Emma','Adriana'].map(name=>({name}));for(const c of characters){if(!c.image)continue;const img=new Image();img.onload=()=>{if(step===5)draw()};img.onerror=()=>{};img.src=c.image;charImages.set(c.name,img)}if(document.fonts?.ready)document.fonts.ready.then(()=>{if(step===5)draw()});loadOfficialImages();loadDocImages();loadPhoto();render();loadDocumentFont()}
+async function init(){try{const res=await fetch('characters.json');if(res.ok)characters=await res.json()}catch(e){}if(!characters.length)characters=['Aya','Jackie','Fiora','Yuki','Hyunwoo','Bianca','Rio','Nadine','Hart','Hyejin','Emma','Adriana'].map(name=>({name}));for(const c of characters){if(!c.image)continue;const img=new Image();img.onload=()=>{if(step===5)draw()};img.onerror=()=>{};img.src=c.image;charImages.set(c.name,img)}if(document.fonts?.ready)document.fonts.ready.then(()=>{if(step===5)draw()});loadOfficialImages();loadDocImages();loadPhoto();render();ensureCardFonts()}
 init();
 
-async function loadDocumentFont(){
- try{
-  await Promise.all([400,700].map(async weight=>{
-   const face=new FontFace('DocSerif',`url(assets/fonts/DocSerif-${weight}.woff2)`,{weight:String(weight),style:'normal'});
-   document.fonts.add(face);await face.load();
-  }));
- }catch(e){console.warn('Document font unavailable, falling back to serif',e)}
+async function ensureCardFonts(){
+ try{await Promise.all([document.fonts.load('400 22px Heiro'),document.fonts.load('700 38px Heiro')]);}
+ catch(e){console.warn('Heiro font load check failed',e)}
  if(step===5)draw();
 }
