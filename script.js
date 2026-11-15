@@ -236,66 +236,96 @@ function dslot(i,id,x,y,w,h){
  // Quiet archival corner notches, no thick fantasy card frames.
  ctx.strokeStyle=gold;ctx.lineWidth=2;for(const [xx,yy,sx,sy] of [[x,y,1,1],[x+w,y,-1,1],[x,y+h,1,-1],[x+w,y+h,-1,-1]]){ctx.beginPath();ctx.moveTo(xx+sx*15,yy);ctx.lineTo(xx,yy);ctx.lineTo(xx,yy+sy*15);ctx.stroke()}
 }
-// Template-first final card. Visual positions are driven by saved editable rectangles.
-const layoutDefaults={
- portrait:[78,264,380,427],nickname:[672,262,260,51],xid:[672,328,260,45],discord:[672,384,260,38],oneLine:[672,434,260,54],tier:[672,503,260,40],modes:[672,553,260,42],time:[672,603,260,42],gender:[672,655,260,42],
- char0:[78,828,155,168],char1:[253,828,155,168],char2:[428,828,155,168],char3:[603,828,155,168],char4:[778,828,155,168],
- charName0:[78,1006,155,31],charName1:[253,1006,155,31],charName2:[428,1006,155,31],charName3:[603,1006,155,31],charName4:[778,1006,155,31],
- interests:[255,1121,675,41],likes:[255,1178,675,41],dislikes:[255,1235,675,41],intro:[255,1292,675,72]
-};
-const regionTitles={portrait:'프로필 사진',nickname:'이름',xid:'X ID',discord:'DISCORD',oneLine:'한 줄 소개',tier:'티어',modes:'선호 모드',time:'활동 시간',gender:'성별',interests:'관심사',likes:'좋아요',dislikes:'싫어요',intro:'자유 소개'};
-for(let i=0;i<5;i++){regionTitles['char'+i]='실험체 '+(i+1)+' 사진';regionTitles['charName'+i]='실험체 '+(i+1)+' 이름'}
-const layoutKey='ertcs_s13_final_layout_v1';
-function storedLayout(){try{const v=JSON.parse(localStorage.getItem(layoutKey)||'{}');const o={};for(const [k,rect] of Object.entries(layoutDefaults)){const r=v[k];o[k]=Array.isArray(r)&&r.length===4&&r.every(Number.isFinite)?r.slice():rect.slice()}return o}catch(e){return structuredClone(layoutDefaults)}}
-let layout=storedLayout(),editing=false,activeRegion='portrait',pointerStart=null;
-const sampleAssets={};for(const [k,f] of Object.entries({paper:'holy-empire-paper.jpg',portrait:'sample-portrait.jpg',char0:'sample-char-1.jpg',char1:'sample-char-2.jpg'})){const im=new Image();im.onload=()=>draw();im.src='assets/season13/'+f;sampleAssets[k]=im}
+// S13 sacred registry — fixed composition. No editable geometry or SVG ornaments.
+const sampleAssets={};
+for(const [k,f] of Object.entries({paper:'holy-empire-paper.jpg',portrait:'sample-portrait.jpg',char0:'sample-char-1.jpg',char1:'sample-char-2.jpg'})){
+ const im=new Image(); im.onload=()=>{if(step===5)draw()};im.src='assets/season13/'+f;sampleAssets[k]=im;
+}
 function isDemoCard(){return ![state.nickname,state.xid,state.oneLine,state.photo,state.tier,state.time,state.interests,state.likes,state.dislikes,state.intro].some(Boolean)&&!(state.modes||[]).length&&!(state.characters||[]).length}
-const demo={nickname:'테스트',xid:'@test_test',discord:'공개 안 함',oneLine:'테스트 용입니다',tier:'미래의 이터니티',modes:'일반 · 랭크 · 코발트',time:'언제나',gender:'남성',interests:'이터널 리턴, 게임',likes:'함께 게임하기',dislikes:'지나친 비난',intro:'편하게 이야기 걸어줘!'};
-function val(k){if(k==='modes')return state.modes?.length?state.modes.join(' · '):(isDemoCard()?demo.modes:'—');if(k==='discord')return state.discordPublic?(state.discord||'—'):'공개 안 함';return state[k]||(isDemoCard()?demo[k]:'—')||'—'}
-function blit(img,r){if(!img?.complete||!img.naturalWidth)return false;ctx.save();ctx.beginPath();ctx.rect(...r);ctx.clip();const [x,y,w,h]=r,sc=Math.max(w/img.naturalWidth,h/img.naturalHeight),sw=img.naturalWidth*sc,sh=img.naturalHeight*sc;ctx.drawImage(img,x+(w-sw)/2,y+(h-sh)/2,sw,sh);ctx.restore();return true}
-function frame(r){const [x,y,w,h]=r;ctx.save();ctx.strokeStyle='#ae8d4c';ctx.lineWidth=4;ctx.strokeRect(x-4,y-4,w+8,h+8);ctx.strokeStyle='#274252';ctx.lineWidth=5;ctx.strokeRect(x-8,y-8,w+16,h+16);ctx.strokeStyle='#dcc797';ctx.lineWidth=2;ctx.strokeRect(x-13,y-13,w+26,h+26);for(let [sx,sy,dx,dy] of [[x-13,y-13,1,1],[x+w+13,y-13,-1,1],[x-13,y+h+13,1,-1],[x+w+13,y+h+13,-1,-1]]){ctx.beginPath();ctx.moveTo(sx+dx*28,sy);ctx.lineTo(sx,sy);ctx.lineTo(sx,sy+dy*28);ctx.stroke()}ctx.restore()}
-function printText(v,r,size=23,weight=400,align='left',maxLines=2){const [x,y,w,h]=r;ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.fillStyle='#1e3039';ctx.font=`${weight} ${size}px DocSerif, Georgia, serif`;ctx.textBaseline='top';ctx.textAlign=align;const lines=dwlines(String(v||'—'),w,size,weight);const lh=size*1.32;for(let i=0;i<Math.min(maxLines,lines.length,Math.floor(h/lh)||1);i++){let t=lines[i];if(i===maxLines-1&&lines.length>maxLines)t=dfit(t+'…',w,size,weight);ctx.fillText(t,align==='center'?x+w/2:x,y+i*lh,w)}ctx.restore()}
-function navyLabel(s,x,y,w=160){ctx.save();ctx.fillStyle='#213b50';ctx.fillRect(x,y,w,34);ctx.strokeStyle='#c8ae73';ctx.strokeRect(x,y,w,34);ctx.fillStyle='#f5efdb';ctx.font='20px DocSerif, serif';ctx.textBaseline='middle';ctx.textAlign='center';ctx.fillText(s,x+w/2,y+17,w-15);ctx.restore()}
-function rule(x,y,w){ctx.save();ctx.strokeStyle='#a89674';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+w,y);ctx.stroke();ctx.restore()}
+const demo={nickname:'헤로',xid:'@Ly_anh',discord:'비공개',oneLine:'하이하이용',tier:'미래의 이터니티',modes:'일반 / 랭크 / 코발트',time:'언제나',gender:'남성',interests:'이터널 리턴, 게임, 실험체 연구',likes:'함께 게임하기, 편안한 대화',dislikes:'비매너, 무례한 말투',intro:'편하게 이야기 걸어줘! 함께 즐겁게 게임하자.'};
+function val(k){if(k==='modes')return state.modes?.length?state.modes.join(' / '):(isDemoCard()?demo.modes:'—');if(k==='discord')return state.discordPublic?(state.discord||'공개'):'비공개';return state[k]||(isDemoCard()?demo[k]:'—')||'—'}
+function picture(im,x,y,w,h,useCrop=false){
+ ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+ if(im?.complete&&im.naturalWidth){
+  if(useCrop&&state.photo&&im===photoImage){const p=cropParams(im,w,h);ctx.drawImage(im,...p,x,y,w,h);applyPhotoCorrection(ctx,x,y,w,h)}
+  else{const s=Math.max(w/im.naturalWidth,h/im.naturalHeight),iw=im.naturalWidth*s,ih=im.naturalHeight*s;ctx.drawImage(im,x+(w-iw)/2,y+(h-ih)/2,iw,ih)}
+ }else{ctx.fillStyle='#e7e0d1';ctx.fillRect(x,y,w,h);ctx.fillStyle='#c4b89f';ctx.font='26px DocSerif,serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('사진',x+w/2,y+h/2)}
+ ctx.restore();
+}
+function ornateLine(x,y,w){ctx.save();ctx.strokeStyle='rgba(166,140,92,.65)';ctx.lineWidth=1.35;ctx.beginPath();ctx.moveTo(x,y+.5);ctx.lineTo(x+w,y+.5);ctx.stroke();ctx.restore()}
+function ink(t,x,y,size=24,color='#273c4c',weight=400,align='left'){
+ ctx.save();ctx.font=`${weight} ${size}px DocSerif, Georgia, serif`;ctx.fillStyle=color;ctx.textBaseline='alphabetic';ctx.textAlign=align;ctx.fillText(String(t),x,y);ctx.restore()
+}
+function fitted(t,x,y,width,size=24,weight=400,color='#273c4c',align='left'){
+ const v=String(t||'—');ctx.save();ctx.font=`${weight} ${size}px DocSerif, Georgia, serif`;let n=size;while(n>14&&ctx.measureText(v).width>width){n-=1;ctx.font=`${weight} ${n}px DocSerif, Georgia, serif`};ctx.fillStyle=color;ctx.textAlign=align;ctx.textBaseline='alphabetic';ctx.fillText(v,x,y);ctx.restore()
+}
+function paragraph(t,x,y,w,size=22,lh=31,maxRows=2){
+ ctx.save();ctx.font=`400 ${size}px DocSerif, Georgia, serif`;ctx.fillStyle='#2b3b43';ctx.textBaseline='alphabetic';ctx.textAlign='left';let line='',rows=[];
+ for(const ch of String(t||'—')){if(ch==='\n'){rows.push(line);line='';continue}if(ctx.measureText(line+ch).width>w&&line){rows.push(line);line=ch}else line+=ch}rows.push(line);
+ for(let i=0;i<Math.min(rows.length,maxRows);i++){let str=rows[i];if(i===maxRows-1&&rows.length>maxRows){while(str.length&&ctx.measureText(str+'…').width>w)str=str.slice(0,-1);str+='…'}ctx.fillText(str,x,y+i*lh)}ctx.restore()
+}
+function captionTag(label,x,y,w=137){
+ ctx.save();const g=ctx.createLinearGradient(x,y,x+w,y);g.addColorStop(0,'#233d50');g.addColorStop(1,'#304f63');ctx.fillStyle=g;ctx.fillRect(x,y,w,34);ctx.strokeStyle='#bda16a';ctx.lineWidth=1.5;ctx.strokeRect(x+.7,y+.7,w-1.4,32.6);ink(label,x+w/2,y+24,20,'#fff8e9',400,'center');ctx.restore()
+}
+function framedImage(im,x,y,w,h,main=false){
+ // Image sits *under* the foreground photo frame; gold corner work stays visible.
+ ctx.fillStyle='#e9e1d2';ctx.fillRect(x-5,y-5,w+10,h+10);picture(im,x,y,w,h,main);
+ ctx.save();ctx.strokeStyle='#f2dfb4';ctx.lineWidth=7;ctx.strokeRect(x-4,y-4,w+8,h+8);ctx.strokeStyle='#274353';ctx.lineWidth=3;ctx.strokeRect(x-7,y-7,w+14,h+14);ctx.strokeStyle='#b7985d';ctx.lineWidth=2;ctx.strokeRect(x-11,y-11,w+22,h+22);
+ // Deliberately minimal ornamental corners: no SVG.
+ ctx.strokeStyle='#be9c63';ctx.lineWidth=3;
+ for(const [cx,cy,sx,sy] of [[x-12,y-12,1,1],[x+w+12,y-12,-1,1],[x-12,y+h+12,1,-1],[x+w+12,y+h+12,-1,-1]]){
+ ctx.beginPath();ctx.moveTo(cx+sx*24,cy);ctx.lineTo(cx,cy);ctx.lineTo(cx,cy+sy*24);ctx.stroke();
+ }ctx.restore();
+}
 function draw(){
  if(!ctx||step!==5)return;
- ctx.clearRect(0,0,W,H);if(!blit(sampleAssets.paper,[0,0,W,H]))rect(0,0,W,H,'#F3F0E6');
- // All ornamental borders and the main heraldic crest remain pixels of the approved background.
- dt('S E A S O N   X I I I   ·   E T E R N A L   R E T U R N',210,236,17,'#263c4c',700);
- // Portrait, under its fixed foreground frame.
- const pr=layout.portrait;ctx.fillStyle='#e7e3d8';ctx.fillRect(...pr);
- blit(photoImage||(isDemoCard()?sampleAssets.portrait:null),pr);frame(pr);
- const fields=[['nickname','이름',34,700],['xid','ID',25,400],['discord','DISCORD',21,400],['oneLine','한 줄 소개',22,400],['tier','티어',23,400],['modes','선호 모드',21,400],['time','활동 시간',22,400],['gender','성별',22,400]];
- for(const [key,label,size,weight] of fields){const r=layout[key];navyLabel(label,505,r[1]+Math.max(0,(r[3]-34)/2),153);printText(val(key),r,size,weight);rule(503,r[1]+r[3]+5,433)}
- rule(75,740,855);dt('선호 실험체',77,786,31,'#25394b',700);rule(280,780,652);
+ ctx.clearRect(0,0,W,H);
+ if(sampleAssets.paper?.complete&&sampleAssets.paper.naturalWidth)ctx.drawImage(sampleAssets.paper,0,0,W,H);
+ else{ctx.fillStyle='#f3f0e6';ctx.fillRect(0,0,W,H)}
+ // Header begins beneath the fixed heraldic crest in the paper background.
+ ink('S E A S O N  X I I I    ·    E T E R N A L  R E T U R N',500,180,17,'#394c54',400,'center');
+ ornateLine(238,195,524);
+ ink('루미아 섬 교류 등록부',500,247,38,'#1e3446',700,'center');
+ ink('ETERNAL RETURN  ·  SOCIAL RECORD',500,269,13,'#8a7355',400,'center');
+ // Portrait and identity block: editorial hierarchy instead of repeated boxes.
+ const demoCard=isDemoCard();const portrait=photoImage||(demoCard?sampleAssets.portrait:null);
+ framedImage(portrait,88,317,340,395,true);
+ ink('REGISTRANT',486,344,17,'#97815c');
+ fitted(val('nickname'),486,413,443,56,700,'#1c3445');
+ fitted(val('xid'),489,451,420,25,400,'#5a6c71');
+ ornateLine(487,473,431);
+ paragraph('“ '+val('oneLine')+' ”',500,522,405,24,32,2);
+ ornateLine(487,557,431);
+ const fields=[['티어','tier'],['선호 모드','modes'],['활동 시간','time'],['성별','gender']];
+ fields.forEach(([label,key],i)=>{const y=577+i*46;captionTag(label,490,y,128);fitted(val(key),640,y+25,274,21,400,'#263b47');ornateLine(640,y+36,278)});
+ // Small discord notation, part of the record rather than a heavyweight section.
+ ink('DISCORD',490,776,15,'#806c50');fitted(val('discord'),602,777,305,19,400,'#384e5b');
+ // Section header and all five characters. Names are drawn separately from portraits.
+ ornateLine(78,808,844);ink('선호 실험체',500,842,30,'#1e3446',700,'center');
  const ids=state.characters||[];
- for(let i=0;i<5;i++){const r=layout['char'+i];const img=ids[i]?charImages.get(ids[i]):isDemoCard()&&i<2?sampleAssets['char'+i]:null;ctx.fillStyle='#e8e2d5';ctx.fillRect(...r);blit(img,r);frame(r);const name=ids[i]?charName(ids[i]):isDemoCard()?(i===0?'이안':i===1?'제니':'미지정'):'미지정';printText(name,layout['charName'+i],21,400,'center',1)}
- rule(72,1082,865);
- for(const [k,label] of [['interests','관심사'],['likes','좋아요'],['dislikes','싫어요'],['intro','자유 소개']]){const r=layout[k];navyLabel(label,75,r[1]+3,163);printText(val(k),r,k==='intro'?21:23,400,'left',k==='intro'?3:2);if(k!=='intro')rule(75,r[1]+r[3]+4,860)}
- drawEditor();
+ for(let i=0;i<5;i++){
+  const x=89+i*176, y=874, w=145,h=145;
+  const id=ids[i],im=id?charImages.get(id):(demoCard&&i<2?sampleAssets['char'+i]:null);
+  framedImage(im,x,y,w,h,false);
+  const name=id?charName(id):demoCard?(i===0?'이안':i===1?'제니':'미선택'):'미선택';
+  // Restrained name slip, outside photo crop.
+  ctx.fillStyle='rgba(247,241,226,.93)';ctx.fillRect(x-2,1023,w+4,34);
+  fitted(name,x+w/2,1048,w-9,20,400,'#263a45','center');
+  ornateLine(x-1,1058,w+2);
+ }
+ // A clean archival notes table leaves enough room for user-entered content.
+ ornateLine(76,1090,848);
+ const rows=[['관심사','interests'],['좋아요','likes'],['싫어요','dislikes'],['자유 소개','intro']];
+ rows.forEach(([label,key],i)=>{
+  const y=1128+i*55; ink(label,90,y,22,'#273d50',700);
+  ctx.fillStyle='#bba16e';ctx.fillRect(227,y-17,2,22);
+  paragraph(val(key),252,y,665,i===3?21:22,27,i===3?2:1);
+  if(i!==3)ornateLine(86,y+19,827);
+ });
 }
-function drawEditor(){const c=$('#editOverlay');if(!c||!editing||step!==5)return;const g=c.getContext('2d');g.clearRect(0,0,1000,1414);for(const [k,r] of Object.entries(layout)){const [x,y,w,h]=r;const selected=k===activeRegion;g.fillStyle=selected?'rgba(41,139,184,.13)':'rgba(25,95,125,.025)';g.fillRect(x,y,w,h);g.strokeStyle=selected?'#e2a644':'rgba(39,106,144,.6)';g.lineWidth=selected?4:1.4;g.setLineDash(selected?[]:[6,5]);g.strokeRect(x,y,w,h);g.setLineDash([]);if(selected){g.fillStyle='#e2a644';g.fillRect(x+w-12,y+h-12,22,22);g.fillStyle='#182e3c';g.font='bold 17px sans-serif';g.fillText(regionTitles[k]||k,x+4,Math.max(20,y-8))}}}
-function saveLayout(){try{localStorage.setItem(layoutKey,JSON.stringify(layout))}catch(e){console.warn(e)}}
-function editorControls(){const toolbar=$('#cardEditorToolbar'),overlay=$('#editOverlay'),select=$('#editSelect');if(!toolbar||!overlay)return;
- select.innerHTML=Object.keys(layoutDefaults).map(k=>`<option value="${k}">${regionTitles[k]||k}</option>`).join('');
- function sync(){select.value=activeRegion;['X','Y','W','H'].forEach((v,i)=>$('#edit'+v).value=Math.round(layout[activeRegion][i]));}
- function activate(key){activeRegion=key;sync();drawEditor()}
- function toggle(){editing=!editing;overlay.hidden=!editing;const b=$('#editToggle');b.textContent=editing?'영역 후조정 끄기':'영역 후조정 켜기';b.classList.toggle('active',editing);if(editing){sync();drawEditor()}}
- $('#editToggle').onclick=toggle;
- $('#editReset').onclick=()=>{if(confirm('영역을 처음 배치로 되돌릴까?')){layout=structuredClone(layoutDefaults);saveLayout();sync();draw()}};
- $('#editSave').onclick=()=>{const a=document.createElement('a'),blob=new Blob([JSON.stringify({canvas:[1000,1414],regions:layout},null,2)],{type:'application/json'});a.href=URL.createObjectURL(blob);a.download='ER-TCS-S13-layout.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
- select.onchange=e=>activate(e.target.value);
- ['X','Y','W','H'].forEach((k,i)=>$('#edit'+k).oninput=e=>{const r=layout[activeRegion];r[i]=Math.round(Number(e.target.value)||0);if(i>1)r[i]=Math.max(20,r[i]);saveLayout();draw()});
- function coords(e){const r=overlay.getBoundingClientRect();return [(e.clientX-r.left)*1000/r.width,(e.clientY-r.top)*1414/r.height]}
- overlay.addEventListener('pointerdown',e=>{const [px,py]=coords(e);let key=Object.keys(layout).reverse().find(k=>{const [x,y,w,h]=layout[k];return px>=x-10&&px<=x+w+10&&py>=y-10&&py<=y+h+10});if(!key)return;activate(key);const rect=layout[key],resize=px>rect[0]+rect[2]-25&&py>rect[1]+rect[3]-25;pointerStart={px,py,r:rect.slice(),resize,key};overlay.setPointerCapture(e.pointerId)});
- overlay.addEventListener('pointermove',e=>{if(!pointerStart)return;const [px,py]=coords(e),p=pointerStart,r=layout[p.key],dx=px-p.px,dy=py-p.py;if(p.resize){r[2]=Math.max(20,Math.round(p.r[2]+dx));r[3]=Math.max(20,Math.round(p.r[3]+dy))}else{r[0]=Math.round(p.r[0]+dx);r[1]=Math.round(p.r[1]+dy)}sync();draw()});
- const stop=()=>{if(pointerStart){pointerStart=null;saveLayout()}};overlay.addEventListener('pointerup',stop);overlay.addEventListener('pointercancel',stop);
- sync();
-}
-
 function measure(s,size,weight=400){ctx.font=`${weight} ${size}px Heiro`;return ctx.measureText(s).width}
 function download(){draw();const a=document.createElement('a');a.download=`ER-TCS-S13-${(state.nickname||'profile').replace(/[\\/:*?"<>|]/g,'_')}.png`;a.href=canvas.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove()}
-async function init(){try{const res=await fetch('characters.json');if(res.ok)characters=await res.json()}catch(e){}if(!characters.length)characters=['Aya','Jackie','Fiora','Yuki','Hyunwoo','Bianca','Rio','Nadine','Hart','Hyejin','Emma','Adriana'].map(name=>({name}));for(const c of characters){if(!c.image)continue;const img=new Image();img.onload=()=>{if(step===5)draw()};img.onerror=()=>{};img.src=c.image;charImages.set(c.name,img)}if(document.fonts?.ready)document.fonts.ready.then(()=>{if(step===5)draw()});loadOfficialImages();loadDocImages();loadPhoto();render();editorControls();loadDocumentFont()}
+async function init(){try{const res=await fetch('characters.json');if(res.ok)characters=await res.json()}catch(e){}if(!characters.length)characters=['Aya','Jackie','Fiora','Yuki','Hyunwoo','Bianca','Rio','Nadine','Hart','Hyejin','Emma','Adriana'].map(name=>({name}));for(const c of characters){if(!c.image)continue;const img=new Image();img.onload=()=>{if(step===5)draw()};img.onerror=()=>{};img.src=c.image;charImages.set(c.name,img)}if(document.fonts?.ready)document.fonts.ready.then(()=>{if(step===5)draw()});loadOfficialImages();loadDocImages();loadPhoto();render();loadDocumentFont()}
 init();
 
 async function loadDocumentFont(){
