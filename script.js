@@ -237,13 +237,17 @@ function dslot(i,id,x,y,w,h){
  ctx.strokeStyle=gold;ctx.lineWidth=2;for(const [xx,yy,sx,sy] of [[x,y,1,1],[x+w,y,-1,1],[x,y+h,1,-1],[x+w,y+h,-1,-1]]){ctx.beginPath();ctx.moveTo(xx+sx*15,yy);ctx.lineTo(xx,yy);ctx.lineTo(xx,yy+sy*15);ctx.stroke()}
 }
 // S13 sacred registry — fixed composition. No editable geometry or SVG ornaments.
+// Only the stationery texture is a fixed design asset. No sample profile content.
 const sampleAssets={};
-for(const [k,f] of Object.entries({paper:'holy-empire-paper.jpg',portrait:'sample-portrait.jpg',char0:'sample-char-1.jpg',char1:'sample-char-2.jpg'})){
- const im=new Image(); im.onload=()=>{if(step===5)draw()};im.src='assets/season13/'+f;sampleAssets[k]=im;
+const paperImage=new Image();
+paperImage.onload=()=>{if(step===5)draw()};
+paperImage.src='assets/season13/holy-empire-paper.jpg';
+sampleAssets.paper=paperImage;
+function val(k){
+ if(k==='modes')return Array.isArray(state.modes)&&state.modes.length?state.modes.join(' / '):'—';
+ if(k==='discord')return state.discordPublic?(state.discord||'공개'):'비공개';
+ return state[k]||'—';
 }
-function isDemoCard(){return ![state.nickname,state.xid,state.oneLine,state.photo,state.tier,state.time,state.interests,state.likes,state.dislikes,state.intro].some(Boolean)&&!(state.modes||[]).length&&!(state.characters||[]).length}
-const demo={nickname:'헤로',xid:'@Ly_anh',discord:'비공개',oneLine:'하이하이용',tier:'미래의 이터니티',modes:'일반 / 랭크 / 코발트',time:'언제나',gender:'남성',interests:'이터널 리턴, 게임, 실험체 연구',likes:'함께 게임하기, 편안한 대화',dislikes:'비매너, 무례한 말투',intro:'편하게 이야기 걸어줘! 함께 즐겁게 게임하자.'};
-function val(k){if(k==='modes')return state.modes?.length?state.modes.join(' / '):(isDemoCard()?demo.modes:'—');if(k==='discord')return state.discordPublic?(state.discord||'공개'):'비공개';return state[k]||(isDemoCard()?demo[k]:'—')||'—'}
 function picture(im,x,y,w,h,useCrop=false){
  ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
  if(im?.complete&&im.naturalWidth){
@@ -285,7 +289,7 @@ function draw(){
  else{ctx.fillStyle='#f3f0e6';ctx.fillRect(0,0,W,H)}
  // The parchment crest remains clear; season and registrant belong to the identity block.
  // Raise the portrait and identity section to recover room for written records.
- const demoCard=isDemoCard();const portrait=photoImage||(demoCard?sampleAssets.portrait:null);
+ const portrait=photoImage;
  framedImage(portrait,88,263,340,395,true);
  ink('SEASON XIII · ETERNAL RETURN',486,303,17,'#394c54');
  fitted(val('nickname'),486,360,443,54,700,'#1c3445');
@@ -302,9 +306,7 @@ function draw(){
   ornateLine(487,baseline+12,431);
  });
  // Show only selected experimenters, without name labels. Center the group as a whole.
- const demoIds=isDemoCard()?['__sample0','__sample1']:[];
- const selected=(state.characters||[]).slice(0,5);
- const visible=selected.length?selected:demoIds;
+ const visible=(state.characters||[]).slice(0,5);
  if(visible.length){
   ink('선호 실험체',500,801,33,'#1e3446',700,'center');
   const count=visible.length;
@@ -312,7 +314,7 @@ function draw(){
   const h=w, gap=count===5?18:24;
   const startX=(W-(count*w+(count-1)*gap))/2;
   visible.forEach((id,i)=>{
-   const im=id==='__sample0'?sampleAssets.char0:id==='__sample1'?sampleAssets.char1:charImages.get(id);
+   const im=charImages.get(id);
    framedImage(im,Math.round(startX+i*(w+gap)),825,w,h,false);
   });
  }
