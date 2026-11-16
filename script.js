@@ -282,45 +282,48 @@ function draw(){
  ctx.clearRect(0,0,W,H);
  if(sampleAssets.paper?.complete&&sampleAssets.paper.naturalWidth)ctx.drawImage(sampleAssets.paper,0,0,W,H);
  else{ctx.fillStyle='#f3f0e6';ctx.fillRect(0,0,W,H)}
- // Header begins beneath the fixed heraldic crest in the paper background.
- ink('S E A S O N  X I I I    ·    E T E R N A L  R E T U R N',500,180,17,'#394c54',400,'center');
- ornateLine(238,195,524);
- ink('루미아 섬 교류 등록부',500,247,36,'#1e3446',700,'center');
- ink('ETERNAL RETURN  ·  SOCIAL RECORD',500,269,13,'#8a7355',400,'center');
- // Portrait and identity block: editorial hierarchy instead of repeated boxes.
+ // The parchment crest is the only document heading; no invented registry title.
+ ink('S E A S O N  X I I I    ·    E T E R N A L  R E T U R N',500,187,17,'#394c54',400,'center');
+ ornateLine(238,201,524);
+ // Raise the portrait and identity section to recover room for written records.
  const demoCard=isDemoCard();const portrait=photoImage||(demoCard?sampleAssets.portrait:null);
- framedImage(portrait,88,317,340,395,true);
- ink('REGISTRANT',486,344,17,'#97815c');
- fitted(val('nickname'),486,413,443,54,700,'#1c3445');
- fitted(val('xid'),489,451,420,23,400,'#5a6c71');
- ornateLine(487,473,431);
- paragraph('“ '+val('oneLine')+' ”',500,522,405,23,32,2);
- ornateLine(487,557,431);
- const fields=[['티어','tier'],['선호 모드','modes'],['활동 시간','time'],['성별','gender']];
- fields.forEach(([label,key],i)=>{const y=577+i*46;captionTag(label,490,y,128);fitted(val(key),640,y+25,274,20,400,'#263b47');ornateLine(640,y+36,278)});
- // Small discord notation, part of the record rather than a heavyweight section.
- ink('DISCORD',490,776,15,'#806c50');fitted(val('discord'),602,777,305,19,400,'#384e5b');
- // Section header and all five characters. Names are drawn separately from portraits.
- ornateLine(78,808,844);ink('선호 실험체',500,842,29,'#1e3446',700,'center');
+ framedImage(portrait,88,263,340,395,true);
+ ink('REGISTRANT',486,293,17,'#97815c');
+ fitted(val('nickname'),486,360,443,54,700,'#1c3445');
+ fitted(val('xid'),489,399,420,23,400,'#5a6c71');
+ ornateLine(487,421,431);
+ paragraph('“ '+val('oneLine')+' ”',500,467,405,23,32,2);
+ ornateLine(487,495,431);
+ // All five metadata rows use the same light archival notation as DISCORD.
+ const fields=[['티어','tier'],['선호 모드','modes'],['활동 시간','time'],['성별','gender'],['DISCORD','discord']];
+ fields.forEach(([label,key],i)=>{
+  const baseline=529+i*45;
+  ink(label,490,baseline,label==='DISCORD'?17:19,'#806c50',400);
+  fitted(val(key),640,baseline,275,20,400,'#263b47');
+  ornateLine(487,baseline+12,431);
+ });
+ // Five character portraits remain below the main record.
+ ornateLine(78,771,844);
+ ink('선호 실험체',500,801,29,'#1e3446',700,'center');
  const ids=state.characters||[];
  for(let i=0;i<5;i++){
-  const x=89+i*176, y=874, w=145,h=145;
+  const x=89+i*176, y=836, w=145,h=145;
   const id=ids[i],im=id?charImages.get(id):(demoCard&&i<2?sampleAssets['char'+i]:null);
   framedImage(im,x,y,w,h,false);
   const name=id?charName(id):demoCard?(i===0?'이안':i===1?'제니':'미선택'):'미선택';
-  // Restrained name slip, outside photo crop.
-  ctx.fillStyle='rgba(247,241,226,.93)';ctx.fillRect(x-2,1023,w+4,34);
-  fitted(name,x+w/2,1048,w-9,19,700,'#263a45','center');
-  ornateLine(x-1,1058,w+2);
+  ctx.fillStyle='rgba(247,241,226,.93)';ctx.fillRect(x-2,985,w+4,34);
+  fitted(name,x+w/2,1010,w-9,19,700,'#263a45','center');
+  ornateLine(x-1,1020,w+2);
  }
- // A clean archival notes table leaves enough room for user-entered content.
- ornateLine(76,1090,848);
+ // Give the final personal notes a larger vertical share of the document.
+ ornateLine(76,1043,848);
  const rows=[['관심사','interests'],['좋아요','likes'],['싫어요','dislikes'],['자유 소개','intro']];
  rows.forEach(([label,key],i)=>{
-  const y=1128+i*55; ink(label,90,y,21,'#273d50',700);
+  const y=1085+i*61;
+  ink(label,90,y,21,'#273d50',700);
   ctx.fillStyle='#bba16e';ctx.fillRect(227,y-17,2,22);
-  paragraph(val(key),252,y,665,i===3?20:21,27,i===3?2:1);
-  if(i!==3)ornateLine(86,y+19,827);
+  paragraph(val(key),252,y,665,i===3?20:21,27,i===3?3:1);
+  if(i!==3)ornateLine(86,y+21,827);
  });
 }
 function measure(s,size,weight=400){ctx.font=`${weight} ${size}px Heiro`;return ctx.measureText(s).width}
