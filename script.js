@@ -308,14 +308,14 @@ function draw(){
  // Show only selected experimenters, without name labels. Center the group as a whole.
  const visible=(state.characters||[]).slice(0,5);
  if(visible.length){
-  ink('선호 실험체',500,801,33,'#1e3446',700,'center');
+  ink('선호 실험체',500,793,37,'#1e3446',700,'center');
   const count=visible.length;
   const w=count<=2?168:count===3?166:count===4?160:150;
   const h=w, gap=count===5?18:24;
   const startX=(W-(count*w+(count-1)*gap))/2;
   visible.forEach((id,i)=>{
    const im=charImages.get(id);
-   framedImage(im,Math.round(startX+i*(w+gap)),825,w,h,false);
+   framedImage(im,Math.round(startX+i*(w+gap)),817,w,h,false);
   });
  }
  // Give the final personal notes a larger vertical share of the document.
