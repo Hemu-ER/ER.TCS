@@ -101,3 +101,63 @@
 .correction-panel button{border:1px solid #b8a17a;background:#f4eddd;color:#29404d;padding:8px 12px}
 .correction-panel [hidden]{display:none}
 @media(max-width:700px){.form-panel{border-left-width:5px}.reveal-panel canvas{width:100%}}
+
+
+/* v2.1 / Mobile editor only. PC rules are intentionally left untouched. */
+@media screen and (max-width:700px){
+ html{overflow-x:hidden;-webkit-text-size-adjust:100%}
+ body,.app,.layout,.main,.content,.form-panel,.reveal-panel{min-width:0;max-width:100%}
+ .top{padding:11px 15px;min-height:62px}
+ .brand{gap:8px;min-width:0}
+ .brand-mark{font-size:27px}
+ .brand strong{font-size:22px}
+ .brand small{font-size:10px;letter-spacing:1px}
+ .sidebar{padding:9px 9px 10px;min-height:0}
+ #stepNav{display:flex;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;gap:4px;-webkit-overflow-scrolling:touch}
+ .step-button{flex:0 0 auto;min-width:91px;min-height:48px;padding:9px 10px;gap:6px;border-left:0;border-bottom:2px solid transparent;justify-content:center}
+ .step-button.active{border-bottom-color:var(--gold);border-left:0}
+ .step-num{font-size:17px}.step-text{font-size:14px}.step-check{display:none}
+ .main{padding:17px 11px calc(30px + env(safe-area-inset-bottom,0px))}
+ .main-heading{margin-bottom:16px;padding:0 3px 14px}
+ .main-heading h1{font-size:clamp(21px,5.8vw,27px);line-height:1.35}
+ .main-heading p{font-size:14px;line-height:1.5}
+ .main-heading .ornament{display:none}
+ .content,.content.is-finished{display:flex;flex-direction:column;gap:18px}
+ .content .form-panel,.content.is-finished .form-panel{width:100%;min-height:0;padding:25px 18px 18px;border-left-width:4px;overflow:visible}
+ .form-panel:before{inset:9px;pointer-events:none}
+ .form-title{font-size:25px;line-height:1.35}
+ .form-hint{font-size:15px;margin-bottom:22px}
+ .field{margin-bottom:22px}
+ .field-label{font-size:17px;margin-bottom:6px}
+ .field input:not([type=file]),.field textarea,#charSearch{width:100%;min-height:51px;font-size:16px!important;line-height:1.5;padding:12px 6px!important;transform:none!important}
+ .field textarea{min-height:110px;line-height:1.6}
+ .choice-row{gap:9px}
+ .choice{min-width:0;min-height:46px;padding:11px 14px;font-size:16px;touch-action:manipulation}
+ .controls{position:sticky;bottom:0;z-index:8;display:flex;gap:10px;margin:20px -12px -12px;padding:12px 12px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(to bottom,#f5efe2f0,#f5efe2);border-top:1px solid #c3b28f;box-shadow:0 -8px 18px #2224}
+ .controls button{min-height:51px;min-width:0;flex:1;font-size:16px;padding:10px 6px}
+ .controls button:last-child{flex:1.4}
+ .photo-editor{display:flex;flex-direction:column;gap:16px}
+ .photo-visual{width:100%;max-width:300px;margin:0 auto}
+ .photo-visual canvas{width:100%;height:auto;aspect-ratio:1/1;touch-action:none}
+ .photo-tools{width:100%;gap:13px}
+ .photo-upload{min-height:49px;padding:13px}
+ .photo-tools button,.correction-panel button{min-height:44px}
+ .crop-label input[type=range]{min-height:35px;width:100%;touch-action:pan-y}
+ .correction-panel{padding:14px 12px}
+ .char-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9px!important;max-height:min(53vh,450px);padding:5px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+ .char{min-height:115px;padding:8px 4px;touch-action:manipulation}
+ .char img{width:min(100%,82px);height:auto;aspect-ratio:1;object-fit:contain}
+ .char span{font-size:14px;line-height:1.3;overflow-wrap:anywhere}
+ .selected-characters{top:0;padding:11px;margin:8px 0 12px}
+ .selected-chip{min-height:43px;padding:5px 9px}
+ .content.is-finished .reveal-panel{width:100%;max-width:100%;margin:0;padding:0 0 30px}
+ .reveal-panel .canvas-wrap{width:100%;max-width:min(100%,440px);padding:0;margin:0 auto 16px;overflow:hidden}
+ .reveal-panel canvas,.canvas-wrap canvas,#profileCanvas{display:block;width:100%!important;max-width:100%;height:auto!important;aspect-ratio:1000/1414!important}
+ #downloadSmall{width:100%;max-width:440px;min-height:53px;font-size:17px;touch-action:manipulation}
+}
+@media screen and (max-width:370px){
+ .step-button{min-width:79px;padding:8px 6px}
+ .step-text{font-size:13px}
+ .content .form-panel{padding-left:14px;padding-right:14px}
+ .char-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}

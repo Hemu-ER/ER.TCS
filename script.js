@@ -279,6 +279,7 @@ function framedImage(im,x,y,w,h,main=false){
 }
 function draw(){
  if(!ctx||step!==5)return;
+ assertCardDimensions();
  ctx.clearRect(0,0,W,H);
  if(sampleAssets.paper?.complete&&sampleAssets.paper.naturalWidth)ctx.drawImage(sampleAssets.paper,0,0,W,H);
  else{ctx.fillStyle='#f3f0e6';ctx.fillRect(0,0,W,H)}
@@ -327,7 +328,44 @@ function draw(){
  });
 }
 function measure(s,size,weight=400){ctx.font=`${weight} ${size}px Heiro`;return ctx.measureText(s).width}
-function download(){draw();const a=document.createElement('a');a.download=`ER-TCS-S13-${(state.nickname||'profile').replace(/[\\/:*?"<>|]/g,'_')}.png`;a.href=canvas.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove()}
+// Export uses the internal canvas bitmap, never its responsive CSS dimensions.
+// This is intentionally independent of viewport width and devicePixelRatio.
+function assertCardDimensions(){
+ if(canvas.width!==W||canvas.height!==H){
+  canvas.width=W;canvas.height=H;
+ }
+}
+async function download(){
+ const button=$('#downloadSmall');
+ if(button?.disabled)return;
+ const oldLabel=button?.textContent;
+ if(button){button.disabled=true;button.textContent='이미지 저장 중…'}
+ try{
+  assertCardDimensions();
+  draw();
+  let png=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+  if(!png)throw new Error('PNG 변환 실패');
+  // PNG IHDR stores actual bitmap dimensions at bytes 16..23.
+  // Reject malformed or stretched exports before sending them to the user.
+  const header=new DataView(await png.slice(0,24).arrayBuffer());
+  const signature=header.getUint32(0)===0x89504e47 && header.getUint32(4)===0x0d0a1a0a;
+  const width=header.getUint32(16),height=header.getUint32(20);
+  if(!signature||width!==W||height!==H){
+   throw new Error(`저장 크기가 올바르지 않아 (${width}×${height}). 다시 시도해 줘.`);
+  }
+  const a=document.createElement('a');
+  a.download=`ER-TCS-S13-${(state.nickname||'profile').replace(/[\/:*?"<>|]/g,'_')}.png`;
+  const url=URL.createObjectURL(png);
+  a.href=url;document.body.appendChild(a);a.click();a.remove();
+  // Some mobile browsers wait to process the click until the next event loop.
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+ }catch(err){
+  console.error('PNG 저장 오류',err);
+  alert(`PNG 저장에 실패했어. ${err?.message||'브라우저를 확인해 줘.'}`);
+ }finally{
+  if(button){button.disabled=false;button.textContent=oldLabel}
+ }
+}
 async function init(){try{const res=await fetch('characters.json');if(res.ok)characters=await res.json()}catch(e){}if(!characters.length)characters=['Aya','Jackie','Fiora','Yuki','Hyunwoo','Bianca','Rio','Nadine','Hart','Hyejin','Emma','Adriana'].map(name=>({name}));for(const c of characters){if(!c.image)continue;const img=new Image();img.onload=()=>{if(step===5)draw()};img.onerror=()=>{};img.src=c.image;charImages.set(c.name,img)}if(document.fonts?.ready)document.fonts.ready.then(()=>{if(step===5)draw()});loadOfficialImages();loadDocImages();loadPhoto();render();ensureCardFonts()}
 init();
 
