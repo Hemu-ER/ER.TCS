@@ -4,7 +4,7 @@ const stages=[['이름','어떤 이름으로 불리고 싶으신가요?','프로
 const defaults={nickname:'',xid:'',oneLine:'',gender:'비공개',discord:'',discordPublic:false,photoCrop:{x:.5,y:.5,zoom:1},tier:'',modes:[],time:'',characters:[],interests:'',likes:'',dislikes:'',intro:'',photo:'',photoCorrection:{enabled:false,sharpness:20,contrast:4,brightness:0}};
 let state={...defaults},step=0,characters=[],photoImage=null,seasonImage=null;const charImages=new Map();
 try{const saved=JSON.parse(localStorage.getItem('ertcs_s13_v2')||'null');if(saved&&typeof saved==='object')state={...defaults,...saved,modes:Array.isArray(saved.modes)?saved.modes:[],characters:Array.isArray(saved.characters)?saved.characters:[],photoCorrection:{...defaults.photoCorrection,...(saved.photoCorrection||{})}}}catch(e){}
-const canvas=$('#profileCanvas'),ctx=canvas.getContext('2d');const W=1000,H=1414;
+const canvas=$('#profileCanvas'),ctx=canvas.getContext('2d');const W=1200,H=1500;
 const ko={Bihyung:'비형',Charlotte:'샬럿',Coraline:'코랄린',Craver:'크레이버',Darko:'다르코',Fenrir:'펜리르',Garnet:'가넷',Henry:'헨리',Hisui:'히스이',Isol:'이솔',Istvan:'이슈트반',Justyna:'유스티나',Katja:'카티야',Leni:'레니',Lenore:'레노어',Lucia:'루시아',Mirka:'미르카',NiaH:'니아',Tazia:'타지아',Xuelin:'쉐린',Shoichi:'쇼이치',Aya:'아야',Jackie:'재키',Fiora:'피오라',Hyunwoo:'현우',LiDailin:'리 다이린','Li Dailin':'리 다이린',Yuki:'유키',Hyejin:'혜진',Nadine:'나딘',Hart:'하트',Adriana:'아드리아나',Bianca:'비앙카',Chiara:'키아라',Cathy:'캐시',Daniel:'다니엘',Emma:'엠마',Eleven:'일레븐',Felix:'펠릭스',Irem:'이렘',Jenny:'제니',Laura:'라우라',Lyanh:'이안','Ly Anh':'이안',Martha:'마르타',Nicky:'니키',Rio:'리오',Rozzi:'로지',Sissela:'시셀라',Sua:'수아',Tia:'티아',Vanya:'바냐',William:'윌리엄',Zahir:'자히르',Abigail:'아비게일',Adela:'아델라',Adina:'아디나',Aiden:'에이든',Alex:'알렉스',Alonso:'알론소',Arda:'아르다',Barbara:'바바라',Bernice:'버니스',Blair:'블레어',Camilo:'카밀로',Celine:'셀린',Chloe:'클로에',DebiMarlene:'데비&마를렌','Debi & Marlene':'데비&마를렌',Echion:'에키온',Elena:'엘레나',Estelle:'에스텔',Eva:'에바',Haze:'헤이즈',Isaac:'아이작',Jan:'얀',Johann:'요한',Karla:'칼라',Kenneth:'케네스',Lenox:'레녹스',Leon:'레온',Lidia:'리디아',Luke:'루크',Magnus:'매그너스',Mai:'마이',Markus:'마커스',Martina:'마르티나',Nathapon:'나타폰',Piolo:'피올로',Priya:'프리야',Schoichi:'쇼이치',Silvia:'실비아',Theodore:'테오도르',Tsubame:'츠바메',Xiukai:'쇼우',Yumin:'유민',Seres:'세레스'};
 function charName(id){const c=characters.find(x=>x.name===id);return (c&&(c.nameKo||c.koreanName||c.ko||c.displayName))||ko[id]||id}
 function save(){try{localStorage.setItem('ertcs_s13_v2',JSON.stringify(state))}catch(e){}}
@@ -18,7 +18,7 @@ if(step===1)html=`<h2 class="form-title">두 번째 장 · 프로필</h2><p clas
 if(step===2)html=`<h2 class="form-title">세 번째 장 · 플레이</h2><p class="form-hint">즐겨 플레이하는 방식과 시간을 알려 주세요.</p>${field('티어 (자유 입력)','tier','예: 미스릴 312점')}<div class="field-label">선호 게임 모드 (다중 선택)</div>${choices('modes',['일반','랭크','코발트','유니온'],true)}${field('주 활동 시간','time','예: 평일 저녁 / 주말')}`;
 if(step===3)html=`<h2 class="form-title">네 번째 장 · 실험체</h2><p class="form-hint">최대 다섯 명까지 선택할 수 있습니다. 선택한 순서대로 카드에 표시됩니다.</p><label class="field"><span class="field-label">실험체 검색</span><input id="charSearch" placeholder="이름 검색 (한글 / 영어)" autocomplete="off"></label><div class="selected-characters" id="selectedCharacters"></div><div class="search-info" id="charCount">선택 ${state.characters.length} / 5</div><div class="char-grid" id="charGrid"></div><p class="notice">실험체 목록은 데이터 파일을 기준으로 표시됩니다.</p>`;
 if(step===4)html=`<h2 class="form-title">다섯 번째 장 · 이야기</h2><p class="form-hint">함께 게임할 분들에게 전하고 싶은 이야기를 작성해 주세요.</p>${field('관심사 (쉼표로 구분)','interests','예: #이터널리턴, #게임, #일상')}${area('좋아요','likes','예: 같이 랭크, 실험체 얘기, 잡담',100)}${area('싫어요','dislikes','예: 지나친 훈수, 과한 비난',100)}${area('자유 소개','intro','자신을 자유롭게 소개해 주세요.',220)}`;
-if(step===5)html=`<h2 class="form-title">여섯 번째 장 · 완성</h2><p class="form-hint">기록이 완성되었습니다. 수정할 내용은 이전 단계에서 변경할 수 있습니다.</p><div class="summary"><b>닉네임</b> · ${escapeHtml(state.nickname||'미입력')}<br><b>티어</b> · ${escapeHtml(state.tier||'미입력')}<br><b>선호 모드</b> · ${escapeHtml(state.modes.join(', ')||'미선택')}<br><b>선호 실험체</b> · ${state.characters.length}명 선택</div><div class="finish-actions"><button type="button" class="primary action" id="downloadBig">PNG 이미지 저장 ↓</button><button type="button" class="secondary action" id="restart">새로 작성하기</button></div><p class="notice">저장 이미지 크기는 1000 × 1414px입니다. 완성 화면의 Canvas에서 출력됩니다.</p>`;
+if(step===5)html=`<h2 class="form-title">여섯 번째 장 · 완성</h2><p class="form-hint">기록이 완성되었습니다. 수정할 내용은 이전 단계에서 변경할 수 있습니다.</p><div class="summary"><b>닉네임</b> · ${escapeHtml(state.nickname||'미입력')}<br><b>티어</b> · ${escapeHtml(state.tier||'미입력')}<br><b>선호 모드</b> · ${escapeHtml(state.modes.join(', ')||'미선택')}<br><b>선호 실험체</b> · ${state.characters.length}명 선택</div><div class="finish-actions"><button type="button" class="primary action" id="downloadBig">PNG 이미지 저장 ↓</button><button type="button" class="secondary action" id="restart">새로 작성하기</button></div><p class="notice">저장 이미지 크기는 1200 × 1500px입니다. 완성 화면의 Canvas에서 출력됩니다.</p>`;
 $('#stepFields').innerHTML=html;$('#stepCounter').textContent=`${String(step+1).padStart(2,'0')} / 06 · ${['이름','프로필','플레이','실험체','이야기','완성'][step]}`;$('#stepTitle').textContent=stages[step][1];$('#stepDescription').textContent=stages[step][2];$('#prevBtn').disabled=step===0;$('#nextBtn').textContent=step===5?'작성 완료':'다음 단계 →';$('#nextBtn').disabled=step===5;
 if(step===3)renderCharacters('');if(step===5){$('#downloadBig').onclick=download;$('#restart').onclick=()=>{if(confirm('모든 입력 내용을 삭제하고 처음부터 작성하시겠습니까?')){state={...defaults,modes:[],characters:[]};photoImage=null;step=0;save();render()}}}
 if(step===1)installPhotoEditor();;
@@ -241,7 +241,7 @@ function dslot(i,id,x,y,w,h){
 const sampleAssets={};
 const paperImage=new Image();
 paperImage.onload=()=>{if(step===5)draw()};
-paperImage.src='assets/season13/holy-empire-paper.jpg';
+paperImage.src='assets/season13/holy-empire-paper-4x5.jpg';
 sampleAssets.paper=paperImage;
 function val(k){
  if(k==='modes')return Array.isArray(state.modes)&&state.modes.length?state.modes.join(' / '):'—';
@@ -284,50 +284,44 @@ function framedImage(im,x,y,w,h,main=false){
 function draw(){
  if(!ctx||step!==5)return;
  assertCardDimensions();
- ctx.clearRect(0,0,W,H);
- if(sampleAssets.paper?.complete&&sampleAssets.paper.naturalWidth)ctx.drawImage(sampleAssets.paper,0,0,W,H);
- else{ctx.fillStyle='#f3f0e6';ctx.fillRect(0,0,W,H)}
- // The parchment crest remains clear; season and registrant belong to the identity block.
- // Raise the portrait and identity section to recover room for written records.
- const portrait=photoImage;
- framedImage(portrait,88,263,340,395,true);
- ink('SEASON XIII · ETERNAL RETURN',486,303,17,'#394c54');
- fitted(val('nickname'),486,360,443,54,700,'#1c3445');
- fitted(val('xid'),489,399,420,23,400,'#5a6c71');
- ornateLine(487,421,431);
- paragraph('“ '+val('oneLine')+' ”',500,467,405,23,32,2);
- ornateLine(487,495,431);
- // All five metadata rows use the same light archival notation as DISCORD.
+ // Draw at 1000 x 1250 logical coordinates. Uniform enlargement to 1200 x 1500.
+ ctx.setTransform(1.2,0,0,1.2,0,0);
+ ctx.clearRect(0,0,1000,1250);
+ if(sampleAssets.paper?.complete&&sampleAssets.paper.naturalWidth)ctx.drawImage(sampleAssets.paper,0,0,1000,1250);
+ else{ctx.fillStyle='#f3f0e6';ctx.fillRect(0,0,1000,1250)}
+ framedImage(photoImage,88,223,340,365,true);
+ ink('SEASON XIII · ETERNAL RETURN',486,248,17,'#394c54');
+ fitted(val('nickname'),486,305,443,54,700,'#1c3445');
+ fitted(val('xid'),489,342,420,23,400,'#5a6c71');
+ ornateLine(487,362,431);
+ paragraph('“ '+val('oneLine')+' ”',500,397,405,22,29,2);
+ ornateLine(487,424,431);
  const fields=[['티어','tier'],['선호 모드','modes'],['활동 시간','time'],['성별','gender'],['DISCORD','discord']];
  fields.forEach(([label,key],i)=>{
-  const baseline=529+i*45;
+  const baseline=456+i*40;
   ink(label,490,baseline,label==='DISCORD'?19:21,'#806c50',700);
   fitted(val(key),640,baseline,275,20,700,'#263b47');
   ornateLine(487,baseline+12,431);
  });
- // Show only selected experimenters, without name labels. Center the group as a whole.
  const visible=(state.characters||[]).slice(0,5);
  if(visible.length){
-  ink('선호 실험체',500,793,37,'#1e3446',700,'center');
+  ink('선호 실험체',500,687,37,'#1e3446',700,'center');
   const count=visible.length;
-  const w=count<=2?168:count===3?166:count===4?160:150;
-  const h=w, gap=count===5?18:24;
-  const startX=(W-(count*w+(count-1)*gap))/2;
-  visible.forEach((id,i)=>{
-   const im=charImages.get(id);
-   framedImage(im,Math.round(startX+i*(w+gap)),817,w,h,false);
-  });
+  const w=count<=2?158:count===3?154:count===4?145:132;
+  const gap=34;
+  const startX=(1000-(count*w+(count-1)*gap))/2;
+  visible.forEach((id,i)=>framedImage(charImages.get(id),Math.round(startX+i*(w+gap)),714,w,w,false));
  }
- // Give the final personal notes a larger vertical share of the document.
- ornateLine(76,1043,848);
+ ornateLine(76,visible.length?913:744,848);
  const rows=[['관심사','interests'],['좋아요','likes'],['싫어요','dislikes'],['자유 소개','intro']];
  rows.forEach(([label,key],i)=>{
-  const y=1085+i*61;
+  const y=(visible.length?952:783)+i*55;
   ink(label,90,y,23,'#273d50',700);
   ctx.fillStyle='#bba16e';ctx.fillRect(227,y-17,2,22);
-  paragraph(val(key),252,y,665,i===3?21:22,28,i===3?3:1);
-  if(i!==3)ornateLine(86,y+21,827);
+  paragraph(val(key),252,y,665,i===3?21:22,26,i===3?3:1);
+  if(i!==3)ornateLine(86,y+19,827);
  });
+ ctx.setTransform(1,0,0,1,0,0);
 }
 function measure(s,size,weight=400){ctx.font=`${weight} ${size}px Heiro`;return ctx.measureText(s).width}
 // Export uses the internal canvas bitmap, never its responsive CSS dimensions.

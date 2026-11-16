@@ -171,3 +171,5 @@
   .top,.main,.main-heading,.content,.form-panel{min-width:0}
   .main-heading h1,.main-heading p{overflow-wrap:break-word}
 }
+
+@font-face{font-family:Heiro;src:url('assets/fonts/OG-Renaissance-Secret.ttf') format('truetype');font-weight:100 900;font-display:swap;}
