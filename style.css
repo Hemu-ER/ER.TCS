@@ -161,3 +161,13 @@
  .content .form-panel{padding-left:14px;padding-right:14px}
  .char-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
+
+/* v2.2: keep mobile navigation tabs at their intrinsic width.
+   Earlier width:100% from .step-button caused only 01 to be visible. */
+@media screen and (max-width:700px){
+  #stepNav{width:100%;min-width:0;max-width:100%;overflow-x:auto;overflow-y:hidden}
+  #stepNav .step-button{width:auto!important;flex:0 0 auto;white-space:nowrap}
+  .sidebar,.layout,.app{width:100%;max-width:100%;box-sizing:border-box}
+  .top,.main,.main-heading,.content,.form-panel{min-width:0}
+  .main-heading h1,.main-heading p{overflow-wrap:break-word}
+}
