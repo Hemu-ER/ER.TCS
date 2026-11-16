@@ -241,6 +241,7 @@ function dslot(i,id,x,y,w,h){
 const sampleAssets={};
 const paperImage=new Image();
 paperImage.onload=()=>{if(step===5)draw()};
+paperImage.onerror=()=>{console.error('문서 배경을 불러오지 못했어:',paperImage.src);if(step===5)alert('문서 배경 이미지가 없어. assets/season13/holy-empire-paper-4x5.jpg 파일을 확인해 줘.')};
 paperImage.src='assets/season13/holy-empire-paper-4x5.jpg';
 sampleAssets.paper=paperImage;
 function val(k){
@@ -337,6 +338,7 @@ async function download(){
  const oldLabel=button?.textContent;
  if(button){button.disabled=true;button.textContent='이미지 저장 중…'}
  try{
+  if(!sampleAssets.paper?.complete || !sampleAssets.paper.naturalWidth) throw new Error('문서 배경이 아직 로드되지 않았어. 파일 경로를 확인해 줘.');
   assertCardDimensions();
   draw();
   let png=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
