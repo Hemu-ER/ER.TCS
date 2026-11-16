@@ -282,13 +282,12 @@ function draw(){
  ctx.clearRect(0,0,W,H);
  if(sampleAssets.paper?.complete&&sampleAssets.paper.naturalWidth)ctx.drawImage(sampleAssets.paper,0,0,W,H);
  else{ctx.fillStyle='#f3f0e6';ctx.fillRect(0,0,W,H)}
- // The parchment crest is the only document heading; no invented registry title.
- ink('S E A S O N  X I I I    ·    E T E R N A L  R E T U R N',500,187,17,'#394c54',400,'center');
- ornateLine(238,201,524);
+ // The parchment crest remains clear; season and registrant belong to the identity block.
  // Raise the portrait and identity section to recover room for written records.
  const demoCard=isDemoCard();const portrait=photoImage||(demoCard?sampleAssets.portrait:null);
  framedImage(portrait,88,263,340,395,true);
- ink('REGISTRANT',486,293,17,'#97815c');
+ ink('SEASON XIII · ETERNAL RETURN',486,280,17,'#394c54');
+ ink('REGISTRANT',486,311,17,'#97815c');
  fitted(val('nickname'),486,360,443,54,700,'#1c3445');
  fitted(val('xid'),489,399,420,23,400,'#5a6c71');
  ornateLine(487,421,431);
@@ -302,18 +301,21 @@ function draw(){
   fitted(val(key),640,baseline,275,20,400,'#263b47');
   ornateLine(487,baseline+12,431);
  });
- // Five character portraits remain below the main record.
- ornateLine(78,771,844);
- ink('선호 실험체',500,801,29,'#1e3446',700,'center');
- const ids=state.characters||[];
- for(let i=0;i<5;i++){
-  const x=89+i*176, y=836, w=145,h=145;
-  const id=ids[i],im=id?charImages.get(id):(demoCard&&i<2?sampleAssets['char'+i]:null);
-  framedImage(im,x,y,w,h,false);
-  const name=id?charName(id):demoCard?(i===0?'이안':i===1?'제니':'미선택'):'미선택';
-  ctx.fillStyle='rgba(247,241,226,.93)';ctx.fillRect(x-2,985,w+4,34);
-  fitted(name,x+w/2,1010,w-9,19,700,'#263a45','center');
-  ornateLine(x-1,1020,w+2);
+ // Show only selected experimenters, without name labels. Center the group as a whole.
+ const demoIds=isDemoCard()?['__sample0','__sample1']:[];
+ const selected=(state.characters||[]).slice(0,5);
+ const visible=selected.length?selected:demoIds;
+ if(visible.length){
+  ornateLine(78,771,844);
+  ink('선호 실험체',500,801,29,'#1e3446',700,'center');
+  const count=visible.length;
+  const w=count<=2?165:count===3?155:count===4?150:145;
+  const h=145, gap=count===5?22:24;
+  const startX=(W-(count*w+(count-1)*gap))/2;
+  visible.forEach((id,i)=>{
+   const im=id==='__sample0'?sampleAssets.char0:id==='__sample1'?sampleAssets.char1:charImages.get(id);
+   framedImage(im,Math.round(startX+i*(w+gap)),836,w,h,false);
+  });
  }
  // Give the final personal notes a larger vertical share of the document.
  ornateLine(76,1043,848);
