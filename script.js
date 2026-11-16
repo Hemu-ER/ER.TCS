@@ -286,8 +286,7 @@ function draw(){
  // Raise the portrait and identity section to recover room for written records.
  const demoCard=isDemoCard();const portrait=photoImage||(demoCard?sampleAssets.portrait:null);
  framedImage(portrait,88,263,340,395,true);
- ink('SEASON XIII · ETERNAL RETURN',486,280,17,'#394c54');
- ink('REGISTRANT',486,311,17,'#97815c');
+ ink('SEASON XIII · ETERNAL RETURN',486,303,17,'#394c54');
  fitted(val('nickname'),486,360,443,54,700,'#1c3445');
  fitted(val('xid'),489,399,420,23,400,'#5a6c71');
  ornateLine(487,421,431);
@@ -297,8 +296,8 @@ function draw(){
  const fields=[['티어','tier'],['선호 모드','modes'],['활동 시간','time'],['성별','gender'],['DISCORD','discord']];
  fields.forEach(([label,key],i)=>{
   const baseline=529+i*45;
-  ink(label,490,baseline,label==='DISCORD'?17:19,'#806c50',400);
-  fitted(val(key),640,baseline,275,20,400,'#263b47');
+  ink(label,490,baseline,label==='DISCORD'?19:21,'#806c50',700);
+  fitted(val(key),640,baseline,275,20,700,'#263b47');
   ornateLine(487,baseline+12,431);
  });
  // Show only selected experimenters, without name labels. Center the group as a whole.
@@ -306,15 +305,14 @@ function draw(){
  const selected=(state.characters||[]).slice(0,5);
  const visible=selected.length?selected:demoIds;
  if(visible.length){
-  ornateLine(78,771,844);
-  ink('선호 실험체',500,801,29,'#1e3446',700,'center');
+  ink('선호 실험체',500,801,33,'#1e3446',700,'center');
   const count=visible.length;
-  const w=count<=2?165:count===3?155:count===4?150:145;
-  const h=145, gap=count===5?22:24;
+  const w=count<=2?168:count===3?166:count===4?160:150;
+  const h=w, gap=count===5?18:24;
   const startX=(W-(count*w+(count-1)*gap))/2;
   visible.forEach((id,i)=>{
    const im=id==='__sample0'?sampleAssets.char0:id==='__sample1'?sampleAssets.char1:charImages.get(id);
-   framedImage(im,Math.round(startX+i*(w+gap)),836,w,h,false);
+   framedImage(im,Math.round(startX+i*(w+gap)),825,w,h,false);
   });
  }
  // Give the final personal notes a larger vertical share of the document.
@@ -322,9 +320,9 @@ function draw(){
  const rows=[['관심사','interests'],['좋아요','likes'],['싫어요','dislikes'],['자유 소개','intro']];
  rows.forEach(([label,key],i)=>{
   const y=1085+i*61;
-  ink(label,90,y,21,'#273d50',700);
+  ink(label,90,y,23,'#273d50',700);
   ctx.fillStyle='#bba16e';ctx.fillRect(227,y-17,2,22);
-  paragraph(val(key),252,y,665,i===3?20:21,27,i===3?3:1);
+  paragraph(val(key),252,y,665,i===3?21:22,28,i===3?3:1);
   if(i!==3)ornateLine(86,y+21,827);
  });
 }
