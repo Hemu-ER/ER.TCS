@@ -173,3 +173,19 @@
 }
 
 @font-face{font-family:Heiro;src:url('assets/fonts/OG-Renaissance-Secret.ttf') format('truetype');font-weight:100 900;font-display:swap;}
+
+/* v2.6 — Export and on-screen preview share the same 4:5 aspect ratio. */
+.canvas-wrap #profileCanvas,.reveal-panel canvas,#profileCanvas{aspect-ratio:4/5!important;width:100%;height:auto!important;object-fit:contain}
+.x-share{display:block;width:100%;max-width:440px;margin:10px auto 0;min-height:48px;background:#f3e8d4;color:#263d4b;border:1px solid #c3a56e;font-size:16px;font-weight:700}
+.x-share:hover{background:#fff4dd}.x-share:disabled{opacity:.6;cursor:wait}
+.share-hint{max-width:440px;margin:9px auto 18px;color:#b9c7c9;font-size:12px;line-height:1.6;text-align:center}
+@media(max-width:700px){.x-share{min-height:52px;font-size:17px}}
+
+/* Avoid intrinsic-width overflow in the mobile finished-card view. */
+@media screen and (max-width:700px){
+ .layout{grid-template-columns:minmax(0,1fr)!important}
+ .main{width:100%!important;min-width:0!important;max-width:100vw!important;overflow-x:clip}
+ .content,.content.is-finished{width:100%!important;min-width:0!important;max-width:100%!important}
+ .content.is-finished .form-panel,.content.is-finished .reveal-panel{width:100%!important;min-width:0!important;max-width:100%!important}
+ .reveal-panel .canvas-wrap{max-width:100%!important}
+}
