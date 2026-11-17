@@ -295,9 +295,19 @@ function draw(){
  ctx.clearRect(0,0,1000,1250);
  if(sampleAssets.paper?.complete&&sampleAssets.paper.naturalWidth)ctx.drawImage(sampleAssets.paper,0,0,1000,1250);
  else{ctx.fillStyle='#f3f0e6';ctx.fillRect(0,0,1000,1250)}
- // Official-style S13 mark, aligned to the space above the portrait.
- if(seasonLogo.complete && seasonLogo.naturalWidth){
-  ctx.save();ctx.globalAlpha=.93;ctx.drawImage(seasonLogo,96,111,324,108);ctx.restore();
+ // S13 mark: preserve the transparent asset's intrinsic proportions.
+ // Center in the space above the portrait; never force a distorted height.
+ if(seasonLogo.complete && seasonLogo.naturalWidth && seasonLogo.naturalHeight){
+  const logoMaxWidth=312, logoMaxHeight=144;
+  const logoScale=Math.min(logoMaxWidth/seasonLogo.naturalWidth,logoMaxHeight/seasonLogo.naturalHeight);
+  const logoW=seasonLogo.naturalWidth*logoScale;
+  const logoH=seasonLogo.naturalHeight*logoScale;
+  const logoX=258-logoW/2; // portrait center: x=88 + 340/2
+  const logoY=70;
+  ctx.save();ctx.globalAlpha=.93;
+  ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+  ctx.drawImage(seasonLogo,logoX,logoY,logoW,logoH);
+  ctx.restore();
  }
  framedImage(photoImage,88,223,340,365,true);
  ink('SEASON XIII · ETERNAL RETURN',486,248,17,'#394c54');
