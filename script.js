@@ -18,9 +18,9 @@ if(step===1)html=`<h2 class="form-title">두 번째 장 · 프로필</h2><p clas
 if(step===2)html=`<h2 class="form-title">세 번째 장 · 플레이</h2><p class="form-hint">즐겨 플레이하는 방식과 시간을 알려 주세요.</p>${field('티어 (자유 입력)','tier','예: 미스릴 312점')}<div class="field-label">선호 게임 모드 (다중 선택)</div>${choices('modes',['일반','랭크','코발트','유니온'],true)}${field('주 활동 시간','time','예: 평일 저녁 / 주말')}`;
 if(step===3)html=`<h2 class="form-title">네 번째 장 · 실험체</h2><p class="form-hint">최대 다섯 명까지 선택할 수 있습니다. 선택한 순서대로 카드에 표시됩니다.</p><label class="field"><span class="field-label">실험체 검색</span><input id="charSearch" placeholder="이름 검색 (한글 / 영어)" autocomplete="off"></label><div class="selected-characters" id="selectedCharacters"></div><div class="search-info" id="charCount">선택 ${state.characters.length} / 5</div><div class="char-grid" id="charGrid"></div><p class="notice">실험체 목록은 데이터 파일을 기준으로 표시됩니다.</p>`;
 if(step===4)html=`<h2 class="form-title">다섯 번째 장 · 이야기</h2><p class="form-hint">함께 게임할 분들에게 전하고 싶은 이야기를 작성해 주세요.</p>${field('관심사 (쉼표로 구분)','interests','예: #이터널리턴, #게임, #일상')}${area('좋아요','likes','예: 같이 랭크, 실험체 얘기, 잡담',100)}${area('싫어요','dislikes','예: 지나친 훈수, 과한 비난',100)}${area('자유 소개','intro','자신을 자유롭게 소개해 주세요.',220)}`;
-if(step===5)html=`<h2 class="form-title">여섯 번째 장 · 완성</h2><p class="form-hint">기록이 완성되었습니다. 수정할 내용은 이전 단계에서 변경할 수 있습니다.</p><div class="summary"><b>닉네임</b> · ${escapeHtml(state.nickname||'미입력')}<br><b>티어</b> · ${escapeHtml(state.tier||'미입력')}<br><b>선호 모드</b> · ${escapeHtml(state.modes.join(', ')||'미선택')}<br><b>선호 실험체</b> · ${state.characters.length}명 선택</div><div class="finish-actions"><button type="button" class="primary action" id="downloadBig">PNG 이미지 저장 ↓</button><button type="button" class="secondary action x-share" id="shareBig">X에 공유하기 ↗</button><button type="button" class="secondary action" id="restart">새로 작성하기</button></div><p class="notice">저장 이미지 크기는 1200 × 1500px입니다. 완성 화면의 Canvas에서 출력됩니다.</p>`;
+if(step===5)html=`<h2 class="form-title">여섯 번째 장 · 완성</h2><p class="form-hint">기록이 완성되었습니다. 수정할 내용은 이전 단계에서 변경할 수 있습니다.</p><div class="summary"><b>닉네임</b> · ${escapeHtml(state.nickname||'미입력')}<br><b>티어</b> · ${escapeHtml(state.tier||'미입력')}<br><b>선호 모드</b> · ${escapeHtml(state.modes.join(', ')||'미선택')}<br><b>선호 실험체</b> · ${state.characters.length}명 선택</div><div class="finish-actions"><button type="button" class="primary action" id="downloadBig">PNG 이미지 저장 ↓</button><button type="button" class="secondary action" id="restart">새로 작성하기</button></div><p class="notice">저장 이미지 크기는 1200 × 1500px입니다. 완성 화면의 Canvas에서 출력됩니다.</p>`;
 $('#stepFields').innerHTML=html;$('#stepCounter').textContent=`${String(step+1).padStart(2,'0')} / 06 · ${['이름','프로필','플레이','실험체','이야기','완성'][step]}`;$('#stepTitle').textContent=stages[step][1];$('#stepDescription').textContent=stages[step][2];$('#prevBtn').disabled=step===0;$('#nextBtn').textContent=step===5?'작성 완료':'다음 단계 →';$('#nextBtn').disabled=step===5;
-if(step===3)renderCharacters('');if(step===5){$('#downloadBig').onclick=download;$('#shareBig').onclick=shareToX;$('#restart').onclick=()=>{if(confirm('모든 입력 내용을 삭제하고 처음부터 작성하시겠습니까?')){state={...defaults,modes:[],characters:[]};photoImage=null;step=0;save();render()}}}
+if(step===3)renderCharacters('');if(step===5){$('#downloadBig').onclick=download;$('#restart').onclick=()=>{if(confirm('모든 입력 내용을 삭제하고 처음부터 작성하시겠습니까?')){state={...defaults,modes:[],characters:[]};photoImage=null;step=0;save();render()}}}
 if(step===1)installPhotoEditor();;
 $('#stepFields').querySelectorAll('[data-key]').forEach(el=>el.addEventListener('input',()=>{state[el.dataset.key]=el.value;save();draw()}));$('#stepFields').querySelectorAll('[data-choice]').forEach(el=>el.onclick=()=>{let k=el.dataset.choice,v=el.dataset.value;if(el.dataset.multi==='true'){state[k]=state[k].includes(v)?state[k].filter(x=>x!==v):[...state[k],v]}else if(k==='discordPublic')state.discordPublic=v==='공개';else state[k]=v;save();renderForm();draw()});}
 function renderCharacters(filter){
@@ -32,7 +32,50 @@ function renderCharacters(filter){
  $('#selectedCharacters').querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{state.characters=state.characters.filter(x=>x!==b.dataset.remove);save();renderCharacters($('#charSearch').value)});
  $('#charGrid').querySelectorAll('[data-char]').forEach(b=>b.onclick=()=>{const n=b.dataset.char;if(state.characters.includes(n))state.characters=state.characters.filter(x=>x!==n);else if(state.characters.length<5)state.characters.push(n);else{alert('실험체는 최대 다섯 명까지 선택할 수 있습니다.');return}save();renderCharacters($('#charSearch').value)});
 }
-function uploadPhoto(e){const file=e.target.files?.[0];if(!file)return;if(file.size>8*1024*1024){alert('8MB 이하 이미지를 선택해 주세요.');return}const reader=new FileReader();reader.onload=()=>{const img=new Image();img.onload=()=>{const max=900;const ratio=Math.min(1,max/Math.max(img.width,img.height));const tmp=document.createElement('canvas');tmp.width=Math.max(1,Math.round(img.width*ratio));tmp.height=Math.max(1,Math.round(img.height*ratio));tmp.getContext('2d').drawImage(img,0,0,tmp.width,tmp.height);state.photo=tmp.toDataURL('image/jpeg',.88);state.photoCrop={x:.5,y:.5,zoom:1};loadPhoto();save();renderForm()};img.src=reader.result};reader.readAsDataURL(file)}
+// Preserve enough portrait detail for the 1200x1500 export, even after cropping.
+// Persistent browser storage is limited; only downgrade if a full-quality copy won't fit.
+function preparePhotoData(img,maxSide,quality){
+ const ratio=Math.min(1,maxSide/Math.max(img.naturalWidth,img.naturalHeight));
+ const w=Math.max(1,Math.round(img.naturalWidth*ratio)),h=Math.max(1,Math.round(img.naturalHeight*ratio));
+ const temp=document.createElement('canvas');temp.width=w;temp.height=h;
+ const g=temp.getContext('2d');g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';
+ g.drawImage(img,0,0,w,h);
+ return temp.toDataURL('image/jpeg',quality);
+}
+function uploadPhoto(e){
+ const file=e.target.files?.[0];if(!file)return;
+ if(file.size>20*1024*1024){alert('20MB 이하 이미지를 선택해 줘.');return}
+ const reader=new FileReader();
+ reader.onerror=()=>alert('이미지를 읽지 못했어. 다시 선택해 줘.');
+ reader.onload=()=>{
+  const img=new Image();
+  img.onerror=()=>alert('지원되지 않는 이미지 형식이야. PNG나 JPEG로 다시 시도해 줘.');
+  img.onload=()=>{
+   const previousPhoto=state.photo, previousCrop=state.photoCrop;
+   const candidates=[[2048,.95],[1920,.93],[1600,.92],[1400,.90]];
+   let saved=false,usedSize=0;
+   for(const [size,quality] of candidates){
+    try{
+     state.photo=preparePhotoData(img,size,quality);
+     state.photoCrop={x:.5,y:.5,zoom:1};
+     localStorage.setItem('ertcs_s13_v2',JSON.stringify(state));
+     saved=true;usedSize=size;break;
+    }catch(error){
+     if(error?.name!=='QuotaExceededError' && error?.name!=='NS_ERROR_DOM_QUOTA_REACHED')console.warn('사진 저장 재시도:',error);
+    }
+   }
+   if(!saved){
+    state.photo=previousPhoto;state.photoCrop=previousCrop;
+    alert('브라우저 저장 공간이 부족해. 더 작은 사진을 사용하거나 사이트 저장 데이터를 정리해 줘.');
+    return;
+   }
+   if(usedSize<2048)console.info('브라우저 저장 공간에 맞춰 사진 품질을 조절했어:',usedSize);
+   loadPhoto();renderForm();
+  };
+  img.src=reader.result;
+ };
+ reader.readAsDataURL(file);
+}
 function loadPhoto(){photoImage=null;if(!state.photo){drawPhotoEditor();draw();return}const img=new Image();img.onload=()=>{photoImage=img;drawPhotoEditor();draw()};img.onerror=()=>{photoImage=null;drawPhotoEditor()};img.src=state.photo}
 function cropParams(img,w,h){const z=Math.max(1,Math.min(3,Number(state.photoCrop?.zoom)||1)),aspect=w/h,ir=img.width/img.height;let sw=img.width,sh=img.height;if(ir>aspect)sw=img.height*aspect;else sh=img.width/aspect;sw/=z;sh/=z;const cx=Math.max(sw/2,Math.min(img.width-sw/2,(state.photoCrop?.x??.5)*img.width)),cy=Math.max(sh/2,Math.min(img.height-sh/2,(state.photoCrop?.y??.5)*img.height));return [cx-sw/2,cy-sh/2,sw,sh]}
 // Lightweight optional photo correction. Applies ONLY to the cropped photo area.
@@ -81,7 +124,7 @@ async function go(i){
  transitionBusy=false;window.scrollTo({top:0,behavior:reduce?'instant':'smooth'});
 }
 function render(){renderNav();renderForm();$('#creationContent').classList.toggle('is-finished',step===5);$('#revealPanel').hidden=step!==5;if(step===5)requestAnimationFrame(draw)}
-$('#stepNav').addEventListener('click',e=>{const b=e.target.closest('[data-step]');if(b)go(+b.dataset.step)});$('#prevBtn').onclick=()=>go(step-1);$('#nextBtn').onclick=()=>go(step+1);$('#downloadSmall').onclick=download;$('#shareSmall').onclick=shareToX;
+$('#stepNav').addEventListener('click',e=>{const b=e.target.closest('[data-step]');if(b)go(+b.dataset.step)});$('#prevBtn').onclick=()=>go(step-1);$('#nextBtn').onclick=()=>go(step+1);$('#downloadSmall').onclick=download;
 function line(x1,y1,x2,y2,color='#b9a16e',width=1){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()}
 function text(s,x,y,size=24,color='#f4eddd',weight=400,font='Heiro',maxWidth){ctx.fillStyle=color;ctx.font=`${weight} ${size}px ${font}`;ctx.textBaseline='alphabetic';ctx.fillText(String(s),x,y,maxWidth)}
 function rect(x,y,w,h,color){ctx.fillStyle=color;ctx.fillRect(x,y,w,h)}
@@ -354,49 +397,6 @@ function assertCardDimensions(){
  if(canvas.width!==W||canvas.height!==H){
   canvas.width=W;canvas.height=H;
  }
-}
-const X_TAGS='#이터널리턴_트친소 #이리_트친소';
-const xComposeUrl=()=>`https://twitter.com/intent/tweet?text=${encodeURIComponent(X_TAGS)}`;
-function outputFileName(){return `ER-TCS-S13-${(state.nickname||'profile').replace(/[\\/:*?"<>|]/g,'_')}.png`;}
-async function makeCardPng(){
- if(!sampleAssets.paper?.complete||!sampleAssets.paper.naturalWidth)throw new Error('배경 이미지가 아직 준비되지 않았어.');
- assertCardDimensions();draw();
- const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
- if(!blob)throw new Error('PNG 파일을 만들 수 없어.');
- const header=new DataView(await blob.slice(0,24).arrayBuffer());
- if(header.getUint32(0)!==0x89504e47||header.getUint32(4)!==0x0d0a1a0a||header.getUint32(16)!==W||header.getUint32(20)!==H)throw new Error('PNG 비율이 4:5(1200×1500)가 아니야.');
- return blob;
-}
-function savePngBlob(blob){
- const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.download=outputFileName();link.href=url;document.body.appendChild(link);link.click();link.remove();
- setTimeout(()=>URL.revokeObjectURL(url),60000);
-}
-async function shareToX(){
- const button=$('#shareSmall');if(button?.disabled)return;
- // Open the X compose tab synchronously on desktop browsers without native file sharing.
- // Browsers may block popups opened after awaiting PNG encoding.
- let preopenedX=null;
- const testFile=new File([new Blob(['a'],{type:'image/png'})],'test.png',{type:'image/png'});
- const nativeShare=typeof navigator.canShare==='function'&&typeof navigator.share==='function'&&navigator.canShare({files:[testFile]});
- if(!nativeShare)preopenedX=window.open(xComposeUrl(),'_blank','noopener,noreferrer');
- const buttons=['shareSmall','shareBig'].map(id=>document.getElementById(id)).filter(Boolean);
- buttons.forEach(b=>{b.disabled=true;b.dataset.oldLabel=b.textContent;b.textContent='공유 이미지 준비 중…'});
- try{
-  const png=await makeCardPng();
-  const file=new File([png],outputFileName(),{type:'image/png'});
-  if(nativeShare&&navigator.canShare({files:[file]})){
-   try{await navigator.share({files:[file],text:X_TAGS,title:'ER.TCS 트친소'});return}
-   catch(e){if(e?.name==='AbortError')return;console.warn('시스템 공유를 사용할 수 없어:',e)}
-  }
-  // Browsers cannot attach local image files through an X intent URL.
-  // Export image and open the pre-filled compose form as an explicit fallback.
-  savePngBlob(png);
-  if(!preopenedX&&!nativeShare){const link=document.createElement('a');link.href=xComposeUrl();link.target='_blank';link.rel='noopener noreferrer';link.click()}
-  else if(nativeShare){window.open(xComposeUrl(),'_blank','noopener,noreferrer')}
-  alert('PNG를 저장했어. 열린 X 작성 화면에 저장된 사진을 첨부해 줘. 해시태그는 이미 입력돼 있어.');
- }catch(e){console.error('X 공유 준비 오류',e);alert('X 공유를 준비하지 못했어. '+(e?.message||'다시 시도해 줘.'))}
- finally{buttons.forEach(b=>{b.disabled=false;b.textContent=b.dataset.oldLabel||'X에 공유하기 ↗';delete b.dataset.oldLabel})}
 }
 async function download(){
  const button=$('#downloadSmall');
