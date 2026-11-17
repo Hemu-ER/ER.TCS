@@ -257,7 +257,11 @@ function val(k){
 function picture(im,x,y,w,h,useCrop=false){
  ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
  if(im?.complete&&im.naturalWidth){
-  if(useCrop&&state.photo&&im===photoImage){const p=cropParams(im,w,h);ctx.drawImage(im,...p,x,y,w,h);applyPhotoCorrection(ctx,x,y,w,h)}
+  if(useCrop&&state.photo&&im===photoImage){
+   // Pixel correction uses raw bitmap coordinates; render and correct on an unscaled, isolated canvas.
+   // The final card context is transformed (1.2x), so getImageData/putImageData on it would offset the correction rectangle.
+   cropImage(im,x,y,w,h);
+  }
   else{const s=Math.max(w/im.naturalWidth,h/im.naturalHeight),iw=im.naturalWidth*s,ih=im.naturalHeight*s;ctx.drawImage(im,x+(w-iw)/2,y+(h-ih)/2,iw,ih)}
  }else{ctx.fillStyle='#e7e0d1';ctx.fillRect(x,y,w,h);ctx.fillStyle='#c4b89f';ctx.font='26px Heiro';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('사진',x+w/2,y+h/2)}
  ctx.restore();
