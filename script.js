@@ -290,7 +290,7 @@ sampleAssets.paper=paperImage;
 const seasonLogo=new Image();
 seasonLogo.onload=()=>{if(step===5)draw()};
 seasonLogo.onerror=()=>console.warn('장식 로고 이미지를 불러오지 못했어.');
-seasonLogo.src='assets/season13/eternal-return-s13-logo.webp';
+seasonLogo.src='assets/season13/eternal-return-s13-logo.png';
 
 function val(k){
  if(k==='modes')return Array.isArray(state.modes)&&state.modes.length?state.modes.join(' / '):'—';
@@ -342,17 +342,14 @@ function draw(){
  ctx.clearRect(0,0,1000,1250);
  if(sampleAssets.paper?.complete&&sampleAssets.paper.naturalWidth)ctx.drawImage(sampleAssets.paper,0,0,1000,1250);
  else{ctx.fillStyle='#f3f0e6';ctx.fillRect(0,0,1000,1250)}
- // S13 mark: preserve the transparent asset's intrinsic proportions.
- // Center in the space above the portrait; never force a distorted height.
+ // Center the approved Eternal Return title in the former pennant position.
+ // Keep the logo's intrinsic proportions; leave the portrait itself unchanged.
  if(seasonLogo.complete && seasonLogo.naturalWidth && seasonLogo.naturalHeight){
-  const logoMaxWidth=312, logoMaxHeight=144;
-  const logoScale=Math.min(logoMaxWidth/seasonLogo.naturalWidth,logoMaxHeight/seasonLogo.naturalHeight);
-  const logoW=seasonLogo.naturalWidth*logoScale;
-  const logoH=seasonLogo.naturalHeight*logoScale;
-  const logoX=258-logoW/2; // portrait center: x=88 + 340/2
-  const logoY=70;
-  ctx.save();ctx.globalAlpha=.93;
-  ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+  const logoMaxWidth=465,logoMaxHeight=158;
+  const scale=Math.min(logoMaxWidth/seasonLogo.naturalWidth,logoMaxHeight/seasonLogo.naturalHeight);
+  const logoW=seasonLogo.naturalWidth*scale,logoH=seasonLogo.naturalHeight*scale;
+  const logoX=(1000-logoW)/2,logoY=37;
+  ctx.save();ctx.globalAlpha=1;ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
   ctx.drawImage(seasonLogo,logoX,logoY,logoW,logoH);
   ctx.restore();
  }
